@@ -1,4 +1,4 @@
-# SwipeForMe
+# Swipe4Me
 
 ---
 
@@ -92,7 +92,7 @@ This project is licensed under the MIT License. See the [LICENSE](./LICENSE) fil
 
 ## **Contact**
 For questions or feedback, please contact the project team at:
-- **Email:** mealswipeplatform@vanderbilt.edu
-- **Instagram:** [@mealswipeexchange](https://instagram.com/mealswipeexchange)
+- **Email:** swipe4me@vanderbilt.edu
+- **Instagram:** [@mealswipeexchange](https://instagram.com/swipe4me)
 
 ---
