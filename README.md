@@ -47,7 +47,7 @@ The Meal Swipe Exchange Platform is a peer-to-peer web application designed to h
    - Navigate to the frontend folder and run:
      ```bash
      npm install
-     npm start
+     npm run dev
      ```
 4. **Database Configuration:**
    - Update the `application.properties` file with your PostgreSQL credentials.
@@ -67,21 +67,6 @@ The Meal Swipe Exchange Platform is a peer-to-peer web application designed to h
 - [ ] Listing Creation and Browsing  
 - [ ] Messaging and Scheduling  
 - [ ] Deployment  
-
----
-
-## **Contributing**
-We welcome contributions to enhance the platform. To contribute:
-1. Fork the repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. Commit your changes and push the branch:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-4. Submit a pull request for review.
 
 ---
 
