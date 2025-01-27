@@ -1,14 +1,32 @@
 package com.sp25group8.swipe4mebackend.users;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.sp25group8.swipe4mebackend.users.models.RegisterBody;
+import com.sp25group8.swipe4mebackend.users.models.UserEntity;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/users")
+@AllArgsConstructor
 public class UserController {
+
+    private final UserService userService;
 
     @GetMapping()
     public String hello() {
         return "Hello World!";
     }
 
+    @PostMapping("/register")
+    public UserEntity registerUser(@RequestBody RegisterBody registerBody) {
+        boolean isBuyer = registerBody.isBuyer().equals("true");
+
+        return userService.createUser(
+                registerBody.firstName(),
+                registerBody.lastName(),
+                registerBody.email(),
+                registerBody.phoneNumber(),
+                isBuyer
+        );
+    }
 }
