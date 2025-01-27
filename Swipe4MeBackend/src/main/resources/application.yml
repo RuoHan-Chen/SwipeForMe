@@ -9,3 +9,9 @@ spring:
     url: jdbc:postgresql://${DATABASE_URL:localhost}:${DATABASE_PORT:5432}/postgres
     username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:secret}
+
+logging:
+  level:
+    org.apache.coyote.http11.Http11InputBuffer: TRACE
+    org.springframework.jdbc.core: DEBUG
+    org.springframework.jdbc.datasource.init: DEBUG
