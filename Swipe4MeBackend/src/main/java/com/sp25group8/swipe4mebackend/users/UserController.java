@@ -19,14 +19,11 @@ public class UserController {
 
     @PostMapping("/register")
     public UserEntity registerUser(@RequestBody RegisterBody registerBody) {
-        boolean isBuyer = registerBody.isBuyer().equals("true");
-
         return userService.createUser(
                 registerBody.firstName(),
                 registerBody.lastName(),
                 registerBody.email(),
-                registerBody.phoneNumber(),
-                isBuyer
+                registerBody.phoneNumber()
         );
     }
 }

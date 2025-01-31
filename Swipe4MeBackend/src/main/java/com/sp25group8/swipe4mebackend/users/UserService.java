@@ -10,8 +10,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserEntity createUser(String firstName, String lastName, String email, String phoneNumber, boolean isBuyer) {
-        UserEntity user = new UserEntity(null, firstName, lastName, email, phoneNumber, isBuyer, null);
+    public UserEntity createUser(String firstName, String lastName, String email, String phoneNumber) {
+        UserEntity user = new UserEntity(null, firstName, lastName, email, phoneNumber, null);
         return userRepository.save(user);
     }
 

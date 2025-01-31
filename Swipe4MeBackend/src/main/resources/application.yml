@@ -1,6 +1,8 @@
 spring:
   application:
     name: Swipe4MeBackend
+  config:
+    import: optional:file:.env[.properties]
   sql:
     init:
       mode: always
@@ -9,6 +11,10 @@ spring:
     url: jdbc:postgresql://${DATABASE_URL:localhost}:${DATABASE_PORT:5432}/postgres
     username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:secret}
+
+server:
+  servlet:
+    context-path: /api
 
 logging:
   level:
