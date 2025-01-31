@@ -1,10 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+
+  const handleGoogleLoginSuccess = (response: CredentialResponse) => {
+    const queryParams = {
+      id_token: response.credential!!,
+    };
+
+    fetch(
+      "/api/auth/oauth2/google/login?" +
+        new URLSearchParams(queryParams).toString(),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then(() => {
+      console.log("google login");
+    });
+  };
 
   return (
     <>
@@ -25,11 +45,12 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
+      <GoogleLogin onSuccess={handleGoogleLoginSuccess} />
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
