@@ -11,7 +11,6 @@ public record UserEntity(
         String lastName,
         String email,
         String phoneNumber,
-        Boolean isBuyer,
         Double rating
 ) {
 }
