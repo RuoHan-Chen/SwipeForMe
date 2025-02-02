@@ -21,9 +21,9 @@ function App() {
           "Content-Type": "application/json",
         },
       }
-    ).then(() => {
-      console.log("google login");
-    });
+    )
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   };
 
   return (
