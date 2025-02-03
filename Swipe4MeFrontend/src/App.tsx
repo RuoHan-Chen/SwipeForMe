@@ -3,27 +3,15 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { getCurrentUser, googleSignIn } from "./client";
 
 function App() {
   const [count, setCount] = useState(0);
 
-  const handleGoogleLoginSuccess = (response: CredentialResponse) => {
-    const queryParams = {
-      id_token: response.credential!!,
-    };
-
-    fetch(
-      "/api/auth/oauth2/google/login?" +
-        new URLSearchParams(queryParams).toString(),
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+  const handleGoogleLoginSuccess = async (response: CredentialResponse) => {
+    const loginResponse = await googleSignIn(response.credential!!);
+    localStorage.setItem("token", loginResponse.token);
+    getCurrentUser();
   };
 
   return (
