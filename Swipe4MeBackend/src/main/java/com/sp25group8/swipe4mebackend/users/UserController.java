@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserEntity> getCurrentUser() {
-        return ResponseEntity.badRequest().body(userService.getCurrentUser());
+        return ResponseEntity.ok(userService.getCurrentUser());
     }
 
 }

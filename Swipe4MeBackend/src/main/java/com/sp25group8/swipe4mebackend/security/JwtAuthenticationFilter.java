@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final HandlerExceptionResolver handlerExceptionResolver;
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -42,26 +42,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        try {
+//        try {
             final String token = authHeader.substring(7);
             final String userEmail = jwtService.extractUsername(token);
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if (userEmail != null && authentication == null) {
-                UserEntity user = userRepository.findByEmail(userEmail).orElseThrow();
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
-                if (jwtService.isTokenValid(token, user)) {
-                    Authentication authToken = new UsernamePasswordAuthenticationToken(
-                            user, null, user.getAuthorities()
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
                     );
+                    authToken.setDetails(userDetails);
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
 
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
-            handlerExceptionResolver.resolveException(request, response, null, e);
-        }
+//        } catch (Exception e) {
+//            System.out.println("JWT Authentication Failed");
+//            handlerExceptionResolver.resolveException(request, response, null, e);
+//        }
     }
 }

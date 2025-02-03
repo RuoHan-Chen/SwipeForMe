@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -49,7 +51,10 @@ public class AuthenticationService {
                 createUserFromPayload(payload);
             }
 
-            return userRepository.findByEmail(email).orElse(null);
+            UserEntity user = userRepository.findByEmail(email).orElseThrow();
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
+
+            return user;
         } else {
             throw new InvalidGoogleIdTokenException();
         }
