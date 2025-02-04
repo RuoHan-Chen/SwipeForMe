@@ -42,28 +42,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-//        try {
-            final String token = authHeader.substring(7);
-            final String userEmail = jwtService.extractUsername(token);
+        final String token = authHeader.substring(7);
+        final String userEmail = jwtService.extractUsername(token);
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if (userEmail != null && authentication == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+        if (userEmail != null && authentication == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
-                if (jwtService.isTokenValid(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(userDetails);
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
+            if (jwtService.isTokenValid(token, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+                authToken.setDetails(userDetails);
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+        }
 
-            filterChain.doFilter(request, response);
-//        } catch (Exception e) {
-//            System.out.println("JWT Authentication Failed");
-//            handlerExceptionResolver.resolveException(request, response, null, e);
-//        }
+        filterChain.doFilter(request, response);
     }
 }
