@@ -45,13 +45,4 @@ public class ApplicationConfiguration {
         return config.getAuthenticationManager();
     }
 
-//    @Bean
-//    AuthenticationProvider authenticationProvider() {
-//        AuthenticationProvider authenticationProvider = new OAuth2LoginAuthenticationProvider(
-//                new OAuth2Ac
-//        );
-//
-//        return authenticationProvider;
-//    }
-
 }
