@@ -1,5 +1,6 @@
 package com.sp25group8.swipe4mebackend.users;
 
+import com.sp25group8.swipe4mebackend.users.dtos.UserDto;
 import com.sp25group8.swipe4mebackend.users.models.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -17,10 +18,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public UserEntity getCurrentUser() {
+    public UserDto getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return (UserEntity) authentication.getPrincipal();
+        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
+        return UserDto.fromEntity(userEntity);
     }
 
 }
