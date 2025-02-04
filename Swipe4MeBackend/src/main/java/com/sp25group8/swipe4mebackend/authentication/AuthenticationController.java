@@ -1,7 +1,12 @@
 package com.sp25group8.swipe4mebackend.authentication;
 
+import com.sp25group8.swipe4mebackend.authentication.models.LoginResponse;
+import com.sp25group8.swipe4mebackend.exceptions.InvalidGoogleIdTokenException;
+import com.sp25group8.swipe4mebackend.security.JwtService;
 import com.sp25group8.swipe4mebackend.users.models.UserEntity;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -13,12 +18,19 @@ import java.security.GeneralSecurityException;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final JwtService jwtService;
 
     @PostMapping("/oauth2/google/login")
-    public UserEntity googleLogin(
+    public LoginResponse googleLogin(
             @RequestParam("id_token") String idToken
-    ) throws GeneralSecurityException, IOException {
-        return authenticationService.processGoogleIdTokenString(idToken);
+    ) throws GeneralSecurityException, IOException, InvalidGoogleIdTokenException {
+        UserEntity authenticatedUser = authenticationService.processGoogleIdTokenString(idToken);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String token = jwtService.generateToken(authenticatedUser);
+
+        return new LoginResponse(token);
     }
 
 }

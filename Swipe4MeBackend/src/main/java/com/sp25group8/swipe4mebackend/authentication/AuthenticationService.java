@@ -5,13 +5,16 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import com.sp25group8.swipe4mebackend.exceptions.InvalidGoogleIdTokenException;
+import com.sp25group8.swipe4mebackend.users.UserRepository;
 import com.sp25group8.swipe4mebackend.users.UserService;
 import com.sp25group8.swipe4mebackend.users.models.UserEntity;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,10 +25,12 @@ import java.util.Collections;
 public class AuthenticationService {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
 
-    public AuthenticationService(UserService userService) {
+    public AuthenticationService(UserService userService, UserRepository userRepository, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     private static final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
@@ -33,14 +38,25 @@ public class AuthenticationService {
     @Value("${OAUTH_CLIENT_ID}")
     private String oauthClientId;
 
-    public UserEntity processGoogleIdTokenString(String idTokenString) throws GeneralSecurityException, IOException {
+    public UserEntity processGoogleIdTokenString(String idTokenString) throws GeneralSecurityException, IOException, InvalidGoogleIdTokenException {
+        // Verify that the id token is from Google
         GoogleIdToken idToken = verifyIdToken(idTokenString);
         if (idToken != null) {
             Payload payload = idToken.getPayload();
-            return createUserFromPayload(payload);
+
+            String email = payload.get("email").toString();
+
+            // Create user if first time signing in
+            if (!userRepository.existsByEmail(email)) {
+                createUserFromPayload(payload);
+            }
+
+            UserEntity user = userRepository.findByEmail(email).orElseThrow();
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
+
+            return user;
         } else {
-            log.warn("Invalid ID token");
-            return null;
+            throw new InvalidGoogleIdTokenException();
         }
     }
 
@@ -51,13 +67,20 @@ public class AuthenticationService {
         return verifier.verify(idTokenString);
     }
 
-    private UserEntity createUserFromPayload(Payload payload) {
+//    private UserEntity authenticateUser(String email, GoogleIdToken idToken) {
+//        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+//
+//        authenticationManager.authenticate(new GoogleOAuth2AuthenticationToken(user, user.getAuthorities()));
+//        return user;
+//    }
+
+    private void createUserFromPayload(Payload payload) {
         String firstName = payload.get("given_name").toString();
         String lastName = payload.get("family_name").toString();
         String email = payload.get("email").toString();
 
         // Require users to provide their phone number later
-        return userService.createUser(firstName, lastName, email, null);
+        userService.createUser(firstName, lastName, email, null);
     }
 
 }
