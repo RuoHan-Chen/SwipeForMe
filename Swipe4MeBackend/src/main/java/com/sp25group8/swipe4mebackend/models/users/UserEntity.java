@@ -1,4 +1,4 @@
-package com.sp25group8.swipe4mebackend.users.models;
+package com.sp25group8.swipe4mebackend.models.users;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;

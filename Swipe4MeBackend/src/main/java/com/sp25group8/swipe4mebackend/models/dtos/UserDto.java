@@ -1,7 +1,6 @@
-package com.sp25group8.swipe4mebackend.users.dtos;
+package com.sp25group8.swipe4mebackend.models.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sp25group8.swipe4mebackend.users.models.UserEntity;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 
 public record UserDto(
         Long id,

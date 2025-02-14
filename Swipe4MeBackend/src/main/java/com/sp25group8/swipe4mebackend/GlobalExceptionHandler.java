@@ -1,6 +1,6 @@
 package com.sp25group8.swipe4mebackend;
 
-import com.sp25group8.swipe4mebackend.exceptions.models.ErrorResponse;
+import com.sp25group8.swipe4mebackend.models.errors.ErrorResponse;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

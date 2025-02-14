@@ -1,4 +1,4 @@
-package com.sp25group8.swipe4mebackend.users.models;
+package com.sp25group8.swipe4mebackend.models.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
