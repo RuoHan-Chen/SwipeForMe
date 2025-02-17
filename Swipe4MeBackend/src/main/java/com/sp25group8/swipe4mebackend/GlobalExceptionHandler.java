@@ -1,5 +1,6 @@
 package com.sp25group8.swipe4mebackend;
 
+import com.sp25group8.swipe4mebackend.exceptions.InvalidGoogleIdTokenException;
 import com.sp25group8.swipe4mebackend.models.errors.ErrorResponse;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,13 +23,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Access Denied", ex.getCause().toString(), Arrays.toString(ex.getStackTrace()));
+        ErrorResponse errorResponse = new ErrorResponse("Access Denied", ex.getCause().toString());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Data Integrity Violation", ex.getCause().toString(), Arrays.toString(ex.getStackTrace()));
+        ErrorResponse errorResponse = new ErrorResponse("Data Integrity Violation", ex.getCause().toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidGoogleIdTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidGoogleIdTokenException(InvalidGoogleIdTokenException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Invalid Google ID Token", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
