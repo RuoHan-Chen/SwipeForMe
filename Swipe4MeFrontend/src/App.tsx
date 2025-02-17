@@ -22,22 +22,24 @@ function App() {
 
   return (
     <AuthProvider>
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/buySwipes" element={<BuySwipes />} />
-        <Route path="/tradeSwipes" element={<TradeSwipes />} />
-        <Route path="/transaction" element={<Transaction />} />
-        <Route
-          path="*"
-          element={<h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>}
-        />
-      </Routes>
-      {/* <GoogleLogin onSuccess={handleGoogleLoginSuccess} /> */}
-    </Router>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/buySwipes" element={<BuySwipes />} />
+          <Route path="/tradeSwipes" element={<TradeSwipes />} />
+          <Route path="/transaction" element={<Transaction />} />
+          <Route
+            path="*"
+            element={
+              <h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>
+            }
+          />
+        </Routes>
+        {/* <GoogleLogin onSuccess={handleGoogleLoginSuccess} /> */}
+      </Router>
     </AuthProvider>
   );
 }
