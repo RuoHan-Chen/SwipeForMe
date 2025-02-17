@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS "transactions"
 CREATE TABLE IF NOT EXISTS "ratings"
 (
     "id"      bigserial PRIMARY KEY NOT NULL,
-    "user_id" bigint                NOT NULL,
+    "from"    bigint                NOT NULL,
+    "to"      bigint                NOT NULL,
     "rating"  float,
     "comment" text
 );
