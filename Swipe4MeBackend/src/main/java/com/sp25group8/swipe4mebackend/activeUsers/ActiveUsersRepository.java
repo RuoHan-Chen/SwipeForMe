@@ -8,7 +8,4 @@ import java.util.List;
 
 @Repository
 public interface ActiveUsersRepository extends CrudRepository<ActiveUserEntity, Long> {
-
-    List<ActiveUserEntity> findAll();
-
 }
