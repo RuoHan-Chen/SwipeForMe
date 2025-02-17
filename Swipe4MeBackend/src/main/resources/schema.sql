@@ -12,10 +12,10 @@ CREATE TABLE IF NOT EXISTS "transactions"
 (
     "id"        bigserial PRIMARY KEY NOT NULL,
     "location"  smallint              NOT NULL,
-    "time"      timestamp             NOT NULL,
+    "time"      timestamptz           NOT NULL,
     "buyer_id"  bigint                NOT NULL,
     "seller_id" bigint                NOT NULL,
-    "status"    smallint              NOT NULL
+    "status"    varchar(100)          NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "ratings"
@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS "active_users"
 (
     "id"         bigserial PRIMARY KEY NOT NULL,
     "user_id"    bigint                NOT NULL,
-    "location"   smallint              NOT NULL,
-    "start_time" timestamp             NOT NULL,
-    "end_time"   timestamp             NOT NULL
+    "location"   varchar(100)          NOT NULL,
+    "start_time" timestamptz           NOT NULL,
+    "end_time"   timestamptz           NOT NULL
 );
 
 CREATE INDEX ON "ratings" ("to");
