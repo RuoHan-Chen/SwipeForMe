@@ -1,7 +1,7 @@
 package com.sp25group8.swipe4mebackend.users;
 
-import com.sp25group8.swipe4mebackend.users.dtos.UserDto;
-import com.sp25group8.swipe4mebackend.users.models.UserEntity;
+import com.sp25group8.swipe4mebackend.models.dtos.UserDto;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
