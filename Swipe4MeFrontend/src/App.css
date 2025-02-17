@@ -44,8 +44,10 @@
 
 /* Apply Roboto to all text */
 body {
+    margin: 0;
     font-family: 'Roboto', sans-serif;
     font-size: 18px; /* Default font size */
     font-weight: 400; /* Normal weight */
     color: black; /* Default text color */
+    background-color: #2F1893;
 }
