@@ -45,7 +45,10 @@ ALTER TABLE "transactions"
     ADD FOREIGN KEY ("seller_id") REFERENCES "users" ("id");
 
 ALTER TABLE "ratings"
-    ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+    ADD FOREIGN KEY ("from") REFERENCES "users" ("id");
+
+ALTER TABLE "ratings"
+    ADD FOREIGN KEY ("to") REFERENCES "users" ("id");
 
 ALTER TABLE "active_users"
     ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
