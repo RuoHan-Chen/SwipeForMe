@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/landing.css";
-import instagramLogo from '../assets/instagram-logo.jpg';
+import instagramLogo from '../assets/ins-logo.svg';
 
 const Home: React.FC = () => {
     return (
