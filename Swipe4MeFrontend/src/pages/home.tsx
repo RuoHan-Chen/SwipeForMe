@@ -1,13 +1,82 @@
 import React from "react";
+import "../styles/landing.css"; // Ensure the correct CSS file is linked
 
 const Home: React.FC = () => {
-  return (
-    <div className="filler-container">
-      <h1 className="filler-title">Home Coming Soon</h1>
-      <p className="filler-text">This page is under construction. Check back later!</p>
+    return (
+        <div>
+            {/* Hero Section */}
+            <section className="hero">
+                <div className="hero-background">
+                    <div className="eclipse"></div>
+                    <div className="nebula"></div>
+                    <div className="texture"></div>
+                </div>
+                <div className="hero-content">
+                    <h1>Make Every Meal Count</h1>
+                    <p>
+                        Swipe4Me is a peer-to-peer platform designed to help students make the
+                        most of their unused meal swipes. Whether you have extra swipes to share
+                        or you’re looking for a convenient dining option, Swipe4Me connects you
+                        with fellow students to exchange meal swipes effortlessly.
+                    </p>
+                    <div className="hero-buttons">
+                        <a href="/signup" className="btn btn-primary">
+                            Create an Account
+                        </a>
+                    </div>
+                </div>
+            </section>
 
-    </div>
-  );
+            {/* Why Choose Section */}
+            <section className="why-choose-section">
+                <h2>Why Choose Swipe4Me?</h2>
+                <p>
+                    Swipe smarter, connect better, and trust more—designed just for
+                    Vanderbilt students.
+                </p>
+                <div className="feature-box-container">
+                    {/* Feature 1 */}
+                    <div className="feature-box">
+                        <i className="icon-lightning"></i>
+                        <h3>Easy to Use</h3>
+                        <p>
+                            Post your unused swipes, browse listings, and schedule meet-ups
+                            with ease. Swipe4Me keeps it simple for busy students.
+                        </p>
+                        <a href="/learn-more" className="btn btn-primary">
+                            Learn More
+                        </a>
+                    </div>
+
+                    {/* Feature 2 */}
+                    <div className="feature-box">
+                        <i className="icon-rate"></i>
+                        <h3>Rate & Review for Trust</h3>
+                        <p>
+                            Our mutual rating system ensures every interaction is honest and
+                            reliable. Rate users after exchanges to build a trustworthy community.
+                        </p>
+                        <a href="/trust" className="btn btn-primary">
+                            Learn More
+                        </a>
+                    </div>
+
+                    {/* Feature 3 */}
+                    <div className="feature-box">
+                        <i className="icon-design"></i>
+                        <h3>Feel Our Design</h3>
+                        <p>
+                            Samples will show you the feeling of how to play around using the
+                            components in the website building process.
+                        </p>
+                        <a href="/design" className="btn btn-primary">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    );
 };
 
 export default Home;
