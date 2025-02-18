@@ -5,9 +5,9 @@ import Navbar from "./components/navbar";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Account from "./pages/account";
-import BuySwipes from "./pages/buySwipes";
+import BuySwipes from "./pages/donateSwipes.tsx";
 import TradeSwipes from "./pages/tradeSwipes";
-import Transaction from "./pages/transaction";
+import TransactionHistory from "./pages/transactionHistory.tsx";
 import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -30,7 +30,7 @@ function App() {
         <Route path="/account" element={<Account />} />
         <Route path="/buySwipes" element={<BuySwipes />} />
         <Route path="/tradeSwipes" element={<TradeSwipes />} />
-        <Route path="/transaction" element={<Transaction />} />
+        <Route path="/transaction" element={<TransactionHistory />} />
         <Route
           path="*"
           element={<h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>}
