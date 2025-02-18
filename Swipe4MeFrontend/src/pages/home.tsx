@@ -1,5 +1,6 @@
 import React from "react";
-import "../styles/landing.css"; // Ensure the correct CSS file is linked
+import "../styles/landing.css";
+import instagramLogo from '../assets/instagram-logo.jpg';
 
 const Home: React.FC = () => {
     return (
@@ -91,7 +92,7 @@ const Home: React.FC = () => {
                             Follow Us On Instagram!
                         </a>
                         <img
-                            src="../assets/instagram-logo1.jpeg"
+                            src={instagramLogo}
                             alt="Instagram Icon"
                             className="instagram-icon"
                         />

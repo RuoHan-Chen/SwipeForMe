@@ -262,6 +262,8 @@ body {
     align-items: center;
     padding: 80px 5%;
     font-family: 'Roboto', sans-serif;
+
+    filter: contrast(140%) saturate(120%);
 }
 
 .join-movement-content {
@@ -306,7 +308,7 @@ body {
 .icon-instagram {
     width: 24px;
     height: 24px;
-    background: url('../assets/instagram-logo1.jpeg') no-repeat center / contain;
+    background: url('../assets/instagram-logo.jpg') no-repeat center / contain;
     display: inline-block;
 }
 
@@ -322,7 +324,7 @@ body {
 }
 
 .instagram-icon {
-    width: 40px;  /* Adjust icon size */
-    height: 40px;
+    width: 20px;  /* Adjust icon size */
+    height: 20px;
     object-fit: contain; /* Keep aspect ratio */
 }
