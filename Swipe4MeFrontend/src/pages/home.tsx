@@ -75,6 +75,29 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Join the Movement Section */}
+            <section className="join-movement-section">
+                <div className="join-movement-content">
+                    <h3>SWIPE4ME</h3>
+                    <h2>Join the Movement!</h2>
+                    <p>
+                        Our goal is to promote sustainability and build community by reducing waste
+                        and fostering resource-sharing on campus. Join us today to connect, share,
+                        and make a difference—one meal at a time!
+                    </p>
+                    <div className="instagram-button-container">
+                        <a href="https://instagram.com/swipe4me" className="instagram-button">
+                            Follow Us On Instagram!
+                        </a>
+                        <img
+                            src="../assets/instagram-logo1.jpeg"
+                            alt="Instagram Icon"
+                            className="instagram-icon"
+                        />
+                    </div>
+                </div>
+            </section>
         </div>
     );
 };
