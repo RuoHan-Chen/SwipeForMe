@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
             {true ? (
                 <div className="profile-dropdown-container" ref={dropdownRef}>
                   <img
-                      src="/IMG_6570.png"
+                      src="/profile_pic.png"
                       alt="User Profile"
                       className="profile-image"
                       onClick={() => setDropdownOpen(!dropdownOpen)}
