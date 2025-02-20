@@ -169,6 +169,7 @@ const buySwipes: React.FC = () => {
             margin: "0 auto",
             borderRadius: "30px",
             maxHeight: "650px",
+            minHeight: "600px",
             overflowY: "auto",
           }}
         >
@@ -199,12 +200,24 @@ const buySwipes: React.FC = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell align="left">Student Name</TableCell>
-                  <TableCell align="center">Dining Hall</TableCell>
-                  <TableCell align="center">Available Time</TableCell>
-                  <TableCell align="left">Email</TableCell>
-                  <TableCell align="center">Rating</TableCell>
-                  <TableCell align="center">Action</TableCell>
+                  <TableCell align="left">
+                    <span style={{ color: "#B5B7C0" }}>Student Name</span>
+                  </TableCell>
+                  <TableCell align="center">
+                    <span style={{ color: "#B5B7C0" }}>Dining Hall</span>
+                  </TableCell>
+                  <TableCell align="center">
+                    <span style={{ color: "#B5B7C0" }}>Available Time</span>
+                  </TableCell>
+                  <TableCell align="left">
+                    <span style={{ color: "#B5B7C0" }}>Email</span>
+                  </TableCell>
+                  <TableCell align="center">
+                    <span style={{ color: "#B5B7C0" }}>Rating</span>
+                  </TableCell>
+                  <TableCell align="center">
+                    <span style={{ color: "#B5B7C0" }}>Action</span>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -236,7 +249,7 @@ const buySwipes: React.FC = () => {
               <TableFooter>
                 <TableRow>
                   <TablePagination
-                    rowsPerPageOptions={[8]}
+                    rowsPerPageOptions={[ROWS_PER_PAGE]}
                     count={dummyData.length}
                     rowsPerPage={ROWS_PER_PAGE}
                     page={page}
