@@ -225,7 +225,7 @@ const buySwipes: React.FC = () => {
                           variant="contained"
                           color="primary"
                           fullWidth={true}
-                          style={{ width: "70%" }}
+                          style={{ width: "75%" }}
                         >
                           <div style={{ color: "white" }}>{row.action}</div>
                         </Button>
