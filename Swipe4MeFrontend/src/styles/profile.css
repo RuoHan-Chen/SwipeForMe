@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #2F1893; /* Background of the page */
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Profile Container */
+.profile-container {
+    width: 80%;
+    margin: 50px auto;
+    padding: 30px;
+    background: #2F1893;
+    border-radius: 18px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Profile Header */
+.profile-header {
+    display: flex;
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    color: black;
+    align-items: center;
+}
+
+/* Profile Photo */
+.profile-photo-container {
+    flex: 0 0 120px; /* Fixed width */
+    display: flex;
+    justify-content: center;
+}
+
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Details */
+.profile-details {
+    flex: 1;
+    margin-left: 30px;
+}
+
+/* Name & Actions Row */
+.profile-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-name {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+/* Profile Actions */
+.profile-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.notification-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.edit-profile-btn {
+    background: #25DAC5;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.edit-profile-btn:hover {
+    background: #1fa599;
+}
+
+/* Profile Info Layout */
+.profile-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.profile-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
