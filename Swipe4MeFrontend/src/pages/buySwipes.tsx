@@ -9,7 +9,13 @@ import TableBody from "@mui/material/TableBody";
 import Button from "@mui/material/Button";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
-import { Grid2, TextField, Typography } from "@mui/material";
+import {
+  createTheme,
+  Grid2,
+  TextField,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 
 const dummyData = [
   {
@@ -140,94 +146,111 @@ const dummyData = [
   },
 ];
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#16C098",
+    },
+  },
+});
+
 const ROWS_PER_PAGE = 6;
 
 const buySwipes: React.FC = () => {
   const [page, setPage] = useState(0);
 
   return (
-    <div style={{ paddingTop: "50px" }}>
-      <TableContainer
-        component={Paper}
-        style={{
-          width: "80%",
-          margin: "0 auto",
-          borderRadius: "30px",
-          maxHeight: "650px",
-          overflowY: "auto",
-        }}
-      >
-        <Grid2
-          container
-          alignItems="center"
-          justifyContent="space-between"
-          style={{ width: "90%", margin: "0 auto", paddingTop: "20px" }}
-        >
-          <Grid2>
-            <Typography variant="h6">All Students</Typography>
-            <Typography variant="subtitle1" color="#16C098">
-              Active Students
-            </Typography>
-          </Grid2>
-          <Grid2>
-            <TextField variant="outlined" placeholder="Search" size="small" />
-          </Grid2>
-        </Grid2>
-        <div
+    <ThemeProvider theme={theme}>
+      <div style={{ paddingTop: "50px" }}>
+        <TableContainer
+          component={Paper}
           style={{
-            width: "90%",
+            width: "80%",
             margin: "0 auto",
-            display: "flex",
-            justifyContent: "center",
+            borderRadius: "30px",
+            maxHeight: "650px",
+            overflowY: "auto",
           }}
         >
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell align="left">Student Name</TableCell>
-                <TableCell align="center">Dining Hall</TableCell>
-                <TableCell align="center">Available Time</TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="center">Rating</TableCell>
-                <TableCell align="center">Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {dummyData
-                .slice(
-                  page * ROWS_PER_PAGE,
-                  page * ROWS_PER_PAGE + ROWS_PER_PAGE
-                )
-                .map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="center">{row.hall}</TableCell>
-                    <TableCell align="center">{row.time}</TableCell>
-                    <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="center">{row.rating}</TableCell>
-                    <TableCell align="center">
-                      <Button>{row.action}</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[8]}
-                  count={dummyData.length}
-                  rowsPerPage={ROWS_PER_PAGE}
-                  page={page}
-                  onPageChange={(_, newPage) => {
-                    setPage(newPage);
-                  }}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </div>
-      </TableContainer>
-    </div>
+          <Grid2
+            container
+            alignItems="center"
+            justifyContent="space-between"
+            style={{ width: "90%", margin: "0 auto", paddingTop: "20px" }}
+          >
+            <Grid2>
+              <Typography variant="h6">All Students</Typography>
+              <Typography variant="subtitle1" color="#16C098">
+                Active Students
+              </Typography>
+            </Grid2>
+            <Grid2>
+              <TextField variant="outlined" placeholder="Search" size="small" />
+            </Grid2>
+          </Grid2>
+          <div
+            style={{
+              width: "90%",
+              margin: "0 auto",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left">Student Name</TableCell>
+                  <TableCell align="center">Dining Hall</TableCell>
+                  <TableCell align="center">Available Time</TableCell>
+                  <TableCell align="left">Email</TableCell>
+                  <TableCell align="center">Rating</TableCell>
+                  <TableCell align="center">Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {dummyData
+                  .slice(
+                    page * ROWS_PER_PAGE,
+                    page * ROWS_PER_PAGE + ROWS_PER_PAGE
+                  )
+                  .map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell align="left">{row.name}</TableCell>
+                      <TableCell align="center">{row.hall}</TableCell>
+                      <TableCell align="center">{row.time}</TableCell>
+                      <TableCell align="left">{row.email}</TableCell>
+                      <TableCell align="center">{row.rating}</TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          fullWidth={true}
+                          style={{ width: "70%" }}
+                        >
+                          <div style={{ color: "white" }}>{row.action}</div>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[8]}
+                    count={dummyData.length}
+                    rowsPerPage={ROWS_PER_PAGE}
+                    page={page}
+                    onPageChange={(_, newPage) => {
+                      setPage(newPage);
+                    }}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </div>
+        </TableContainer>
+      </div>
+    </ThemeProvider>
   );
 };
 
