@@ -25,7 +25,7 @@ const dummyData = [
     time: "12:30-13:30",
     email: "jane@vanderbilt.edu",
     rating: 5.0,
-    action: "Send Invite",
+    pending: false,
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ const dummyData = [
     time: "10:00-12:00",
     email: "floyd@vanderbilt.edu",
     rating: 4.0,
-    action: "Pending",
+    pending: true,
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ const dummyData = [
     time: "10:00-12:00",
     email: "ronald@vanderbilt.edu",
     rating: 4.7,
-    action: "Pending",
+    pending: true,
   },
   {
     id: 4,
@@ -52,7 +52,7 @@ const dummyData = [
     time: "12:30-13:30",
     email: "marvin@vanderbilt.edu",
     rating: 4.8,
-    action: "Send Invite",
+    pending: false,
   },
   {
     id: 5,
@@ -61,7 +61,7 @@ const dummyData = [
     time: "10:00-12:00",
     email: "jerome@vanderbilt.edu",
     rating: 4.5,
-    action: "Send Invite",
+    pending: false,
   },
   {
     id: 6,
@@ -70,7 +70,7 @@ const dummyData = [
     time: "12:30-13:30",
     email: "kathryn@vanderbilt.edu",
     rating: 2.9,
-    action: "Send Invite",
+    pending: false,
   },
   {
     id: 7,
@@ -79,7 +79,7 @@ const dummyData = [
     time: "12:30-13:30",
     email: "jacob@vanderbilt.edu",
     rating: 3.0,
-    action: "Send Invite",
+    pending: false,
   },
   {
     id: 8,
@@ -88,7 +88,7 @@ const dummyData = [
     time: "14:00-15:00",
     email: "savannah@vanderbilt.edu",
     rating: 4.2,
-    action: "Send Invite",
+    pending: false,
   },
   {
     id: 9,
@@ -97,7 +97,7 @@ const dummyData = [
     time: "11:00-12:00",
     email: "cameron@vanderbilt.edu",
     rating: 3.8,
-    action: "Pending",
+    pending: true,
   },
   {
     id: 10,
@@ -106,7 +106,7 @@ const dummyData = [
     time: "09:00-10:00",
     email: "leslie@vanderbilt.edu",
     rating: 4.9,
-    action: "Send Invite",
+    pending: false,
   },
   {
     id: 11,
@@ -115,7 +115,7 @@ const dummyData = [
     time: "13:00-14:00",
     email: "courtney@vanderbilt.edu",
     rating: 3.5,
-    action: "Pending",
+    pending: true,
   },
   {
     id: 12,
@@ -124,7 +124,7 @@ const dummyData = [
     time: "15:00-16:00",
     email: "arlene@vanderbilt.edu",
     rating: 4.6,
-    action: "Send Invite",
+    pending: false,
   },
   {
     id: 13,
@@ -133,7 +133,7 @@ const dummyData = [
     time: "10:30-11:30",
     email: "guy@vanderbilt.edu",
     rating: 3.9,
-    action: "Pending",
+    pending: true,
   },
   {
     id: 14,
@@ -142,7 +142,7 @@ const dummyData = [
     time: "12:00-13:00",
     email: "kristin@vanderbilt.edu",
     rating: 4.3,
-    action: "Send Invite",
+    pending: false,
   },
 ];
 
@@ -158,6 +158,10 @@ const ROWS_PER_PAGE = 6;
 
 const buySwipes: React.FC = () => {
   const [page, setPage] = useState(0);
+
+  const handleSendInvite = (id: number) => {
+    console.log(`Sending invite to student ${id}`);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -239,8 +243,12 @@ const buySwipes: React.FC = () => {
                           color="primary"
                           fullWidth={true}
                           style={{ width: "75%" }}
+                          onClick={() => handleSendInvite(row.id)}
+                          disabled={row.pending}
                         >
-                          <div style={{ color: "white" }}>{row.action}</div>
+                          <div style={{ color: "white" }}>
+                            {row.pending ? "Pending" : "Send Invite"}
+                          </div>
                         </Button>
                       </TableCell>
                     </TableRow>
