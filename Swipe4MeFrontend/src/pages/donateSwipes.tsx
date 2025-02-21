@@ -152,6 +152,9 @@ const theme = createTheme({
       main: "#16C098",
     },
   },
+  typography: {
+    fontFamily: "Poppins",
+  },
 });
 
 const ROWS_PER_PAGE = 6;
@@ -242,7 +245,7 @@ const buySwipes: React.FC = () => {
                           variant="contained"
                           color="primary"
                           fullWidth={true}
-                          style={{ width: "75%" }}
+                          style={{ width: "80%" }}
                           onClick={() => handleSendInvite(row.id)}
                           disabled={row.pending}
                         >
