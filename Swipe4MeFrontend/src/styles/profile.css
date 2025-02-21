@@ -1,106 +1,201 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-html, body {
-    margin: 0;
-    padding: 0;
-    background-color: #2F1893; /* Background of the page */
-    font-family: 'Roboto', sans-serif;
-}
-
-/* Profile Container */
-.profile-container {
-    width: 80%;
-    margin: 50px auto;
-    padding: 30px;
-    background: #2F1893;
-    border-radius: 18px;
-    color: white;
-    font-family: 'Roboto', sans-serif;
-}
-
-/* Profile Header */
 .profile-header {
-    display: flex;
-    background: white;
-    padding: 30px;
-    border-radius: 18px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-    color: black;
-    align-items: center;
+  width: 80%;
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-left: 180px;
 }
 
-/* Profile Photo */
+.profile-sections {
+  display: flex; /* ✅ 让 Rating 和 Calculator 在一排 */
+  flex-direction: row; /* ✅ 水平排列 */
+  justify-content: space-between; /* ✅ 左右分布 */
+  align-items: flex-start; /* ✅ 让顶部对齐 */
+  width: 80%; /* ✅ 让它占 80% 宽度 */
+  margin-top: 30px;
+  align-items: stretch;
+  margin-left: 180px;
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  border-radius: 15px;
+}
+
 .profile-photo-container {
-    flex: 0 0 120px; /* Fixed width */
-    display: flex;
-    justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .profile-photo {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* Profile Details */
 .profile-details {
-    flex: 1;
-    margin-left: 30px;
+  flex: 1;
+  margin-left: 20px;
 }
 
-/* Name & Actions Row */
 .profile-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .user-name {
-    font-size: 26px;
-    font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
-/* Profile Actions */
 .profile-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .notification-icon {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 
 .edit-profile-btn {
-    background: #25DAC5;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
+  background-color: #a4f2c4;
+  color: black;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .edit-profile-btn:hover {
-    background: #1fa599;
+  background-color: #7ddca8;
 }
 
-/* Profile Info Layout */
 .profile-info {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
-.profile-column {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.profile-column p {
+  margin: 5px 0;
 }
 
+.rating-container {
+  width: 66.66%; /* 2/3 屏幕宽度 */
+  margin-top: 20px;
+}
 
+/* Rating 评分 UI */
+.rating-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.rating-score {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rating-value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.stars {
+  color: gold;
+}
+
+.rating-bars {
+  margin-top: 10px;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.bar {
+  height: 8px;
+  background-color: lightgray;
+  flex-grow: 1;
+  border-radius: 4px;
+  position: relative;
+}
+
+.bar::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  background-color: blue;
+  border-radius: 4px;
+}
+
+.bar.full::after {
+  width: 80%;
+}
+.bar.medium::after {
+  width: 40%;
+}
+.bar.short::after {
+  width: 20%;
+}
+.bar.very-short::after {
+  width: 10%;
+}
+.bar.min::after {
+  width: 15%;
+}
+.calculator-container {
+  margin-top: 20px;
+  width: 30%;
+}
+
+/* Rating 评分 UI */
+.rating-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Calculator UI */
+.calculator-card {
+  background: white;
+  padding: 35px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 让表格好看一些 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
