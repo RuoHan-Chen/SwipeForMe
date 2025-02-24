@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -16,6 +16,9 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
+import { ActiveUser, getAllActiveUsers } from "../client";
+
+// TODO: Update backend to get email and rating of users through a join query
 
 const dummyData = [
   {
@@ -152,12 +155,33 @@ const theme = createTheme({
       main: "#16C098",
     },
   },
+  typography: {
+    fontFamily: "Poppins",
+  },
 });
 
 const ROWS_PER_PAGE = 6;
 
 const buySwipes: React.FC = () => {
   const [page, setPage] = useState(0);
+  const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchActiveUsers = async () => {
+      setLoading(true);
+      try {
+        const response = await getAllActiveUsers();
+        setActiveUsers(response);
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching active users:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchActiveUsers();
+  }, []);
 
   const handleSendInvite = (id: number) => {
     console.log(`Sending invite to student ${id}`);
@@ -242,7 +266,7 @@ const buySwipes: React.FC = () => {
                           variant="contained"
                           color="primary"
                           fullWidth={true}
-                          style={{ width: "75%" }}
+                          style={{ width: "80%" }}
                           onClick={() => handleSendInvite(row.id)}
                           disabled={row.pending}
                         >

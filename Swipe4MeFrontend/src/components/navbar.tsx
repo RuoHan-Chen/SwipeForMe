@@ -10,7 +10,10 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     }
@@ -19,44 +22,56 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-      <nav className="navbar">
-        <div className="navbar-container">
-          <Link to="/" className="navbar-brand">
-            <h1>SWIPE4ME</h1>
-            <img src="/logo.svg" alt="Swipe4Me Logo" className="navbar-logo" />
-          </Link>
+    <nav className="navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-brand">
+          <h1>SWIPE4ME</h1>
+          <img src="/logo.svg" alt="Swipe4Me Logo" className="navbar-logo" />
+        </Link>
 
-          {true && (
-              <ul className="navbar-menu">
-                <Link to="/buySwipes" className="navbar-link">Trade Swipes</Link>
-                <Link to="/donateSwipes" className="navbar-link">Donate Swipes</Link>
-                <Link to="/transaction" className="transaction">Transaction History</Link>
-              </ul>
-          )}
+        {isLoggedIn && (
+          <ul className="navbar-menu">
+            <Link to="/buySwipes" className="navbar-link">
+              Trade Swipes
+            </Link>
+            <Link to="/donateSwipes" className="navbar-link">
+              Donate Swipes
+            </Link>
+            <Link to="/transaction" className="transaction">
+              Transaction History
+            </Link>
+          </ul>
+        )}
 
-          <div className="navbar-actions">
-            {true ? (
-                <div className="profile-dropdown-container" ref={dropdownRef}>
-                  <img
-                      src="/profile_pic.png"
-                      alt="User Profile"
-                      className="profile-image"
-                      onClick={() => setDropdownOpen(!dropdownOpen)}
-                  />
+        <div className="navbar-actions">
+          {isLoggedIn ? (
+            <div className="profile-dropdown-container" ref={dropdownRef}>
+              <img
+                src="/profile_pic.png"
+                alt="User Profile"
+                className="profile-image"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              />
 
-                  {dropdownOpen && (
-                      <div className="dropdown-menu">
-                        <Link to="/account" className="dropdown-button">Account</Link>
-                        <button className="dropdown-button" onClick={logout}>Logout</button>
-                      </div>
-                  )}
+              {dropdownOpen && (
+                <div className="dropdown-menu">
+                  <Link to="/account" className="dropdown-button">
+                    Account
+                  </Link>
+                  <button className="dropdown-button" onClick={logout}>
+                    Logout
+                  </button>
                 </div>
-            ) : (
-                <Link to="/login" className="get-started">Get Started</Link>
-            )}
-          </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/login" className="get-started">
+              Get Started
+            </Link>
+          )}
         </div>
-      </nav>
+      </div>
+    </nav>
   );
 };
 

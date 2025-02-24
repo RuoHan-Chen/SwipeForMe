@@ -1,6 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-// import { getCurrentUser, googleSignIn } from "./client";
 import Navbar from "./components/navbar";
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -12,14 +10,6 @@ import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
-  // const handleGoogleLoginSuccess = async (response: CredentialResponse) => {
-  //   if (response.credential) {
-  //     const loginResponse = await googleSignIn(response.credential);
-  //     localStorage.setItem("token", loginResponse.token);
-  //     getCurrentUser();
-  //   }
-  // };
-
   return (
     <AuthProvider>
       <Router>
@@ -38,15 +28,6 @@ function App() {
             }
           />
         </Routes>
-        {/* <Profile
-          name="RuoHan Chen"
-          email="ruohan@gamil.com"
-          age={21}
-          class="Sophomore"
-          phoneNumber="+1 7306185390"
-          avatarUrl="/path-to-your-avatar.jpg"
-        /> */}
-        {/* <GoogleLogin onSuccess={handleGoogleLoginSuccess} /> */}
       </Router>
     </AuthProvider>
   );
