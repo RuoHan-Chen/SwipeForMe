@@ -1,7 +1,6 @@
-package com.sp25group8.swipe4mebackend.models.ratings;
+package com.sp25group8.swipe4mebackend.ratings;
 
-import com.sp25group8.swipe4mebackend.activeUsers.ActiveUsersRepository;
-import com.sp25group8.swipe4mebackend.ratings.RatingRepository;
+import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
