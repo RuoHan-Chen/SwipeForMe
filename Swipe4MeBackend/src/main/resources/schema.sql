@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS "transactions"
 
 CREATE TABLE IF NOT EXISTS "ratings"
 (
-    "id"      bigserial PRIMARY KEY NOT NULL,
-    "from"    bigint                NOT NULL,
-    "to"      bigint                NOT NULL,
-    "rating"  float,
-    "comment" text
+    "r_id"      bigserial PRIMARY KEY NOT NULL,
+    "seller_id"    bigint                NOT NULL,
+    "buyer_id"      bigint                NOT NULL,
+    "to_seller_rating"  float default(5.0),
+    "to_buyer_rating"  float default(5.0)
 );
 
 CREATE TABLE IF NOT EXISTS "active_users"

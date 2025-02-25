@@ -6,9 +6,10 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("ratings")
 public record RatingEntity(
         @Id
-        Long id,
-        Long from,
-        Long to,
-        Double rating
+        Long rId,
+        Long sellerId,
+        Long buyerId,
+        Double toSellerRating,
+        Double toBuyerRating
 ) {
 }
