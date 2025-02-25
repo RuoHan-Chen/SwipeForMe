@@ -192,10 +192,15 @@ const buySwipes: React.FC = () => {
       hour: "2-digit",
       minute: "2-digit",
       timeZone: "America/Chicago",
-    })}, ${end.toLocaleDateString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
     })}`;
+  };
+
+  const formatDate = (date: string) => {
+    const start = new Date(date);
+    return start.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+    });
   };
 
   const handleSendInvite = (id: number) => {
@@ -252,6 +257,9 @@ const buySwipes: React.FC = () => {
                   <TableCell align="center">
                     <span style={{ color: "#B5B7C0" }}>Available Time</span>
                   </TableCell>
+                  <TableCell align="center">
+                    <span style={{ color: "#B5B7C0" }}>Date</span>
+                  </TableCell>
                   <TableCell align="left">
                     <span style={{ color: "#B5B7C0" }}>Email</span>
                   </TableCell>
@@ -277,6 +285,9 @@ const buySwipes: React.FC = () => {
                       <TableCell align="center">{row.location}</TableCell>
                       <TableCell align="center">
                         {formatAvailableTime(row.startTime, row.endTime)}
+                      </TableCell>
+                      <TableCell align="center">
+                        {formatDate(row.startTime)}
                       </TableCell>
                       <TableCell align="left">{row.email}</TableCell>
                       <TableCell align="center">
