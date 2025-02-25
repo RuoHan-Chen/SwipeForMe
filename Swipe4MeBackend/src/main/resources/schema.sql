@@ -36,7 +36,9 @@ CREATE TABLE IF NOT EXISTS "active_users"
     "end_time"   timestamptz           NOT NULL
 );
 
-CREATE INDEX ON "ratings" ("to");
+CREATE INDEX ON "ratings" ("seller_id");
+
+CREATE INDEX ON "ratings" ("buyer_id");
 
 ALTER TABLE "transactions"
     ADD FOREIGN KEY ("buyer_id") REFERENCES "users" ("id");
@@ -45,10 +47,10 @@ ALTER TABLE "transactions"
     ADD FOREIGN KEY ("seller_id") REFERENCES "users" ("id");
 
 ALTER TABLE "ratings"
-    ADD FOREIGN KEY ("from") REFERENCES "users" ("id");
+    ADD FOREIGN KEY ("buyer_id") REFERENCES "users" ("id");
 
 ALTER TABLE "ratings"
-    ADD FOREIGN KEY ("to") REFERENCES "users" ("id");
+    ADD FOREIGN KEY ("seller_id") REFERENCES "users" ("id");
 
 ALTER TABLE "active_users"
     ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
