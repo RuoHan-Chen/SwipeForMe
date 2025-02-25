@@ -31,8 +31,8 @@ const Navbar: React.FC = () => {
 
         {isLoggedIn && (
           <ul className="navbar-menu">
-            <Link to="/buySwipes" className="navbar-link">
-              Trade Swipes
+            <Link to="/getSwipes" className="navbar-link">
+              Get Swipes
             </Link>
             <Link to="/donateSwipes" className="navbar-link">
               Donate Swipes
