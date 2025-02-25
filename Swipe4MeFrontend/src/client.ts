@@ -34,7 +34,7 @@ export interface ActiveUserResponse {
   firstName: string;
   lastName: string;
   location: string;
-  starTime: string;
+  startTime: string;
   endTime: string;
   email: string;
   rating?: number;

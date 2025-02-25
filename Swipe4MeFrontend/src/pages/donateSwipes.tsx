@@ -276,7 +276,7 @@ const buySwipes: React.FC = () => {
                       </TableCell>
                       <TableCell align="center">{row.location}</TableCell>
                       <TableCell align="center">
-                        {formatAvailableTime(row.starTime, row.endTime)}
+                        {formatAvailableTime(row.startTime, row.endTime)}
                       </TableCell>
                       <TableCell align="left">{row.email}</TableCell>
                       <TableCell align="center">
