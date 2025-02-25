@@ -16,9 +16,7 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { ActiveUser, getAllActiveUsers } from "../client";
-
-// TODO: Update backend to get email and rating of users through a join query
+import { ActiveUserResponse, getAllActiveUsers } from "../client";
 
 const dummyData = [
   {
@@ -164,7 +162,7 @@ const ROWS_PER_PAGE = 6;
 
 const buySwipes: React.FC = () => {
   const [page, setPage] = useState(0);
-  const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
+  const [activeUsers, setActiveUsers] = useState<ActiveUserResponse[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -182,6 +180,23 @@ const buySwipes: React.FC = () => {
     };
     fetchActiveUsers();
   }, []);
+
+  const formatAvailableTime = (startTime: string, endTime: string) => {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    return `${start.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "America/Chicago",
+    })} - ${end.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "America/Chicago",
+    })}, ${end.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+    })}`;
+  };
 
   const handleSendInvite = (id: number) => {
     console.log(`Sending invite to student ${id}`);
@@ -249,18 +264,24 @@ const buySwipes: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dummyData
+                {activeUsers
                   .slice(
                     page * ROWS_PER_PAGE,
                     page * ROWS_PER_PAGE + ROWS_PER_PAGE
                   )
                   .map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell align="left">{row.name}</TableCell>
-                      <TableCell align="center">{row.hall}</TableCell>
-                      <TableCell align="center">{row.time}</TableCell>
+                      <TableCell align="left">
+                        {row.firstName} {row.lastName}
+                      </TableCell>
+                      <TableCell align="center">{row.location}</TableCell>
+                      <TableCell align="center">
+                        {formatAvailableTime(row.starTime, row.endTime)}
+                      </TableCell>
                       <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="center">{row.rating}</TableCell>
+                      <TableCell align="center">
+                        {row.rating || "N/A"}
+                      </TableCell>
                       <TableCell align="center">
                         <Button
                           variant="contained"
@@ -268,10 +289,10 @@ const buySwipes: React.FC = () => {
                           fullWidth={true}
                           style={{ width: "80%" }}
                           onClick={() => handleSendInvite(row.id)}
-                          disabled={row.pending}
+                          disabled={false}
                         >
                           <div style={{ color: "white" }}>
-                            {row.pending ? "Pending" : "Send Invite"}
+                            {false ? "Pending" : "Send Invite"}
                           </div>
                         </Button>
                       </TableCell>
