@@ -303,7 +303,7 @@ const buySwipes: React.FC = () => {
                 <TableRow>
                   <TablePagination
                     rowsPerPageOptions={[ROWS_PER_PAGE]}
-                    count={dummyData.length}
+                    count={activeUsers.length}
                     rowsPerPage={ROWS_PER_PAGE}
                     page={page}
                     onPageChange={(_, newPage) => {
