@@ -3,7 +3,7 @@ import Navbar from "./components/navbar";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Profile from "./pages/profile";
-import BuySwipes from "./pages/donateSwipes.tsx";
+import GetSwipes from "./pages/getSwipes";
 import TradeSwipes from "./pages/tradeSwipes";
 import TransactionHistory from "./pages/transactionHistory.tsx";
 import "./App.css";
@@ -18,8 +18,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/account" element={<Profile />} />
-          <Route path="/buySwipes" element={<BuySwipes />} />
-          <Route path="/tradeSwipes" element={<TradeSwipes />} />
+          <Route path="/getSwipes" element={<GetSwipes />} />
+          <Route path="/donateSwipes" element={<TradeSwipes />} />
           <Route path="/transaction" element={<TransactionHistory />} />
           <Route
             path="*"

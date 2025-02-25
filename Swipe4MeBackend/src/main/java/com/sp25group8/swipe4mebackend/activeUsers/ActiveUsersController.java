@@ -1,6 +1,7 @@
 package com.sp25group8.swipe4mebackend.activeUsers;
 
 import com.sp25group8.swipe4mebackend.models.activeUsers.ActiveUserEntity;
+import com.sp25group8.swipe4mebackend.models.activeUsers.ActiveUserJoinResult;
 import com.sp25group8.swipe4mebackend.models.enums.DiningHall;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,8 +19,8 @@ public class ActiveUsersController {
     private final ActiveUsersService activeUsersService;
 
     @GetMapping
-    public ResponseEntity<List<ActiveUserEntity>> getActiveUsers() {
-        List<ActiveUserEntity> activeUsers = activeUsersService.getActiveUsers();
+    public ResponseEntity<List<ActiveUserJoinResult>> getActiveUsers() {
+        List<ActiveUserJoinResult> activeUsers = activeUsersService.getActiveUsers();
         return ResponseEntity.ok(activeUsers);
     }
 

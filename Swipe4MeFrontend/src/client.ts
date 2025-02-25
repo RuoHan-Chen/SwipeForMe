@@ -28,15 +28,19 @@ export const getCurrentUser = () => {
     .then((data) => console.log(data));
 };
 
-export interface ActiveUser {
+export interface ActiveUserResponse {
   id: number;
-  user_id: number;
+  userId: number;
+  firstName: string;
+  lastName: string;
   location: string;
-  start_time: string;
-  end_time: string;
+  startTime: string;
+  endTime: string;
+  email: string;
+  rating?: number;
 }
 
-export type GetAllActiveUsersResponse = ActiveUser[];
+export type GetAllActiveUsersResponse = ActiveUserResponse[];
 
 export const getAllActiveUsers =
   async (): Promise<GetAllActiveUsersResponse> => {

@@ -1,6 +1,7 @@
 package com.sp25group8.swipe4mebackend.activeUsers;
 
 import com.sp25group8.swipe4mebackend.models.activeUsers.ActiveUserEntity;
+import com.sp25group8.swipe4mebackend.models.activeUsers.ActiveUserJoinResult;
 import com.sp25group8.swipe4mebackend.models.enums.DiningHall;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,8 @@ public class ActiveUsersService {
 
     private final ActiveUsersRepository activeUsersRepository;
 
-    public List<ActiveUserEntity> getActiveUsers() {
-        List<ActiveUserEntity> activeUsers = new ArrayList<>();
-        activeUsersRepository.findAll().forEach(activeUsers::add);
-        return activeUsers;
+    public List<ActiveUserJoinResult> getActiveUsers() {
+        return activeUsersRepository.findAllActiveUsers();
     }
 
     public ActiveUserEntity createActiveUser(
