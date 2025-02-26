@@ -39,9 +39,6 @@ public class AuthenticationService {
     private String oauthClientId;
 
     public UserEntity processGoogleIdTokenString(String idTokenString) throws GeneralSecurityException, IOException, InvalidGoogleIdTokenException {
-        // log idtoken for debugging
-        log.debug("IdToken: {}", idTokenString);
-
         // Verify that the id token is from Google
         GoogleIdToken idToken = verifyIdToken(idTokenString);
 
@@ -76,9 +73,10 @@ public class AuthenticationService {
         String firstName = payload.get("given_name").toString();
         String lastName = payload.get("family_name").toString();
         String email = payload.get("email").toString();
+        String profilePictureUrl = payload.get("picture").toString();
 
         // Require users to provide their phone number later
-        userService.createUser(firstName, lastName, email, null);
+        userService.createUser(firstName, lastName, email, null, profilePictureUrl);
     }
 
 }

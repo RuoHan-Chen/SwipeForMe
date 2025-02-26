@@ -15,8 +15,10 @@ import {
   TextField,
   ThemeProvider,
   Typography,
+  Box,
 } from "@mui/material";
 import { ActiveUserResponse, getAllActiveUsers } from "../client";
+import InfoIcon from "@mui/icons-material/Info";
 
 const dummyData = [
   {
@@ -219,8 +221,28 @@ const buySwipes: React.FC = () => {
             maxHeight: "650px",
             minHeight: "600px",
             overflowY: "auto",
+            position: "relative",
           }}
         >
+          {activeUsers.length === 0 && (
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 1,
+              }}
+            >
+              <InfoIcon color="action" style={{ marginRight: "8px" }} />
+              <Typography variant="body1" color="textSecondary">
+                No Students are available at this time. Check back later!
+              </Typography>
+            </Box>
+          )}
           <Grid2
             container
             alignItems="center"
@@ -272,56 +294,59 @@ const buySwipes: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {activeUsers
-                  .slice(
-                    page * ROWS_PER_PAGE,
-                    page * ROWS_PER_PAGE + ROWS_PER_PAGE
-                  )
-                  .map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell align="left">
-                        {row.firstName} {row.lastName}
-                      </TableCell>
-                      <TableCell align="center">{row.location}</TableCell>
-                      <TableCell align="center">
-                        {formatAvailableTime(row.startTime, row.endTime)}
-                      </TableCell>
-                      <TableCell align="center">
-                        {formatDate(row.startTime)}
-                      </TableCell>
-                      <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="center">
-                        {row.rating || "N/A"}
-                      </TableCell>
-                      <TableCell align="center">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          fullWidth={true}
-                          style={{ width: "80%" }}
-                          onClick={() => handleSendInvite(row.id)}
-                          disabled={false}
-                        >
-                          <div style={{ color: "white" }}>
-                            {false ? "Pending" : "Send Invite"}
-                          </div>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                {activeUsers.length > 0 &&
+                  activeUsers
+                    .slice(
+                      page * ROWS_PER_PAGE,
+                      page * ROWS_PER_PAGE + ROWS_PER_PAGE
+                    )
+                    .map((row, index) => (
+                      <TableRow key={index}>
+                        <TableCell align="left">
+                          {row.firstName} {row.lastName}
+                        </TableCell>
+                        <TableCell align="center">{row.location}</TableCell>
+                        <TableCell align="center">
+                          {formatAvailableTime(row.startTime, row.endTime)}
+                        </TableCell>
+                        <TableCell align="center">
+                          {formatDate(row.startTime)}
+                        </TableCell>
+                        <TableCell align="left">{row.email}</TableCell>
+                        <TableCell align="center">
+                          {row.rating || "N/A"}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth={true}
+                            style={{ width: "80%" }}
+                            onClick={() => handleSendInvite(row.id)}
+                            disabled={false}
+                          >
+                            <div style={{ color: "white" }}>
+                              {false ? "Pending" : "Send Invite"}
+                            </div>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
               </TableBody>
               <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[ROWS_PER_PAGE]}
-                    count={activeUsers.length}
-                    rowsPerPage={ROWS_PER_PAGE}
-                    page={page}
-                    onPageChange={(_, newPage) => {
-                      setPage(newPage);
-                    }}
-                  />
-                </TableRow>
+                {activeUsers.length > 0 && (
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[ROWS_PER_PAGE]}
+                      count={activeUsers.length}
+                      rowsPerPage={ROWS_PER_PAGE}
+                      page={page}
+                      onPageChange={(_, newPage) => {
+                        setPage(newPage);
+                      }}
+                    />
+                  </TableRow>
+                )}
               </TableFooter>
             </Table>
           </div>

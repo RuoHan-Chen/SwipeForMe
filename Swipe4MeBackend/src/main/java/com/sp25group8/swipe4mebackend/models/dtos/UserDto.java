@@ -8,7 +8,8 @@ public record UserDto(
         String lastName,
         String email,
         String phoneNumber,
-        Double rating
+        Double rating,
+        String profilePicUrl
 ) {
 
     public static UserDto fromEntity(UserEntity userEntity) {
@@ -18,7 +19,8 @@ public record UserDto(
                 userEntity.lastName(),
                 userEntity.email(),
                 userEntity.phoneNumber(),
-                userEntity.rating()
+                userEntity.rating(),
+                userEntity.ProfilePicUrl()
         );
     }
 
@@ -29,7 +31,8 @@ public record UserDto(
                 lastName,
                 email,
                 phoneNumber,
-                rating
+                rating,
+                profilePicUrl
         );
     }
 

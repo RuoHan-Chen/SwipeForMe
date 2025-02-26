@@ -13,8 +13,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserEntity createUser(String firstName, String lastName, String email, String phoneNumber) {
-        UserEntity user = new UserEntity(null, firstName, lastName, email, phoneNumber, null);
+    public UserEntity createUser(String firstName, String lastName, String email, String phoneNumber, String profilePicUrl) {
+        UserEntity user = new UserEntity(null, firstName, lastName, email, phoneNumber, null, profilePicUrl);
         return userRepository.save(user);
     }
 
