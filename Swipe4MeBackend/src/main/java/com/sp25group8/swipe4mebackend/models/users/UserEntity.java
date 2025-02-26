@@ -18,7 +18,8 @@ public record UserEntity(
         String lastName,
         String email,
         String phoneNumber,
-        Double rating
+        Double rating,
+        String ProfilePicUrl
 ) implements UserDetails, OAuth2User {
         @Override
         public Map<String, Object> getAttributes() {
