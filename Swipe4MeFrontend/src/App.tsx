@@ -8,13 +8,25 @@ import TradeSwipes from "./pages/tradeSwipes";
 import TransactionHistory from "./pages/transactionHistory.tsx";
 import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
+import createTheme from "@mui/material/styles/createTheme";
+import { ThemeProvider } from "@mui/material/styles";
 
 function App() {
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#2F1893",
+        dark: "#1E0E62",
+      },
+    },
+  });
+
   return (
     <AuthProvider>
-      <Router>
-        <Navbar />
-        <Routes>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Navbar />
+          <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/account" element={<Profile />} />
@@ -27,8 +39,9 @@ function App() {
               <h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>
             }
           />
-        </Routes>
-      </Router>
+          </Routes>
+        </Router>
+      </ThemeProvider>
     </AuthProvider>
   );
 }
