@@ -132,7 +132,13 @@ const buySwipes: React.FC = () => {
     const fetchCurrentUserTransactions = async () => {
       const response = await getCurrentUserTransactionsAsBuyer();
       setCurrentUserPendingAvailabilityIds(
-        new Set(response.map((transaction) => transaction.availabilityId))
+        new Set(
+          response
+            .filter(
+              (transaction) => transaction.status === TransactionStatus.PENDING
+            )
+            .map((transaction) => transaction.availabilityId)
+        )
       );
       console.log(currentUserPendingAvailabilityIds);
     };
