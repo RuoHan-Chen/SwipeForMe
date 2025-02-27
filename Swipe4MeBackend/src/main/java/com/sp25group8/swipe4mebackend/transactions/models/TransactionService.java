@@ -1,12 +1,7 @@
-package com.sp25group8.swipe4mebackend.transactions;
+package com.sp25group8.swipe4mebackend.transactions.models;
 
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionEntity;
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionStatus;
+import com.sp25group8.swipe4mebackend.transactions.TransactionsRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-
-
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,7 +10,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class TransactionsService {
+public class TransactionService {
 
     private final TransactionsRepository transactionRepository;
 
