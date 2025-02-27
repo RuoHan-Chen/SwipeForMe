@@ -2,42 +2,43 @@ package com.sp25group8.swipe4mebackend.transactions;
 
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/transactions")
+@RequiredArgsConstructor
 public class TransactionsController {
+
+    private final TransactionsService transactionsService;
 
     /**
      * Creates a new transaction
      * @param transaction
      * @return
      */
-    @PostMapping("/new")
+    @PostMapping("")
     public TransactionEntity createTransaction(@RequestBody TransactionEntity transaction) {
-        return null;  // TODO: implement this method
+        return transactionsService.createTransaction(transaction);
     }
 
-    /**
-     * Fetches all transactions with the CREATED status
-     * @return
-     */
-    @GetMapping("/available")
-    public List<TransactionEntity> getAllAvailableTransactions() {
-        return List.of();  // TODO: implement this method
+    @GetMapping("/buyer/{buyerId}")
+    public List<TransactionEntity> getTransactionsByBuyer(@PathVariable Long buyerId) {
+        return transactionsService.getTransactionsByBuyer(buyerId);
     }
 
-    /**
-     * Updates the status of the transaction with given id
-     * @param id
-     * @param status
-     * @return
-     */
-    @PutMapping()
-    public TransactionEntity updateTransaction(@RequestParam Integer id, @RequestParam TransactionStatus status) {
-        return null;  // TODO: implement this method
+    @GetMapping("/seller/{sellerId}")
+    public List<TransactionEntity> getTransactionsBySeller(@PathVariable Long sellerId) {
+        return transactionsService.getTransactionsBySeller(sellerId);
+    }
+
+    @PutMapping("/{transactionId}/status")
+    public Optional<TransactionEntity> updateTransactionStatus(@PathVariable Long transactionId,
+                                                               @RequestParam TransactionStatus status) {
+        return transactionsService.updateTransactionStatus(transactionId, status);
     }
 
 }
