@@ -1,7 +1,7 @@
 package com.sp25group8.swipe4mebackend.activeUsers;
 
-import com.sp25group8.swipe4mebackend.models.activeUsers.ActiveUserEntity;
-import com.sp25group8.swipe4mebackend.models.activeUsers.ActiveUserJoinResult;
+import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
+import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityJoinResult;
 import com.sp25group8.swipe4mebackend.models.enums.DiningHall;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,31 +14,31 @@ import java.util.List;
 @RestController
 @RequestMapping("/active")
 @RequiredArgsConstructor
-public class ActiveUsersController {
+public class AvailabilityController {
 
-    private final ActiveUsersService activeUsersService;
+    private final AvailabilityService availabilityService;
 
     @GetMapping
-    public ResponseEntity<List<ActiveUserJoinResult>> getActiveUsers() {
-        List<ActiveUserJoinResult> activeUsers = activeUsersService.getActiveUsers();
-        return ResponseEntity.ok(activeUsers);
+    public ResponseEntity<List<AvailabilityJoinResult>> getAllAvailabilities() {
+        List<AvailabilityJoinResult> availabilities = availabilityService.getAvailabilities();
+        return ResponseEntity.ok(availabilities);
     }
 
     @PostMapping
-    public ResponseEntity<ActiveUserEntity> addActiveUser(
+    public ResponseEntity<AvailabilityEntity> addAvailability(
             @RequestParam Long userId,
             @RequestParam DiningHall location,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime
     ) {
-        return ResponseEntity.ok(activeUsersService.createActiveUser(userId, location, startTime, endTime));
+        return ResponseEntity.ok(availabilityService.createAvailability(userId, location, startTime, endTime));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> removeActiveUser(
+    public ResponseEntity<Void> removeAvailability(
             @RequestParam Long userId
     ) {
-        activeUsersService.removeActiveUser(userId);
+        availabilityService.removeAvailability(userId);
         return ResponseEntity.ok().build();
     }
 
