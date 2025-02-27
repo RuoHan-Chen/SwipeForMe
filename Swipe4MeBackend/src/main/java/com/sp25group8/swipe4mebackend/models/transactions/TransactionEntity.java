@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 public record TransactionEntity(
         @Id
         Long id,
-        DiningHall location,
-        LocalDateTime timestamp,
+        Long availabilityId,
         Long buyerId,
         Long sellerId,
         TransactionStatus status

@@ -1,9 +1,9 @@
 package com.sp25group8.swipe4mebackend.models.transactions;
 
-
-
 public enum TransactionStatus {
-    CREATED,
+    PENDING,
     IN_PROGRESS,
-    COMPLETED
+    AWAITING_REVIEWS,
+    COMPLETED,
+    REJECTED
 }
