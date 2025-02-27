@@ -1,8 +1,10 @@
+// Author: Steven Yi
+// Time spent: 1 hour
+
 package com.sp25group8.swipe4mebackend;
 
 import com.sp25group8.swipe4mebackend.exceptions.InvalidGoogleIdTokenException;
 import com.sp25group8.swipe4mebackend.models.errors.ErrorResponse;
-import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +17,11 @@ import java.util.Arrays;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler({Exception.class})
-//    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-//        ErrorResponse errorResponse = new ErrorResponse("Internal Server Error", ex.getMessage());
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-//    }
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Internal Server Error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
 
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {

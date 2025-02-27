@@ -1,3 +1,6 @@
+// Author: Steven Yi
+// Time spent: 3 hours
+
 package com.sp25group8.swipe4mebackend.authentication;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;

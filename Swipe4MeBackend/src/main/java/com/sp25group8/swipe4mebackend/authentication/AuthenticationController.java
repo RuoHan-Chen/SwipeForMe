@@ -1,3 +1,6 @@
+// Author: Steven Yi
+// Time spent: 1 hour
+
 package com.sp25group8.swipe4mebackend.authentication;
 
 import com.sp25group8.swipe4mebackend.models.authentication.LoginResponse;

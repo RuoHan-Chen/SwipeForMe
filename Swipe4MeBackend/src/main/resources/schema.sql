@@ -1,3 +1,6 @@
+-- Authors: Steven Yi, Xinying Luo
+-- Time spent: 1 hour
+
 CREATE TABLE IF NOT EXISTS "users"
 (
     "id"              bigserial PRIMARY KEY NOT NULL,

@@ -1,10 +1,12 @@
+// Author: Steven Yi
+// Time spent: 2 hours
+
 package com.sp25group8.swipe4mebackend.configs;
 
 import com.sp25group8.swipe4mebackend.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;

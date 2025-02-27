@@ -1,3 +1,6 @@
+// Author: Xinying Luo
+// Time spent: 15 minutes
+
 package com.sp25group8.swipe4mebackend.models.ratings;
 
 import org.springframework.data.annotation.Id;

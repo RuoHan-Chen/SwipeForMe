@@ -1,3 +1,6 @@
+// Author: Jerry Wei, Steven Yi
+// Time spent: 3 hours
+
 package com.sp25group8.swipe4mebackend.transactions;
 
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;

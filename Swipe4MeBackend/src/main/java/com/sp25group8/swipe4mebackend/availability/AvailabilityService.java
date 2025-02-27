@@ -1,3 +1,6 @@
+// Author: Steven Yi
+// Time spent: 1 hour
+
 package com.sp25group8.swipe4mebackend.availability;
 
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;

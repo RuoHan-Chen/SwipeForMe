@@ -1,3 +1,6 @@
+// Author: Steven Yi
+// Time spent: 2 hours
+
 package com.sp25group8.swipe4mebackend.models.users;
 
 import org.springframework.data.annotation.Id;

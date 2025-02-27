@@ -1,3 +1,6 @@
+// Author: Xinying Luo
+// Time spent: 1 hour
+
 package com.sp25group8.swipe4mebackend.ratings;
 
 import lombok.RequiredArgsConstructor;
