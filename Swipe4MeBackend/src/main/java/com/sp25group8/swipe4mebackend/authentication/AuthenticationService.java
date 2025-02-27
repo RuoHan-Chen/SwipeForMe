@@ -48,7 +48,7 @@ public class AuthenticationService {
         if (idToken != null) {
             Payload payload = idToken.getPayload();
 
-            String email = payload.get("email").toString();
+            String email = getFieldFromPayload(payload, "email");
 
             // Create user if first time signing in
             if (!userRepository.existsByEmail(email)) {
@@ -73,13 +73,18 @@ public class AuthenticationService {
 
 
     private void createUserFromPayload(Payload payload) {
-        String firstName = payload.get("given_name").toString();
-        String lastName = payload.get("family_name").toString();
-        String email = payload.get("email").toString();
-        String profilePictureUrl = payload.get("picture").toString();
+        String firstName = getFieldFromPayload(payload, "given_name");
+        String lastName = getFieldFromPayload(payload, "family_name");
+        String email = getFieldFromPayload(payload, "email");
+        String profilePictureUrl = getFieldFromPayload(payload, "picture");
 
         // Require users to provide their phone number later
         userService.createUser(firstName, lastName, email, null, profilePictureUrl);
+    }
+
+    private String getFieldFromPayload(Payload payload, String fieldName) {
+        Object value = payload.get(fieldName);
+        return value == null ? "" : value.toString();
     }
 
 }
