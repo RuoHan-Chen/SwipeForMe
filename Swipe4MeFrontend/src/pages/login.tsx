@@ -1,12 +1,13 @@
 import React from "react";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import { getCurrentUser, googleSignIn } from "../client";
+import { googleSignIn } from "../clients/authClient";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { getCurrentUser } from "../clients/userClient";
 
 const GradientCircles = () => {
   return (

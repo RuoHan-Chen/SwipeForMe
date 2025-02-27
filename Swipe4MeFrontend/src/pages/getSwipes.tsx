@@ -17,8 +17,11 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import { ActiveUserResponse, getAllActiveUsers } from "../client";
 import InfoIcon from "@mui/icons-material/Info";
+import {
+  AvailabilityResponse,
+  getAllAvailabilities,
+} from "../clients/availabilityClient";
 
 const dummyData = [
   {
@@ -164,14 +167,14 @@ const ROWS_PER_PAGE = 6;
 
 const buySwipes: React.FC = () => {
   const [page, setPage] = useState(0);
-  const [activeUsers, setActiveUsers] = useState<ActiveUserResponse[]>([]);
+  const [activeUsers, setActiveUsers] = useState<AvailabilityResponse[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchActiveUsers = async () => {
       setLoading(true);
       try {
-        const response = await getAllActiveUsers();
+        const response = await getAllAvailabilities();
         setActiveUsers(response);
         console.log(response);
       } catch (error) {
