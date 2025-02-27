@@ -1,4 +1,9 @@
-export const googleSignIn = async (idToken: string) => {
+export interface LoginResponse {
+  token: string;
+  userId: number;
+}
+
+export const googleSignIn = async (idToken: string): Promise<LoginResponse> => {
   const queryParams = {
     id_token: idToken,
   };

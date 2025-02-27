@@ -1,6 +1,6 @@
 import React from "react";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import { googleSignIn } from "../clients/authClient";
+import { googleSignIn, LoginResponse } from "../clients/authClient";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -83,8 +83,10 @@ const Login: React.FC = () => {
 
   const handleGoogleLoginSuccess = async (response: CredentialResponse) => {
     if (response.credential) {
-      const loginResponse = await googleSignIn(response.credential);
-      login(loginResponse.token);
+      const loginResponse: LoginResponse = await googleSignIn(
+        response.credential
+      );
+      login(loginResponse.token, loginResponse.userId);
       getCurrentUser();
       navigate("/");
     }
