@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "users"
 CREATE TABLE IF NOT EXISTS "transactions"
 (
     "id"              bigserial PRIMARY KEY NOT NULL,
-    "availability_id" bigint PRIMARY KEY    NOT NULL,
+    "availability_id" bigint                NOT NULL,
     "buyer_id"        bigint                NOT NULL,
     "seller_id"       bigint                NOT NULL,
     "status"          varchar(100)          NOT NULL
