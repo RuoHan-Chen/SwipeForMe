@@ -2,14 +2,12 @@ package com.sp25group8.swipe4mebackend.transactions;
 
 import java.util.List;
 
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionEntity;
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionService;
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionStatus;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController

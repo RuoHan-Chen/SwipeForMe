@@ -1,4 +1,4 @@
-package com.sp25group8.swipe4mebackend.transactions.models;
+package com.sp25group8.swipe4mebackend.models.transactions;
 
 
 

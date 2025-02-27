@@ -1,8 +1,8 @@
 package com.sp25group8.swipe4mebackend.transactions;
 
 
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionEntity;
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionStatus;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;

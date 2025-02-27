@@ -1,11 +1,9 @@
 package com.sp25group8.swipe4mebackend.transactions;
 
-import com.sp25group8.swipe4mebackend.transactions.models.DiningHall;
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionEntity;
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionStatus;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController

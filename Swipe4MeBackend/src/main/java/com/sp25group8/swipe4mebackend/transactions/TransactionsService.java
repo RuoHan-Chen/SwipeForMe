@@ -1,13 +1,10 @@
 package com.sp25group8.swipe4mebackend.transactions;
 
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionEntity;
-import com.sp25group8.swipe4mebackend.transactions.models.TransactionStatus;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
-
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
