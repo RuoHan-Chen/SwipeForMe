@@ -49,41 +49,39 @@ const ROWS_PER_PAGE = 6;
 
 const buySwipes: React.FC = () => {
   const [page, setPage] = useState(0);
-  const [activeUsers, setActiveUsers] = useState<AvailabilityResponse[]>([]);
+  const [availabilities, setAvailabilities] = useState<AvailabilityResponse[]>(
+    []
+  );
   const [
     currentUserPendingAvailabilityIds,
     setCurrentUserPendingAvailabilityIds,
   ] = useState<Set<number>>(new Set());
-  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [sendInviteSuccess, setSendInviteSuccess] = useState(false);
 
   // Fetch all availabilities
   useEffect(() => {
-    const fetchActiveUsers = async () => {
-      setLoading(true);
+    const fetchAvailabilities = async () => {
       try {
         const response = await getAllAvailabilities();
 
         // If the user is logged in, filter out their own availability
         const userId = localStorage.getItem("userId");
         if (!!userId) {
-          const activeUsers = response.filter(
+          const availabilities = response.filter(
             (user) => user.userId !== parseInt(userId)
           );
-          setActiveUsers(activeUsers);
+          setAvailabilities(availabilities);
         } else {
           // If the user is not logged in, show all availabilities
-          setActiveUsers(response);
+          setAvailabilities(response);
         }
       } catch (error) {
-        console.error("Error fetching active users:", error);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching availabilities:", error);
       }
     };
 
-    fetchActiveUsers();
+    fetchAvailabilities();
   }, []);
 
   // Fetch all transactions for the current user
@@ -177,7 +175,7 @@ const buySwipes: React.FC = () => {
             position: "relative",
           }}
         >
-          {activeUsers.length === 0 && (
+          {availabilities.length === 0 && (
             <Box
               display="flex"
               alignItems="center"
@@ -247,8 +245,8 @@ const buySwipes: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {activeUsers.length > 0 &&
-                  activeUsers
+                {availabilities.length > 0 &&
+                  availabilities
                     .slice(
                       page * ROWS_PER_PAGE,
                       page * ROWS_PER_PAGE + ROWS_PER_PAGE
@@ -289,11 +287,11 @@ const buySwipes: React.FC = () => {
                     ))}
               </TableBody>
               <TableFooter>
-                {activeUsers.length > 0 && (
+                {availabilities.length > 0 && (
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[ROWS_PER_PAGE]}
-                      count={activeUsers.length}
+                      count={availabilities.length}
                       rowsPerPage={ROWS_PER_PAGE}
                       page={page}
                       onPageChange={(_, newPage) => {
