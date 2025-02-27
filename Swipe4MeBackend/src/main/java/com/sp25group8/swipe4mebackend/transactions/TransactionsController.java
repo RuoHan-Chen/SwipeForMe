@@ -21,7 +21,7 @@ public class TransactionsController {
      * @param transaction
      * @return
      */
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<TransactionEntity> createTransaction(@RequestBody TransactionEntity transaction) {
         return ResponseEntity.ok(transactionsService.createTransaction(transaction));
     }
