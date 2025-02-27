@@ -30,3 +30,24 @@ export const createTransaction = async (transaction: Transaction) => {
 
   return await response.json();
 };
+
+export const getCurrentUserTransactionsAsBuyer = async (): Promise<
+  Transaction[]
+> => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    throw new Error("User ID not found");
+  }
+
+  const response = await fetch(`/api/transactions/buyer/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch transactions");
+  }
+
+  return await response.json();
+};

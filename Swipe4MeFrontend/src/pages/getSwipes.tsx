@@ -23,142 +23,16 @@ import {
   AvailabilityResponse,
   getAllAvailabilities,
 } from "../clients/availabilityClient";
-import { Transaction } from "../clients/transactionClient";
+import {
+  getCurrentUserTransactionsAsBuyer,
+  Transaction,
+} from "../clients/transactionClient";
 import {
   createTransaction,
   TransactionStatus,
 } from "../clients/transactionClient";
 import { getCurrentUser, User } from "../clients/userClient";
 import Snackbar from "@mui/material/Snackbar";
-
-const dummyData = [
-  {
-    id: 1,
-    name: "Jane Cooper",
-    hall: "Rand",
-    time: "12:30-13:30",
-    email: "jane@vanderbilt.edu",
-    rating: 5.0,
-    pending: false,
-  },
-  {
-    id: 2,
-    name: "Floyd Miles",
-    hall: "Rand",
-    time: "10:00-12:00",
-    email: "floyd@vanderbilt.edu",
-    rating: 4.0,
-    pending: true,
-  },
-  {
-    id: 3,
-    name: "Ronald Richards",
-    hall: "Rand",
-    time: "10:00-12:00",
-    email: "ronald@vanderbilt.edu",
-    rating: 4.7,
-    pending: true,
-  },
-  {
-    id: 4,
-    name: "Marvin McKinney",
-    hall: "Rothchild",
-    time: "12:30-13:30",
-    email: "marvin@vanderbilt.edu",
-    rating: 4.8,
-    pending: false,
-  },
-  {
-    id: 5,
-    name: "Jerome Bell",
-    hall: "Commons",
-    time: "10:00-12:00",
-    email: "jerome@vanderbilt.edu",
-    rating: 4.5,
-    pending: false,
-  },
-  {
-    id: 6,
-    name: "Kathryn Murphy",
-    hall: "Commons",
-    time: "12:30-13:30",
-    email: "kathryn@vanderbilt.edu",
-    rating: 2.9,
-    pending: false,
-  },
-  {
-    id: 7,
-    name: "Jacob Jones",
-    hall: "Rand",
-    time: "12:30-13:30",
-    email: "jacob@vanderbilt.edu",
-    rating: 3.0,
-    pending: false,
-  },
-  {
-    id: 8,
-    name: "Savannah Nguyen",
-    hall: "Rand",
-    time: "14:00-15:00",
-    email: "savannah@vanderbilt.edu",
-    rating: 4.2,
-    pending: false,
-  },
-  {
-    id: 9,
-    name: "Cameron Williamson",
-    hall: "Rothchild",
-    time: "11:00-12:00",
-    email: "cameron@vanderbilt.edu",
-    rating: 3.8,
-    pending: true,
-  },
-  {
-    id: 10,
-    name: "Leslie Alexander",
-    hall: "Commons",
-    time: "09:00-10:00",
-    email: "leslie@vanderbilt.edu",
-    rating: 4.9,
-    pending: false,
-  },
-  {
-    id: 11,
-    name: "Courtney Henry",
-    hall: "Rand",
-    time: "13:00-14:00",
-    email: "courtney@vanderbilt.edu",
-    rating: 3.5,
-    pending: true,
-  },
-  {
-    id: 12,
-    name: "Arlene McCoy",
-    hall: "Rothchild",
-    time: "15:00-16:00",
-    email: "arlene@vanderbilt.edu",
-    rating: 4.6,
-    pending: false,
-  },
-  {
-    id: 13,
-    name: "Guy Hawkins",
-    hall: "Commons",
-    time: "10:30-11:30",
-    email: "guy@vanderbilt.edu",
-    rating: 3.9,
-    pending: true,
-  },
-  {
-    id: 14,
-    name: "Kristin Watson",
-    hall: "Rand",
-    time: "12:00-13:00",
-    email: "kristin@vanderbilt.edu",
-    rating: 4.3,
-    pending: false,
-  },
-];
 
 const theme = createTheme({
   palette: {
@@ -176,24 +50,53 @@ const ROWS_PER_PAGE = 6;
 const buySwipes: React.FC = () => {
   const [page, setPage] = useState(0);
   const [activeUsers, setActiveUsers] = useState<AvailabilityResponse[]>([]);
+  const [
+    currentUserPendingAvailabilityIds,
+    setCurrentUserPendingAvailabilityIds,
+  ] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [sendInviteSuccess, setSendInviteSuccess] = useState(false);
 
+  // Fetch all availabilities
   useEffect(() => {
     const fetchActiveUsers = async () => {
       setLoading(true);
       try {
         const response = await getAllAvailabilities();
-        setActiveUsers(response);
-        console.log(response);
+
+        // If the user is logged in, filter out their own availability
+        const userId = localStorage.getItem("userId");
+        if (!!userId) {
+          const activeUsers = response.filter(
+            (user) => user.userId !== parseInt(userId)
+          );
+          setActiveUsers(activeUsers);
+        } else {
+          // If the user is not logged in, show all availabilities
+          setActiveUsers(response);
+        }
       } catch (error) {
         console.error("Error fetching active users:", error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchActiveUsers();
+  }, []);
+
+  // Fetch all transactions for the current user
+  useEffect(() => {
+    const fetchCurrentUserTransactions = async () => {
+      const response = await getCurrentUserTransactionsAsBuyer();
+      setCurrentUserPendingAvailabilityIds(
+        new Set(response.map((transaction) => transaction.availabilityId))
+      );
+      console.log(currentUserPendingAvailabilityIds);
+    };
+
+    fetchCurrentUserTransactions();
   }, []);
 
   const formatAvailableTime = (startTime: string, endTime: string) => {
@@ -230,12 +133,19 @@ const buySwipes: React.FC = () => {
 
     try {
       await createTransaction(transaction);
-      setSendInviteSuccess(true);
+      setSendInviteSuccess(true); // Show success snackbar
+      setCurrentUserPendingAvailabilityIds(
+        new Set(currentUserPendingAvailabilityIds.add(availabilityId)) // Add the availabilityId to the set of pending availabilityIds
+      );
     } catch (error) {
       setSendInviteSuccess(false);
     }
 
     setOpen(true);
+  };
+
+  const isTransactionPending = (availabilityId: number) => {
+    return currentUserPendingAvailabilityIds.has(availabilityId);
   };
 
   return (
@@ -366,10 +276,12 @@ const buySwipes: React.FC = () => {
                             fullWidth={true}
                             style={{ width: "80%" }}
                             onClick={() => handleSendInvite(row.id, row.userId)}
-                            disabled={false}
+                            disabled={isTransactionPending(row.id)}
                           >
                             <div style={{ color: "white" }}>
-                              {false ? "Pending" : "Send Invite"}
+                              {isTransactionPending(row.id)
+                                ? "Pending"
+                                : "Send Invite"}
                             </div>
                           </Button>
                         </TableCell>
