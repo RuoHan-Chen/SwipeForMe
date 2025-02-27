@@ -1,8 +1,8 @@
 export interface Transaction {
   id?: number;
   availabilityId: number;
-  buyer_id: number;
-  seller_id: number;
+  buyerId: number;
+  sellerId: number;
   status: TransactionStatus;
 }
 
@@ -19,7 +19,7 @@ export const createTransaction = async (transaction: Transaction) => {
     method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
-      ContentType: "application/json",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(transaction),
   });

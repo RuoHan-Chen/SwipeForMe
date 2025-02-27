@@ -223,8 +223,8 @@ const buySwipes: React.FC = () => {
 
     const transaction: Transaction = {
       availabilityId: availabilityId,
-      buyer_id: currentUser.id,
-      seller_id: sellerId,
+      buyerId: currentUser.id,
+      sellerId: sellerId,
       status: TransactionStatus.PENDING,
     };
 
