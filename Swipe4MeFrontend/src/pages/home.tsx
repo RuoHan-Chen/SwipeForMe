@@ -1,3 +1,6 @@
+// Author: Xinying Luo
+// Time spent: 7 hours
+
 import React from "react";
 import "../styles/landing.css";
 import instagramLogo from "../assets/ins-logo.svg";

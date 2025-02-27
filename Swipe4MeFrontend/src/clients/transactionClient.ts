@@ -1,3 +1,6 @@
+// Author: Steven Yi
+// Time spent: 30 minutes
+
 export interface Transaction {
   id?: number;
   availabilityId: number;

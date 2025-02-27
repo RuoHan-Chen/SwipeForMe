@@ -1,16 +1,17 @@
+// Author: Jerry Wei
+// Time spent: 1 hour
+
 import React from "react";
 import "../styles/profile.css";
-import ProfileHeader from "../pages/profileHeader";
+import ProfileHeader from "../components/profileHeader";
 import Rating from "../components/rating";
 import MealSwipeCalculator from "../components/mealSwipeCalculator";
 
 const Profile: React.FC = () => {
   return (
     <div className="profile-container">
-      {/* Profile 头部信息，独占整行 */}
       <ProfileHeader />
 
-      {/* 评分 + Meal Swipe Calculator */}
       <div className="profile-sections">
         <div className="rating-container">
           <Rating />

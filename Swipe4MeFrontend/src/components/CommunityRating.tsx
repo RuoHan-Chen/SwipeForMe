@@ -1,3 +1,6 @@
+// Author: Jerry Wei
+// Time spent: 1 hour
+
 import React from "react";
 
 interface CommunityRatingProps {

@@ -1,3 +1,6 @@
+// Author: Steven Yi
+// Time spent: around 6 hours
+
 import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
@@ -47,7 +50,47 @@ const theme = createTheme({
 
 const ROWS_PER_PAGE = 6;
 
+const NoStudentsAvailable: React.FC = () => (
+  <Box
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+    style={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      zIndex: 1,
+    }}
+  >
+    <InfoIcon color="action" style={{ marginRight: "8px" }} />
+    <Typography variant="body1" color="textSecondary">
+      No Students are available at this time. Check back later!
+    </Typography>
+  </Box>
+);
+
+const TableHeader: React.FC = () => (
+  <Grid2
+    container
+    alignItems="center"
+    justifyContent="space-between"
+    style={{ width: "90%", margin: "0 auto", paddingTop: "20px" }}
+  >
+    <Grid2>
+      <Typography variant="h6">All Students</Typography>
+      <Typography variant="subtitle1" color="#16C098">
+        Active Students
+      </Typography>
+    </Grid2>
+    <Grid2>
+      <TextField variant="outlined" placeholder="Search" size="small" />
+    </Grid2>
+  </Grid2>
+);
+
 const buySwipes: React.FC = () => {
+  // State variables
   const [page, setPage] = useState(0);
   const [availabilities, setAvailabilities] = useState<AvailabilityResponse[]>(
     []
@@ -97,6 +140,12 @@ const buySwipes: React.FC = () => {
     fetchCurrentUserTransactions();
   }, []);
 
+  /**
+   * Formats the available time of the availability
+   * @param startTime - The start time of the availability
+   * @param endTime - The end time of the availability
+   * @returns The formatted available time
+   */
   const formatAvailableTime = (startTime: string, endTime: string) => {
     const start = new Date(startTime);
     const end = new Date(endTime);
@@ -111,6 +160,11 @@ const buySwipes: React.FC = () => {
     })}`;
   };
 
+  /**
+   * Formats the date of the availability
+   * @param date - The date of the availability
+   * @returns The formatted date
+   */
   const formatDate = (date: string) => {
     const start = new Date(date);
     return start.toLocaleDateString("en-US", {
@@ -119,6 +173,11 @@ const buySwipes: React.FC = () => {
     });
   };
 
+  /**
+   * Handles the sending of an invite
+   * @param availabilityId - The id of the availability
+   * @param sellerId - The id of the seller
+   */
   const handleSendInvite = async (availabilityId: number, sellerId: number) => {
     const currentUser: User = await getCurrentUser();
 
@@ -142,6 +201,11 @@ const buySwipes: React.FC = () => {
     setOpen(true);
   };
 
+  /**
+   * Checks if a transaction with the given availabilityId is pending
+   * @param availabilityId - The id of the availability
+   * @returns True if the transaction is pending, false otherwise
+   */
   const isTransactionPending = (availabilityId: number) => {
     return currentUserPendingAvailabilityIds.has(availabilityId);
   };
@@ -175,41 +239,12 @@ const buySwipes: React.FC = () => {
             position: "relative",
           }}
         >
-          {availabilities.length === 0 && (
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                zIndex: 1,
-              }}
-            >
-              <InfoIcon color="action" style={{ marginRight: "8px" }} />
-              <Typography variant="body1" color="textSecondary">
-                No Students are available at this time. Check back later!
-              </Typography>
-            </Box>
-          )}
-          <Grid2
-            container
-            alignItems="center"
-            justifyContent="space-between"
-            style={{ width: "90%", margin: "0 auto", paddingTop: "20px" }}
-          >
-            <Grid2>
-              <Typography variant="h6">All Students</Typography>
-              <Typography variant="subtitle1" color="#16C098">
-                Active Students
-              </Typography>
-            </Grid2>
-            <Grid2>
-              <TextField variant="outlined" placeholder="Search" size="small" />
-            </Grid2>
-          </Grid2>
+          {/* If there are no availabilities, show the NoStudentsAvailable component */}
+          {availabilities.length === 0 && <NoStudentsAvailable />}
+
+          <TableHeader />
+
+          {/* Table body */}
           <div
             style={{
               width: "90%",

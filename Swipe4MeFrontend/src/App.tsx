@@ -1,3 +1,6 @@
+// Authors: RuoHan Chen, Xinying Luo, Steven Yi
+// Time spent: 3 hours
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar";
 import Home from "./pages/home";
@@ -27,18 +30,18 @@ function App() {
         <Router>
           <Navbar />
           <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/account" element={<Profile />} />
-          <Route path="/getSwipes" element={<GetSwipes />} />
-          <Route path="/donateSwipes" element={<TradeSwipes />} />
-          <Route path="/transaction" element={<TransactionHistory />} />
-          <Route
-            path="*"
-            element={
-              <h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>
-            }
-          />
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/account" element={<Profile />} />
+            <Route path="/getSwipes" element={<GetSwipes />} />
+            <Route path="/donateSwipes" element={<TradeSwipes />} />
+            <Route path="/transaction" element={<TransactionHistory />} />
+            <Route
+              path="*"
+              element={
+                <h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>
+              }
+            />
           </Routes>
         </Router>
       </ThemeProvider>

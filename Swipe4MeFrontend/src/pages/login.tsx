@@ -1,3 +1,6 @@
+// Author: Steven Yi
+// Time spent: 1 hour
+
 import React from "react";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { googleSignIn, LoginResponse } from "../clients/authClient";

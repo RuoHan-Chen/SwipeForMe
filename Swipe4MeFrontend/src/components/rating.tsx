@@ -1,3 +1,6 @@
+// Author: Jerry Wei
+// Time spent: 15 minutes
+
 import React from "react";
 import "../styles/profile.css";
 

@@ -1,3 +1,6 @@
+// Author: Steven Yi
+// Time spent: 15 minutes
+
 export interface LoginResponse {
   token: string;
   userId: number;

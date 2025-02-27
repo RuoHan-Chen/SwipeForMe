@@ -1,16 +1,17 @@
+// Author: Jerry Wei
+// Time spent: 15 minutes
+
 import React from "react";
-import "../styles/profile.css"; // 确保 CSS 路径正确
+import "../styles/profile.css";
 
 const ProfileHeader: React.FC = () => {
   return (
     <div className="profile-header">
       <div className="profile-card">
-        {/* 头像部分 */}
         <div className="profile-photo-container">
           <img src="/profile_pic.png" alt="Profile" className="profile-photo" />
         </div>
 
-        {/* 用户信息 */}
         <div className="profile-details">
           <div className="profile-header-row">
             <h2 className="user-name">RuoHan Chen</h2>
@@ -24,7 +25,6 @@ const ProfileHeader: React.FC = () => {
             </div>
           </div>
 
-          {/* 其他信息 */}
           <div className="profile-info">
             <div className="profile-column">
               <p>
