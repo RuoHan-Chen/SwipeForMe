@@ -30,7 +30,7 @@ public class AuthenticationController {
 
         String token = jwtService.generateToken(authenticatedUser);
 
-        return new LoginResponse(token);
+        return new LoginResponse(token, authenticatedUser.id());
     }
 
 }
