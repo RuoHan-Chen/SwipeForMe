@@ -16,7 +16,7 @@ public class TransactionService {
 
     // 创建交易
     public TransactionEntity createTransaction(TransactionEntity transaction) {
-        transaction.setStatus(TransactionStatus.PENDING);
+        transaction.setStatus(TransactionStatus.IN_PROGRESS);
         transaction.setCreatedAt(LocalDateTime.now());
         transaction.setUpdatedAt(LocalDateTime.now());
         return transactionRepository.save(transaction);
@@ -54,7 +54,6 @@ public class TransactionService {
         Optional<TransactionEntity> transactionOptional = transactionRepository.findById(transactionId);
         if (transactionOptional.isPresent()) {
             TransactionEntity transaction = transactionOptional.get();
-            transaction.setStatus(TransactionStatus.CANCELLED);
             transaction.setUpdatedAt(LocalDateTime.now());
             transactionRepository.save(transaction);
             return true;
