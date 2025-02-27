@@ -2,7 +2,7 @@
 // Time spent: 3 hours
 
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
 import { useAuth } from "../context/AuthContext";
 
@@ -10,6 +10,7 @@ const Navbar: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -23,6 +24,11 @@ const Navbar: React.FC = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <nav className="navbar">
@@ -61,7 +67,7 @@ const Navbar: React.FC = () => {
                   <Link to="/account" className="dropdown-button">
                     Account
                   </Link>
-                  <button className="dropdown-button" onClick={logout}>
+                  <button className="dropdown-button" onClick={handleLogout}>
                     Logout
                   </button>
                 </div>

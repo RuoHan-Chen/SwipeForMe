@@ -32,7 +32,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/account" element={<Profile />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/getSwipes" element={<GetSwipes />} />
             <Route path="/donateSwipes" element={<TradeSwipes />} />
             <Route path="/transaction" element={<TransactionHistory />} />
