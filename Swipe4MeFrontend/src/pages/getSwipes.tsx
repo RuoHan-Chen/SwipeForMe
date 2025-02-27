@@ -16,12 +16,20 @@ import {
   ThemeProvider,
   Typography,
   Box,
+  Alert,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import {
   AvailabilityResponse,
   getAllAvailabilities,
 } from "../clients/availabilityClient";
+import { Transaction } from "../clients/transactionClient";
+import {
+  createTransaction,
+  TransactionStatus,
+} from "../clients/transactionClient";
+import { getCurrentUser, User } from "../clients/userClient";
+import Snackbar from "@mui/material/Snackbar";
 
 const dummyData = [
   {
@@ -169,6 +177,8 @@ const buySwipes: React.FC = () => {
   const [page, setPage] = useState(0);
   const [activeUsers, setActiveUsers] = useState<AvailabilityResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [sendInviteSuccess, setSendInviteSuccess] = useState(false);
 
   useEffect(() => {
     const fetchActiveUsers = async () => {
@@ -208,12 +218,42 @@ const buySwipes: React.FC = () => {
     });
   };
 
-  const handleSendInvite = (id: number) => {
-    console.log(`Sending invite to student ${id}`);
+  const handleSendInvite = async (availabilityId: number, sellerId: number) => {
+    const currentUser: User = await getCurrentUser();
+
+    const transaction: Transaction = {
+      availabilityId: availabilityId,
+      buyer_id: currentUser.id,
+      seller_id: sellerId,
+      status: TransactionStatus.PENDING,
+    };
+
+    try {
+      await createTransaction(transaction);
+      setSendInviteSuccess(true);
+    } catch (error) {
+      setSendInviteSuccess(false);
+    }
+
+    setOpen(true);
   };
 
   return (
     <ThemeProvider theme={theme}>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => setOpen(false)}
+      >
+        <Alert
+          severity={sendInviteSuccess ? "success" : "error"}
+          onClose={() => setOpen(false)}
+          sx={{ width: "100%" }}
+        >
+          {sendInviteSuccess ? "Invite sent!" : "Failed to send invite"}
+        </Alert>
+      </Snackbar>
+
       <div style={{ paddingTop: "50px" }}>
         <TableContainer
           component={Paper}
@@ -325,7 +365,7 @@ const buySwipes: React.FC = () => {
                             color="primary"
                             fullWidth={true}
                             style={{ width: "80%" }}
-                            onClick={() => handleSendInvite(row.id)}
+                            onClick={() => handleSendInvite(row.id, row.userId)}
                             disabled={false}
                           >
                             <div style={{ color: "white" }}>
