@@ -1,4 +1,4 @@
-package com.sp25group8.swipe4mebackend.activeUsers;
+package com.sp25group8.swipe4mebackend.availability;
 
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityJoinResult;
