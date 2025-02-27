@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Navbar Container */
+.navbar {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 0.5px solid #484848;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  padding-top: 5px;
+  padding-bottom: 5px; /* Reduced vertical padding to make navbar shorter */
+  font-family: 'Roboto', sans-serif;
+  height: 60px; /* Set a fixed height for the navbar */
+}
+
+/* Navbar Content */
+.navbar-container {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0; /* Remove left padding */
+}
+
+/* Branding (Logo + Name) */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  color: #1E0E62;  /* Updated to Deep Purple */
+  text-decoration: none;
+  font-size: 1.2rem; /* Reduced font size for the brand name */
+  margin-left: 10px; /* Adjust this value to control the gap */
+}
+
+/* Navigation Menu */
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar-link {
+  text-decoration: none;
+  font-weight: 500;
+  color: #1E0E62;  /* Updated to Deep Purple */
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.navbar-link:hover {
+  color: #482BE7;  /* Slightly brighter blue for hover effect */
+}
+
+/* Right Section (Buttons & Profile) */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Get Started Button */
+.get-started {
+  background-color: #4F46E5;
+  color: white;
+  padding: 8px 16px;
+  font-weight: bold;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.get-started:hover {
+  background-color: #2F1893; /* Darker blue on hover */
+}
+
+/* Transactions Button */
+.transaction {
+  background-color: #E93A7D;  /* Updated to Pink */
+  color: white;
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.transaction:hover {
+  background-color: #b1225c; /* Darker Pink on Hover */
+}
+
+/* Profile Dropdown */
+.profile-dropdown-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Profile Image */
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+  right: 30px;
+}
+
+.profile-image:hover {
+  opacity: 0.8;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #1E0E62; /* Updated background color */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  border-radius: 8px;
+  box-shadow: none; /* Removed shadow */
+  border: none; /* Removed border */
+}
+
+/* Dropdown Menu Buttons */
+.dropdown-menu a, .dropdown-menu button {
+  background-color: #E93A7D; /* Pink button color */
+  color: white;
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 20px;
+  border: none; /* Remove default button border */
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin: 5px 0; /* Add spacing between buttons */
+  text-decoration: none; /* Remove underline from Link */
+  text-align: center; /* Center text */
+}
+
+/* Hover Effect for Dropdown Buttons */
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+  background-color: #b1225c; /* Darker pink on hover */
+}

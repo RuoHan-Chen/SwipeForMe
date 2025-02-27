@@ -27,3 +27,28 @@ export const getCurrentUser = () => {
     .then((response) => response.json())
     .then((data) => console.log(data));
 };
+
+export interface ActiveUserResponse {
+  id: number;
+  userId: number;
+  firstName: string;
+  lastName: string;
+  location: string;
+  startTime: string;
+  endTime: string;
+  email: string;
+  rating?: number;
+}
+
+export type GetAllActiveUsersResponse = ActiveUserResponse[];
+
+export const getAllActiveUsers =
+  async (): Promise<GetAllActiveUsersResponse> => {
+    const response = await fetch("/api/active", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        ContentType: "application/json",
+      },
+    });
+    return await response.json();
+  };

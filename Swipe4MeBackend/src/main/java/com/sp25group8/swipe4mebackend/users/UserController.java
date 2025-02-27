@@ -1,6 +1,6 @@
 package com.sp25group8.swipe4mebackend.users;
 
-import com.sp25group8.swipe4mebackend.users.dtos.UserDto;
+import com.sp25group8.swipe4mebackend.models.dtos.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,9 +1,9 @@
 package com.sp25group8.swipe4mebackend.authentication;
 
-import com.sp25group8.swipe4mebackend.authentication.models.LoginResponse;
+import com.sp25group8.swipe4mebackend.models.authentication.LoginResponse;
 import com.sp25group8.swipe4mebackend.exceptions.InvalidGoogleIdTokenException;
 import com.sp25group8.swipe4mebackend.security.JwtService;
-import com.sp25group8.swipe4mebackend.users.models.UserEntity;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
