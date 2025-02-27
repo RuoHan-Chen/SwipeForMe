@@ -1,3 +1,6 @@
+# Author: Steven Yi
+# Time spent: 30 minutes
+
 spring:
   application:
     name: Swipe4MeBackend
