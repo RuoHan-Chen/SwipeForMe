@@ -18,9 +18,6 @@ public class TransactionsService {
 
     // 创建交易
     public TransactionEntity createTransaction(TransactionEntity transaction) {
-        transaction.setStatus(TransactionStatus.IN_PROGRESS);
-        transaction.setCreatedAt(LocalDateTime.now());
-        transaction.setUpdatedAt(LocalDateTime.now());
         return transactionRepository.save(transaction);
     }
 
@@ -40,27 +37,17 @@ public class TransactionsService {
     }
 
     // 更新交易状态
-    public Optional<TransactionEntity> updateTransactionStatus(Long transactionId, TransactionStatus status) {
+    public TransactionEntity updateTransactionStatus(Long transactionId, TransactionStatus status) {
         Optional<TransactionEntity> transactionOptional = transactionRepository.findById(transactionId);
-        if (transactionOptional.isPresent()) {
-            TransactionEntity transaction = transactionOptional.get();
-            transaction.setStatus(status);
-            transaction.setUpdatedAt(LocalDateTime.now());
-            return Optional.of(transactionRepository.save(transaction));
-        }
-        return Optional.empty();
-    }
-
-    // 取消交易
-    public boolean cancelTransaction(Long transactionId) {
-        Optional<TransactionEntity> transactionOptional = transactionRepository.findById(transactionId);
-        if (transactionOptional.isPresent()) {
-            TransactionEntity transaction = transactionOptional.get();
-            transaction.setUpdatedAt(LocalDateTime.now());
-            transactionRepository.save(transaction);
-            return true;
-        }
-        return false;
+        TransactionEntity transaction = transactionOptional.orElseThrow();
+        TransactionEntity updatedTx = new TransactionEntity(
+                transaction.id(),
+                transaction.availabilityId(),
+                transaction.buyerId(),
+                transaction.sellerId(),
+                status
+        );
+        return transactionRepository.save(updatedTx);
     }
 }
 
