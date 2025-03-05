@@ -1,9 +1,7 @@
-package com.sp25group8.swipe4mebackend;
+package com.sp25group8.swipe4mebackend.users;
 
 import com.sp25group8.swipe4mebackend.models.dtos.UserDto;
 import com.sp25group8.swipe4mebackend.models.users.UserEntity;
-import com.sp25group8.swipe4mebackend.users.UserRepository;
-import com.sp25group8.swipe4mebackend.users.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,8 +31,7 @@ public class UserServiceTests {
                 "jd@gmail.com",
                 "123",
                 null,
-                "abc.com"
-        );
+                "abc.com");
 
         given(userRepository.save(user)).willReturn(user);
         UserEntity savedUser = userService.createUser(
@@ -42,8 +39,7 @@ public class UserServiceTests {
                 user.lastName(),
                 user.email(),
                 user.phoneNumber(),
-                user.ProfilePicUrl()
-        );
+                user.ProfilePicUrl());
 
         assertThat(savedUser).isEqualTo(user);
     }
@@ -57,11 +53,11 @@ public class UserServiceTests {
                 "jd@gmail.com",
                 "123",
                 null,
-                "abc.com"
-        );
+                "abc.com");
 
         // Login user
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
+        SecurityContextHolder.getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
 
         UserDto curUserDto = userService.getCurrentUser();
         assertThat(curUserDto).isNotNull();
