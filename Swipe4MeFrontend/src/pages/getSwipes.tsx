@@ -101,6 +101,9 @@ const buySwipes: React.FC = () => {
   ] = useState<Set<number>>(new Set());
   const [open, setOpen] = useState(false);
   const [sendInviteSuccess, setSendInviteSuccess] = useState(false);
+  const [loadingAvailabilityId, setLoadingAvailabilityId] = useState<
+    number | null
+  >(null); // Used for loading state of the button
 
   // Fetch all availabilities
   useEffect(() => {
@@ -194,6 +197,9 @@ const buySwipes: React.FC = () => {
       status: TransactionStatus.PENDING,
     };
 
+    // Set only the button of this row to loading
+    setLoadingAvailabilityId(availabilityId);
+
     try {
       await createTransaction(transaction);
       setSendInviteSuccess(true); // Show success snackbar
@@ -202,6 +208,8 @@ const buySwipes: React.FC = () => {
       );
     } catch (error) {
       setSendInviteSuccess(false);
+    } finally {
+      setLoadingAvailabilityId(null);
     }
 
     setOpen(true);
@@ -316,6 +324,7 @@ const buySwipes: React.FC = () => {
                             style={{ width: "80%" }}
                             onClick={() => handleSendInvite(row.id, row.userId)}
                             disabled={isTransactionPending(row.id)}
+                            loading={loadingAvailabilityId === row.id}
                           >
                             <div style={{ color: "white" }}>
                               {isTransactionPending(row.id)
