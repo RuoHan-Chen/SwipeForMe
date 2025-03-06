@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -28,6 +29,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public class ApplicationConfiguration {
 
     private final UserRepository userRepository;
+
+    private final Environment environment;
 
     @Bean
     UserDetailsService userDetailsService() {
@@ -55,8 +58,8 @@ public class ApplicationConfiguration {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername(System.getenv("MAIL_USERNAME"));
-        mailSender.setPassword(System.getenv("MAIL_PASSWORD"));
+        mailSender.setUsername(environment.getProperty("MAIL_USERNAME"));
+        mailSender.setPassword(environment.getProperty("MAIL_PASSWORD"));
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
