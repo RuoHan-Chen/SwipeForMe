@@ -7,7 +7,7 @@ import ProfileHeader from "../components/profileHeader";
 import Rating from "../components/rating";
 import MealSwipeCalculator from "../components/mealSwipeCalculator";
 
-const Profile: React.FC = () => {
+const Dashboard: React.FC = () => {
   return (
     <div className="profile-container">
       <ProfileHeader />
@@ -24,4 +24,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default Dashboard;

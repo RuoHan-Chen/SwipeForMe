@@ -64,8 +64,8 @@ const Navbar: React.FC = () => {
 
               {dropdownOpen && (
                 <div className="dropdown-menu">
-                  <Link to="/account" className="dropdown-button">
-                    Account
+                  <Link to="/dashboard" className="dropdown-button">
+                    Dashboard
                   </Link>
                   <button className="dropdown-button" onClick={handleLogout}>
                     Logout

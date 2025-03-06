@@ -91,7 +91,7 @@ const Login: React.FC = () => {
       );
       login(loginResponse.token, loginResponse.userId);
       getCurrentUser();
-      navigate("/profile");
+      navigate("/dashboard");
     }
   };
 

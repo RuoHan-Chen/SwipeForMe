@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar";
 import Home from "./pages/home";
 import Login from "./pages/login";
-import Profile from "./pages/profile";
+import Dashboard from "./pages/dashboard";
 import GetSwipes from "./pages/getSwipes";
 import TradeSwipes from "./pages/tradeSwipes";
 import TransactionHistory from "./pages/transactionHistory.tsx";
@@ -32,7 +32,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/getSwipes" element={<GetSwipes />} />
             <Route path="/donateSwipes" element={<TradeSwipes />} />
             <Route path="/transaction" element={<TransactionHistory />} />
