@@ -1,7 +1,11 @@
+// Author: Steven Yi
+// Time spent: 1 hour
+
 package com.sp25group8.swipe4mebackend.users;
 
-import com.sp25group8.swipe4mebackend.users.dtos.UserDto;
-import com.sp25group8.swipe4mebackend.users.models.UserEntity;
+import com.sp25group8.swipe4mebackend.exceptions.UserNotFoundException;
+import com.sp25group8.swipe4mebackend.models.dtos.UserDto;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,8 +17,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserEntity createUser(String firstName, String lastName, String email, String phoneNumber) {
-        UserEntity user = new UserEntity(null, firstName, lastName, email, phoneNumber, null);
+    public UserEntity createUser(String firstName, String lastName, String email, String phoneNumber,
+            String profilePicUrl) {
+        UserEntity user = new UserEntity(null, firstName, lastName, email, phoneNumber, null, profilePicUrl);
         return userRepository.save(user);
     }
 
@@ -22,6 +27,12 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserEntity userEntity = (UserEntity) authentication.getPrincipal();
+        return UserDto.fromEntity(userEntity);
+    }
+
+    public UserDto getUserById(Long id) {
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
         return UserDto.fromEntity(userEntity);
     }
 

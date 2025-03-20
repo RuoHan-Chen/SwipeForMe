@@ -1,3 +1,6 @@
+// Author: Steven Yi
+// Time spent: 3 hours
+
 package com.sp25group8.swipe4mebackend.authentication;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -8,7 +11,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.sp25group8.swipe4mebackend.exceptions.InvalidGoogleIdTokenException;
 import com.sp25group8.swipe4mebackend.users.UserRepository;
 import com.sp25group8.swipe4mebackend.users.UserService;
-import com.sp25group8.swipe4mebackend.users.models.UserEntity;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,10 +44,11 @@ public class AuthenticationService {
     public UserEntity processGoogleIdTokenString(String idTokenString) throws GeneralSecurityException, IOException, InvalidGoogleIdTokenException {
         // Verify that the id token is from Google
         GoogleIdToken idToken = verifyIdToken(idTokenString);
+
         if (idToken != null) {
             Payload payload = idToken.getPayload();
 
-            String email = payload.get("email").toString();
+            String email = getFieldFromPayload(payload, "email");
 
             // Create user if first time signing in
             if (!userRepository.existsByEmail(email)) {
@@ -67,20 +71,20 @@ public class AuthenticationService {
         return verifier.verify(idTokenString);
     }
 
-//    private UserEntity authenticateUser(String email, GoogleIdToken idToken) {
-//        UserEntity user = userRepository.findByEmail(email).orElseThrow();
-//
-//        authenticationManager.authenticate(new GoogleOAuth2AuthenticationToken(user, user.getAuthorities()));
-//        return user;
-//    }
 
     private void createUserFromPayload(Payload payload) {
-        String firstName = payload.get("given_name").toString();
-        String lastName = payload.get("family_name").toString();
-        String email = payload.get("email").toString();
+        String firstName = getFieldFromPayload(payload, "given_name");
+        String lastName = getFieldFromPayload(payload, "family_name");
+        String email = getFieldFromPayload(payload, "email");
+        String profilePictureUrl = getFieldFromPayload(payload, "picture");
 
         // Require users to provide their phone number later
-        userService.createUser(firstName, lastName, email, null);
+        userService.createUser(firstName, lastName, email, null, profilePictureUrl);
+    }
+
+    private String getFieldFromPayload(Payload payload, String fieldName) {
+        Object value = payload.get(fieldName);
+        return value == null ? "" : value.toString();
     }
 
 }
