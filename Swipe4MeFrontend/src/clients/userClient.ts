@@ -1,6 +1,8 @@
 // Author: Steven Yi
 // Time spent: 15 minutes
 
+import { toEndpointUrl } from "./utils";
+
 export interface User {
   id: number;
   firstName: string;
@@ -12,10 +14,10 @@ export interface User {
 }
 
 export const getCurrentUser = async () => {
-  const response = await fetch("/api/users/me", {
+  const response = await fetch(toEndpointUrl("/api/users/me"), {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
-      ContentType: "application/json",
+      "Content-Type": "application/json",
     },
   });
 

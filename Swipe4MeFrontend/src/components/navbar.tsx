@@ -33,7 +33,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-brand">
+        <Link to={isLoggedIn ? "/dashboard" : "/"} className="navbar-brand">
           <h1>SWIPE4ME</h1>
           <img src="/logo.svg" alt="Swipe4Me Logo" className="navbar-logo" />
         </Link>
