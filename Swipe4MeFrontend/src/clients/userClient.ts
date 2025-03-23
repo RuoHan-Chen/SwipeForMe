@@ -17,7 +17,7 @@ export const getCurrentUser = async () => {
   const response = await fetch(toEndpointUrl("/api/users/me"), {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
-      ContentType: "application/json",
+      "Content-Type": "application/json",
     },
   });
 

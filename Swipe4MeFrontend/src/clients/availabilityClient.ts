@@ -22,7 +22,7 @@ export const getAllAvailabilities =
     const response = await fetch(toEndpointUrl("/api/availabilities"), {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        ContentType: "application/json",
+        "Content-Type": "application/json",
       },
     });
 
