@@ -41,5 +41,5 @@ logging:
 
 swipe4me:
   jwt:
-    secret-key: 34b7e85cd5adae511a39bf9a08377e86f705194bc0f3fff8b7f9e1192af7c04f
+    secret-key: ${JWT_SECRET_KEY}
     expiration-time: 3600000
