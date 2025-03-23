@@ -1,6 +1,8 @@
 // Author: Steven Yi
 // Time spent: 15 minutes
 
+import { toEndpointUrl } from "./utils";
+
 export interface AvailabilityResponse {
   id: number;
   userId: number;
@@ -17,7 +19,7 @@ export type GetAllAvailabilityResponse = AvailabilityResponse[];
 
 export const getAllAvailabilities =
   async (): Promise<GetAllAvailabilityResponse> => {
-    const response = await fetch("/api/availabilities", {
+    const response = await fetch(toEndpointUrl("/api/availabilities"), {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         ContentType: "application/json",

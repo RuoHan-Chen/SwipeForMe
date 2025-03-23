@@ -1,6 +1,8 @@
 // Author: Steven Yi
 // Time spent: 30 minutes
 
+import { toEndpointUrl } from "./utils";
+
 export interface Transaction {
   id?: number;
   availabilityId: number;
@@ -18,7 +20,7 @@ export enum TransactionStatus {
 }
 
 export const createTransaction = async (transaction: Transaction) => {
-  const response = await fetch("/api/transactions", {
+  const response = await fetch(toEndpointUrl("/api/transactions"), {
     method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -42,11 +44,14 @@ export const getCurrentUserTransactionsAsBuyer = async (): Promise<
     throw new Error("User ID not found");
   }
 
-  const response = await fetch(`/api/transactions/buyer/${userId}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
+  const response = await fetch(
+    toEndpointUrl(`/api/transactions/buyer/${userId}`),
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch transactions");
