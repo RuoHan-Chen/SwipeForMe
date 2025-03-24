@@ -27,7 +27,12 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
+    setDropdownOpen(false);
     navigate("/");
+  };
+  const handleDashboard = () => {
+    setDropdownOpen(false);
+    navigate("/dashboard");
   };
 
   return (
@@ -64,9 +69,9 @@ const Navbar: React.FC = () => {
 
               {dropdownOpen && (
                 <div className="dropdown-menu">
-                  <Link to="/dashboard" className="dropdown-button">
+                  <button className="dropdown-button" onClick={handleDashboard}>
                     Dashboard
-                  </Link>
+                  </button>
                   <button className="dropdown-button" onClick={handleLogout}>
                     Logout
                   </button>

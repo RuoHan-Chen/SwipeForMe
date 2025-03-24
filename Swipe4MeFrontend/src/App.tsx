@@ -13,7 +13,8 @@ import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
 import createTheme from "@mui/material/styles/createTheme";
 import { ThemeProvider } from "@mui/material/styles";
-
+import PrivateRoute from "./utils/router.tsx";
+import Rating from "./pages/rating.tsx";
 function App() {
   const theme = createTheme({
     palette: {
@@ -28,14 +29,15 @@ function App() {
     <AuthProvider>
       <ThemeProvider theme={theme}>
         <Router>
-          <Navbar />
+            <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/getSwipes" element={<GetSwipes />} />
-            <Route path="/donateSwipes" element={<TradeSwipes />} />
-            <Route path="/transaction" element={<TransactionHistory />} />
+            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+            <Route path="/getSwipes" element={<PrivateRoute><GetSwipes /></PrivateRoute>} />
+            <Route path="/donateSwipes" element={<PrivateRoute><TradeSwipes /></PrivateRoute>} />
+            <Route path="/transaction" element={<PrivateRoute><TransactionHistory /></PrivateRoute>} />
+            <Route path="/rating" element={<PrivateRoute><Rating /></PrivateRoute>} />
             <Route
               path="*"
               element={
