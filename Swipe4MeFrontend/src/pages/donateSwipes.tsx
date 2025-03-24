@@ -17,9 +17,10 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 // Custom styled components
 const StyledFormControl = styled(FormControl)({
@@ -56,17 +57,7 @@ const StyledFormControl = styled(FormControl)({
   },
 });
 
-const StyledButton = styled(Button)({
-  backgroundColor: "#f84c7b",
-  borderRadius: "2rem",
-  padding: "12px 32px",
-  fontSize: "1.25rem",
-  marginTop: "24px",
-  "&:hover": {
-    backgroundColor: "#ff5e8a",
-  },
-});
-
+// Add styles for the DatePicker and TimePicker
 const StyledDatePicker = styled(DatePicker)({
   width: "100%",
   "& .MuiOutlinedInput-root": {
@@ -97,11 +88,53 @@ const StyledDatePicker = styled(DatePicker)({
   },
 });
 
+const StyledTimePicker = styled(TimePicker)({
+  width: "100%",
+  "& .MuiOutlinedInput-root": {
+    borderRadius: "2rem",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    color: "white",
+    "& fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.2)",
+    },
+    "&:hover fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.5)",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.5)",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "rgba(255, 255, 255, 0.7)",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "rgba(255, 255, 255, 0.5)",
+  },
+  "& .MuiSvgIcon-root": {
+    color: "white",
+  },
+  "& .MuiInputBase-input": {
+    color: "white",
+  },
+});
+
+const StyledButton = styled(Button)({
+  backgroundColor: "#f84c7b",
+  borderRadius: "2rem",
+  padding: "12px 32px",
+  fontSize: "1.25rem",
+  marginTop: "24px",
+  "&:hover": {
+    backgroundColor: "#ff5e8a",
+  },
+});
+
 const DonateSwipes: React.FC = () => {
   const [date, setDate] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState<string>("");
-  const [checkInTime, setCheckInTime] = useState<string>("");
-  const [checkOutTime, setCheckOutTime] = useState<string>("");
+  const [checkInTime, setCheckInTime] = useState<Dayjs | null>(null);
+  const [checkOutTime, setCheckOutTime] = useState<Dayjs | null>(null);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleDateChange = (newValue: Dayjs | null) => {
     setDate(newValue);
@@ -111,22 +144,26 @@ const DonateSwipes: React.FC = () => {
     setLocation(event.target.value as string);
   };
 
-  const handleCheckInTimeChange = (event: SelectChangeEvent) => {
-    setCheckInTime(event.target.value as string);
+  const handleCheckInTimeChange = (newValue: Dayjs | null) => {
+    setCheckInTime(newValue);
   };
 
-  const handleCheckOutTimeChange = (event: SelectChangeEvent) => {
-    setCheckOutTime(event.target.value as string);
+  const handleCheckOutTimeChange = (newValue: Dayjs | null) => {
+    setCheckOutTime(newValue);
   };
 
   const handleConfirm = () => {
-    // Handle form submission logic here
-    console.log({
-      date: date?.format("YYYY-MM-DD"),
-      location,
-      checkInTime,
-      checkOutTime,
-    });
+    setFormSubmitted(true);
+
+    if (date && location && checkInTime && checkOutTime) {
+      // Handle form submission logic here
+      console.log({
+        date: date.format("YYYY-MM-DD"),
+        location,
+        checkInTime: checkInTime.format("HH:mm"),
+        checkOutTime: checkOutTime.format("HH:mm"),
+      });
+    }
   };
 
   return (
@@ -172,19 +209,23 @@ const DonateSwipes: React.FC = () => {
                 <StyledDatePicker
                   label="Select Date"
                   value={date}
-                  onChange={(newValue) => {
-                    if (newValue) {
-                      handleDateChange(newValue);
-                    }
-                  }}
+                  onChange={handleDateChange}
                   disablePast
                   sx={{ m: 1 }}
+                  slotProps={{
+                    textField: {
+                      required: true,
+                      error: formSubmitted && !date,
+                    },
+                  }}
                 />
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6}>
-              <StyledFormControl fullWidth>
-                <InputLabel id="location-label">Select Location</InputLabel>
+              <StyledFormControl fullWidth error={formSubmitted && !location}>
+                <InputLabel required id="location-label">
+                  Select Location
+                </InputLabel>
                 <Select
                   labelId="location-label"
                   value={location}
@@ -198,38 +239,36 @@ const DonateSwipes: React.FC = () => {
               </StyledFormControl>
             </Grid>
             <Grid item xs={12} md={6}>
-              <StyledFormControl fullWidth>
-                <InputLabel id="check-in-label">
-                  Select Check-in Time
-                </InputLabel>
-                <Select
-                  labelId="check-in-label"
-                  value={checkInTime}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StyledTimePicker
                   label="Select Check-in Time"
+                  value={checkInTime}
                   onChange={handleCheckInTimeChange}
-                >
-                  <MenuItem value="8:00">8:00 AM</MenuItem>
-                  <MenuItem value="9:00">9:00 AM</MenuItem>
-                  {/* Add more time options as needed */}
-                </Select>
-              </StyledFormControl>
+                  sx={{ m: 1 }}
+                  slotProps={{
+                    textField: {
+                      required: true,
+                      error: formSubmitted && !checkInTime,
+                    },
+                  }}
+                />
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6}>
-              <StyledFormControl fullWidth>
-                <InputLabel id="check-out-label">
-                  Select Check-out Time
-                </InputLabel>
-                <Select
-                  labelId="check-out-label"
-                  value={checkOutTime}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StyledTimePicker
                   label="Select Check-out Time"
+                  value={checkOutTime}
                   onChange={handleCheckOutTimeChange}
-                >
-                  <MenuItem value="12:00">12:00 PM</MenuItem>
-                  <MenuItem value="13:00">1:00 PM</MenuItem>
-                  {/* Add more time options as needed */}
-                </Select>
-              </StyledFormControl>
+                  sx={{ m: 1 }}
+                  slotProps={{
+                    textField: {
+                      required: true,
+                      error: formSubmitted && !checkOutTime,
+                    },
+                  }}
+                />
+              </LocalizationProvider>
             </Grid>
           </Grid>
 
