@@ -5,7 +5,7 @@ package com.sp25group8.swipe4mebackend.availability;
 
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityJoinResult;
-import com.sp25group8.swipe4mebackend.models.enums.DiningHall;
+import com.sp25group8.swipe4mebackend.models.enums.DiningLocation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +24,9 @@ public class AvailabilityService {
 
     public AvailabilityEntity createAvailability(
             Long userId,
-            DiningHall location,
+            DiningLocation location,
             LocalDateTime startTime,
-            LocalDateTime endTime
-    ) {
+            LocalDateTime endTime) {
         AvailabilityEntity availabilityEntity = new AvailabilityEntity(null, userId, location, startTime, endTime);
         return availabilityRepository.save(availabilityEntity);
     }

@@ -7,7 +7,7 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import GetSwipes from "./pages/getSwipes";
-import TradeSwipes from "./pages/tradeSwipes";
+import TradeSwipes from "./pages/DonateSwipes/donateSwipes.tsx";
 import TransactionHistory from "./pages/transactionHistory.tsx";
 import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
@@ -15,6 +15,8 @@ import createTheme from "@mui/material/styles/createTheme";
 import { ThemeProvider } from "@mui/material/styles";
 import PrivateRoute from "./utils/router.tsx";
 import Rating from "./pages/rating.tsx";
+import { SnackbarProvider } from "./context/SnackbarContext";
+
 function App() {
   const theme = createTheme({
     palette: {
@@ -26,6 +28,7 @@ function App() {
   });
 
   return (
+   <SnackbarProvider>
     <AuthProvider>
       <ThemeProvider theme={theme}>
         <Router>
@@ -48,6 +51,8 @@ function App() {
         </Router>
       </ThemeProvider>
     </AuthProvider>
+   </SnackbarProvider>
+
   );
 }
 
