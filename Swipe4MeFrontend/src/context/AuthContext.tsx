@@ -3,7 +3,6 @@ import React, {
   useState,
   useContext,
   ReactNode,
-  useEffect,
 } from "react";
 
 interface AuthContextType {
@@ -17,14 +16,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  useEffect(() => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+    return !!token;
+  });
 
   const login = (token: string, userId: number) => {
     localStorage.setItem("token", token);
