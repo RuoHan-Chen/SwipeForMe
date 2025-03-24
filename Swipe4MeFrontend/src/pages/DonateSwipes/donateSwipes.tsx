@@ -56,7 +56,7 @@ const DonateSwipes: React.FC = () => {
     setFormSubmitted(true);
 
     if (date && location && checkInTime && checkOutTime) {
-      // Create a new date object with the selected date
+      // Create date objects with the correct date and time components
       const startDateTime = date
         .hour(checkInTime.hour())
         .minute(checkInTime.minute());
@@ -64,16 +64,24 @@ const DonateSwipes: React.FC = () => {
         .hour(checkOutTime.hour())
         .minute(checkOutTime.minute());
 
-      // Find the enum key (like "COMMONS") that corresponds to the selected value (like "Commons")
+      // Format in ISO format but preserve the Central time zone information
+      // This creates strings like "2023-05-15T14:30:00.000-05:00" (with proper timezone offset)
+      const startTimeISO =
+        startDateTime.format("YYYY-MM-DDTHH:mm:ss.SSS") +
+        startDateTime.format("Z");
+      const endTimeISO =
+        endDateTime.format("YYYY-MM-DDTHH:mm:ss.SSS") + endDateTime.format("Z");
+
+      // Find the enum key that corresponds to the selected value
       const locationKey = Object.keys(DiningLocation).find(
         (key) => DiningLocation[key as keyof typeof DiningLocation] === location
       );
 
       const request: CreateAvailabilityRequest = {
         userId: parseInt(localStorage.getItem("userId")!!),
-        location: locationKey as string, // Send the enum name (e.g., "COMMONS") instead of the value
-        startTime: startDateTime.toISOString(), // ISO format: YYYY-MM-DDTHH:mm:ss.sssZ
-        endTime: endDateTime.toISOString(),
+        location: locationKey as string,
+        startTime: startTimeISO,
+        endTime: endTimeISO,
       };
 
       console.log("Sending request:", request);
