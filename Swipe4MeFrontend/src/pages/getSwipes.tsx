@@ -35,6 +35,7 @@ import {
 } from "../clients/transactionClient";
 import { getCurrentUser, User } from "../clients/userClient";
 import { useSnackbar } from "../context/SnackbarContext";
+import { DiningLocation } from "../types";
 
 const theme = createTheme({
   palette: {
@@ -181,6 +182,10 @@ const buySwipes: React.FC = () => {
     });
   };
 
+  const convertEnumStringToDiningLocation = (location: string) => {
+    return DiningLocation[location as keyof typeof DiningLocation];
+  };
+
   /**
    * Handles the sending of an invite
    * @param availabilityId - The id of the availability
@@ -287,7 +292,9 @@ const buySwipes: React.FC = () => {
                         <TableCell align="left">
                           {row.firstName} {row.lastName}
                         </TableCell>
-                        <TableCell align="center">{row.location}</TableCell>
+                        <TableCell align="center">
+                          {convertEnumStringToDiningLocation(row.location)}
+                        </TableCell>
                         <TableCell align="center">
                           {formatAvailableTime(row.startTime, row.endTime)}
                         </TableCell>
