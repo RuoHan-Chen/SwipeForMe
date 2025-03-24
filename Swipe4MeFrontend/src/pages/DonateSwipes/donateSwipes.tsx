@@ -28,13 +28,15 @@ import {
   createAvailability,
   CreateAvailabilityRequest,
 } from "../../clients/availabilityClient";
-
+import { useSnackbar } from "../../context/SnackbarContext";
 const DonateSwipes: React.FC = () => {
   const [date, setDate] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState<DiningLocation | "">("");
   const [checkInTime, setCheckInTime] = useState<Dayjs | null>(null);
   const [checkOutTime, setCheckOutTime] = useState<Dayjs | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const { success, error } = useSnackbar();
 
   const handleDateChange = (newValue: Dayjs | null) => {
     setDate(newValue);
@@ -84,10 +86,12 @@ const DonateSwipes: React.FC = () => {
         endTime: endTimeISO,
       };
 
-      console.log("Sending request:", request);
-
-      const response = await createAvailability(request);
-      console.log("Response:", response);
+      try {
+        await createAvailability(request);
+        success("Availability created!");
+      } catch (err) {
+        error("Failed to create availability");
+      }
     }
   };
 

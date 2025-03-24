@@ -55,5 +55,9 @@ export const createAvailability = async (
     },
   });
 
+  if (!response.ok) {
+    throw new Error("Failed to create availability");
+  }
+
   return await response.json();
 };
