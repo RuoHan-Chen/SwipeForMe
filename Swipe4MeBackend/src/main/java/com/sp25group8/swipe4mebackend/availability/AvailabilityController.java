@@ -27,6 +27,12 @@ public class AvailabilityController {
         return ResponseEntity.ok(availabilities);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AvailabilityEntity>> getAvailabilitiesByUserId(@PathVariable Long userId) {
+        List<AvailabilityEntity> availabilities = availabilityService.getAvailabilitiesByUserId(userId);
+        return ResponseEntity.ok(availabilities);
+    }
+
     @PostMapping
     public ResponseEntity<AvailabilityEntity> addAvailability(
             @RequestParam Long userId,

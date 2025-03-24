@@ -17,4 +17,6 @@ public interface AvailabilityRepository extends CrudRepository<AvailabilityEntit
     @Query("SELECT u.email, u.rating, u.first_name, u.last_name, a.id, a.user_id, a.location, a.start_time, a.end_time FROM public.users u JOIN public.availabilities a ON u.id = a.user_id")
     List<AvailabilityJoinResult> findAllAvailabilities();
 
+    List<AvailabilityEntity> findAllByUserId(Long userId);
+
 }

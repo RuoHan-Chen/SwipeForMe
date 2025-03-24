@@ -59,3 +59,27 @@ export const getCurrentUserTransactionsAsBuyer = async (): Promise<
 
   return await response.json();
 };
+
+export const getCurrentUserTransactionsAsSeller = async (): Promise<
+  Transaction[]
+> => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    throw new Error("User ID not found");
+  }
+
+  const response = await fetch(
+    toEndpointUrl(`/api/transactions/seller/${userId}`),
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch transactions");
+  }
+
+  return await response.json();
+};

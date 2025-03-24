@@ -5,6 +5,8 @@ package com.sp25group8.swipe4mebackend.transactions;
 
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionWithAvailability;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ public class TransactionsController {
 
     /**
      * Creates a new transaction
+     * 
      * @param transaction
      * @return
      */
@@ -41,8 +44,25 @@ public class TransactionsController {
 
     @PutMapping("/{transactionId}/status")
     public ResponseEntity<TransactionEntity> updateTransactionStatus(@PathVariable Long transactionId,
-                                                   @RequestParam TransactionStatus status) {
+            @RequestParam TransactionStatus status) {
         return ResponseEntity.ok(transactionsService.updateTransactionStatus(transactionId, status));
     }
 
+    @GetMapping("/with-availability/buyer/{buyerId}")
+    public ResponseEntity<List<TransactionWithAvailability>> getTransactionsByBuyerWithAvailability(
+            @PathVariable Long buyerId) {
+        return ResponseEntity.ok(transactionsService.getTransactionsByBuyerWithAvailability(buyerId));
+    }
+
+    @GetMapping("/with-availability/seller/{sellerId}")
+    public ResponseEntity<List<TransactionWithAvailability>> getTransactionsBySellerWithAvailability(
+            @PathVariable Long sellerId) {
+        return ResponseEntity.ok(transactionsService.getTransactionsBySellerWithAvailability(sellerId));
+    }
+
+    @GetMapping("/with-availability/{transactionId}")
+    public ResponseEntity<TransactionWithAvailability> getTransactionWithAvailability(
+            @PathVariable Long transactionId) {
+        return ResponseEntity.ok(transactionsService.getTransactionWithAvailability(transactionId));
+    }
 }

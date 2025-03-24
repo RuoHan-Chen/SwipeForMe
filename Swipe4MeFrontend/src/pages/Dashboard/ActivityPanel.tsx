@@ -3,7 +3,17 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  AvailabilityResponse,
+  getAvailabilityByUserId,
+  getCurrentUserAvailability,
+} from "../../clients/availabilityClient";
+import {
+  getCurrentUserTransactionsAsBuyer,
+  getCurrentUserTransactionsAsSeller,
+  Transaction,
+} from "../../clients/transactionClient";
 
 const ActivityPanel = () => {
   const [viewMode, setViewMode] = useState<"buyer" | "seller">("buyer");
@@ -11,7 +21,59 @@ const ActivityPanel = () => {
     "pending" | "inProgress"
   >("pending");
 
-  // Placeholder transaction data for buyer and availability data for seller
+  const [availabilities, setAvailabilities] = useState<AvailabilityResponse[]>(
+    []
+  );
+  const [buyerTransactions, setBuyerTransactions] = useState<Transaction[]>([]);
+  const [sellerTransactions, setSellerTransactions] = useState<Transaction[]>(
+    []
+  );
+
+  // Fetch transactions for the current user
+  useEffect(() => {
+    const fetchBuyerTransactions = async () => {
+      try {
+        const response = await getCurrentUserTransactionsAsBuyer();
+        setBuyerTransactions(response);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+
+    const fetchSellerTransactions = async () => {
+      try {
+        const response = await getCurrentUserTransactionsAsSeller();
+        setSellerTransactions(response);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+
+    fetchBuyerTransactions();
+    fetchSellerTransactions();
+  }, []);
+
+  // Fetch availabilities for the current user
+  useEffect(() => {
+    const fetchAvailabilities = async () => {
+      try {
+        const response = await getCurrentUserAvailability();
+
+        // Filter out availabilities that have already passed
+        const currentTime = new Date();
+        const upcomingAvailabilities = response.filter(
+          (availability) => new Date(availability.startTime) > currentTime
+        );
+
+        setAvailabilities(upcomingAvailabilities);
+      } catch (error) {
+        console.error("Error fetching availabilities:", error);
+      }
+    };
+
+    fetchAvailabilities();
+  }, []);
+
   const placeholderData = {
     asBuyer: {
       pending: [
@@ -58,28 +120,24 @@ const ActivityPanel = () => {
         location: "Campus Coffee Shop",
         startTime: "2023-05-18T09:15:00Z",
         endTime: "2023-05-18T10:00:00Z",
-        status: "AVAILABLE", // Added status to indicate if it's booked or available
       },
       {
         id: 2,
         location: "Engineering Building",
         startTime: "2023-05-22T13:00:00Z",
         endTime: "2023-05-22T14:30:00Z",
-        status: "BOOKED", // This one is already booked
       },
       {
         id: 3,
         location: "Math Department",
         startTime: "2023-05-25T11:00:00Z",
         endTime: "2023-05-25T12:00:00Z",
-        status: "AVAILABLE",
       },
       {
         id: 4,
         location: "Student Union",
         startTime: "2023-05-30T15:30:00Z",
         endTime: "2023-05-30T16:30:00Z",
-        status: "AVAILABLE",
       },
     ],
   };
@@ -214,37 +272,35 @@ const ActivityPanel = () => {
               {transactionType === "pending" ? (
                 // Pending Transactions
                 <>
-                  {placeholderData.asBuyer.pending.length > 0 ? (
-                    placeholderData.asBuyer.pending.map(
-                      (transaction, index) => (
-                        <Paper
-                          key={index}
-                          elevation={1}
-                          sx={{
-                            p: 2,
-                            mb: 2,
-                            borderLeft: "4px solid #ff9800",
-                            "&:hover": { boxShadow: 3 },
-                          }}
+                  {buyerTransactions.length > 0 ? (
+                    buyerTransactions.map((transaction, index) => (
+                      <Paper
+                        key={index}
+                        elevation={1}
+                        sx={{
+                          p: 2,
+                          mb: 2,
+                          borderLeft: "4px solid #ff9800",
+                          "&:hover": { boxShadow: 3 },
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: "bold" }}
                         >
-                          <Typography
-                            variant="subtitle1"
-                            sx={{ fontWeight: "bold" }}
-                          >
-                            {transaction.title}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {formatDateTime(transaction.availability.startTime)}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Location: {transaction.availability.location}
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 1 }}>
-                            ${transaction.amount.toFixed(2)}
-                          </Typography>
-                        </Paper>
-                      )
-                    )
+                          {transaction.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {formatDateTime(transaction.availability.startTime)}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Location: {transaction.availability.location}
+                        </Typography>
+                        <Typography variant="body2" sx={{ mt: 1 }}>
+                          ${transaction.amount.toFixed(2)}
+                        </Typography>
+                      </Paper>
+                    ))
                   ) : (
                     <Typography variant="body1" color="text.secondary">
                       No pending purchases
@@ -300,19 +356,15 @@ const ActivityPanel = () => {
                 Upcoming Availabilities
               </Typography>
 
-              {placeholderData.availabilities.length > 0 ? (
-                placeholderData.availabilities.map((availability, index) => (
+              {availabilities.length > 0 ? (
+                availabilities.map((availability, index) => (
                   <Paper
                     key={index}
                     elevation={1}
                     sx={{
                       p: 2,
                       mb: 2,
-                      borderLeft: `4px solid ${
-                        availability.status === "AVAILABLE"
-                          ? "#4caf50"
-                          : "#2196f3"
-                      }`,
+                      borderLeft: "4px solid #4caf50",
                       "&:hover": { boxShadow: 3 },
                     }}
                   >
@@ -335,28 +387,6 @@ const ActivityPanel = () => {
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Location: {availability.location}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            py: 0.5,
-                            px: 1.5,
-                            borderRadius: 1,
-                            bgcolor:
-                              availability.status === "AVAILABLE"
-                                ? "#e8f5e9"
-                                : "#e3f2fd",
-                            color:
-                              availability.status === "AVAILABLE"
-                                ? "#2e7d32"
-                                : "#1565c0",
-                          }}
-                        >
-                          {availability.status === "AVAILABLE"
-                            ? "Available"
-                            : "Booked"}
                         </Typography>
                       </Box>
                     </Box>

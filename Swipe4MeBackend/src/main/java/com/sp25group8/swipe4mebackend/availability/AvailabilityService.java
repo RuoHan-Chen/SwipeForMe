@@ -22,6 +22,10 @@ public class AvailabilityService {
         return availabilityRepository.findAllAvailabilities();
     }
 
+    public List<AvailabilityEntity> getAvailabilitiesByUserId(Long userId) {
+        return availabilityRepository.findAllByUserId(userId);
+    }
+
     public AvailabilityEntity createAvailability(
             Long userId,
             DiningLocation location,

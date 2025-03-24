@@ -24,17 +24,63 @@ export interface CreateAvailabilityRequest {
   endTime: string;
 }
 
-export const getAllAvailabilities =
-  async (): Promise<GetAllAvailabilityResponse> => {
-    const response = await fetch(toEndpointUrl("/api/availabilities"), {
+export const getAllAvailabilities = async (): Promise<
+  AvailabilityResponse[]
+> => {
+  const response = await fetch(toEndpointUrl("/api/availabilities"), {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  return await response.json();
+};
+
+export const getAvailabilityByUserId = async (
+  userId: number
+): Promise<AvailabilityResponse[]> => {
+  const response = await fetch(
+    toEndpointUrl(`/api/availabilities/user/${userId}`),
+    {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
-    });
+    }
+  );
 
-    return await response.json();
-  };
+  if (!response.ok) {
+    throw new Error("Failed to get availability by user ID");
+  }
+
+  return await response.json();
+};
+
+export const getCurrentUserAvailability = async (): Promise<
+  AvailabilityResponse[]
+> => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    throw new Error("User ID not found");
+  }
+
+  const response = await fetch(
+    toEndpointUrl(`/api/availabilities/user/${userId}`),
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to get current user availability");
+  }
+
+  return await response.json();
+};
 
 export const createAvailability = async (
   request: CreateAvailabilityRequest
