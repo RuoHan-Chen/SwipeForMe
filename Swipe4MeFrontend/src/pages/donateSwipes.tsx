@@ -16,6 +16,10 @@ import {
   Grid,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Dayjs } from "dayjs";
 
 // Custom styled components
 const StyledFormControl = styled(FormControl)({
@@ -63,14 +67,44 @@ const StyledButton = styled(Button)({
   },
 });
 
+const StyledDatePicker = styled(DatePicker)({
+  width: "100%",
+  "& .MuiOutlinedInput-root": {
+    borderRadius: "2rem",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    color: "white",
+    "& fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.2)",
+    },
+    "&:hover fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.5)",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "rgba(255, 255, 255, 0.5)",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "rgba(255, 255, 255, 0.7)",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "rgba(255, 255, 255, 0.5)",
+  },
+  "& .MuiSvgIcon-root": {
+    color: "white",
+  },
+  "& .MuiInputBase-input": {
+    color: "white",
+  },
+});
+
 const DonateSwipes: React.FC = () => {
-  const [date, setDate] = useState<string>("");
+  const [date, setDate] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState<string>("");
   const [checkInTime, setCheckInTime] = useState<string>("");
   const [checkOutTime, setCheckOutTime] = useState<string>("");
 
-  const handleDateChange = (event: SelectChangeEvent) => {
-    setDate(event.target.value as string);
+  const handleDateChange = (newValue: Dayjs | null) => {
+    setDate(newValue);
   };
 
   const handleLocationChange = (event: SelectChangeEvent) => {
@@ -129,19 +163,19 @@ const DonateSwipes: React.FC = () => {
         <Box sx={{ maxWidth: "900px", mx: "auto", width: "100%" }}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <StyledFormControl fullWidth>
-                <InputLabel id="date-label">Select Date</InputLabel>
-                <Select
-                  labelId="date-label"
-                  value={date}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StyledDatePicker
                   label="Select Date"
-                  onChange={handleDateChange}
-                >
-                  <MenuItem value="today">Today</MenuItem>
-                  <MenuItem value="tomorrow">Tomorrow</MenuItem>
-                  {/* Add more date options as needed */}
-                </Select>
-              </StyledFormControl>
+                  value={date}
+                  onChange={(newValue) => {
+                    if (newValue) {
+                      handleDateChange(newValue);
+                    }
+                  }}
+                  disablePast
+                  sx={{ m: 1 }}
+                />
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6}>
               <StyledFormControl fullWidth>
