@@ -23,10 +23,15 @@ import {
   StyledTimePicker,
   StyledButton,
 } from "./styles";
+import { DiningLocation } from "../../types";
+import {
+  createAvailability,
+  CreateAvailabilityRequest,
+} from "../../clients/availabilityClient";
 
 const DonateSwipes: React.FC = () => {
   const [date, setDate] = useState<Dayjs | null>(null);
-  const [location, setLocation] = useState<string>("");
+  const [location, setLocation] = useState<DiningLocation | "">("");
   const [checkInTime, setCheckInTime] = useState<Dayjs | null>(null);
   const [checkOutTime, setCheckOutTime] = useState<Dayjs | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -36,7 +41,7 @@ const DonateSwipes: React.FC = () => {
   };
 
   const handleLocationChange = (event: SelectChangeEvent) => {
-    setLocation(event.target.value as string);
+    setLocation(event.target.value as DiningLocation);
   };
 
   const handleCheckInTimeChange = (newValue: Dayjs | null) => {
@@ -47,17 +52,34 @@ const DonateSwipes: React.FC = () => {
     setCheckOutTime(newValue);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setFormSubmitted(true);
 
     if (date && location && checkInTime && checkOutTime) {
-      // Handle form submission logic here
-      console.log({
-        date: date.format("YYYY-MM-DD"),
-        location,
-        checkInTime: checkInTime.format("HH:mm"),
-        checkOutTime: checkOutTime.format("HH:mm"),
-      });
+      // Create a new date object with the selected date
+      const startDateTime = date
+        .hour(checkInTime.hour())
+        .minute(checkInTime.minute());
+      const endDateTime = date
+        .hour(checkOutTime.hour())
+        .minute(checkOutTime.minute());
+
+      // Find the enum key (like "COMMONS") that corresponds to the selected value (like "Commons")
+      const locationKey = Object.keys(DiningLocation).find(
+        (key) => DiningLocation[key as keyof typeof DiningLocation] === location
+      );
+
+      const request: CreateAvailabilityRequest = {
+        userId: parseInt(localStorage.getItem("userId")!!),
+        location: locationKey as string, // Send the enum name (e.g., "COMMONS") instead of the value
+        startTime: startDateTime.toISOString(), // ISO format: YYYY-MM-DDTHH:mm:ss.sssZ
+        endTime: endDateTime.toISOString(),
+      };
+
+      console.log("Sending request:", request);
+
+      const response = await createAvailability(request);
+      console.log("Response:", response);
     }
   };
 
@@ -127,9 +149,11 @@ const DonateSwipes: React.FC = () => {
                   label="Select Location"
                   onChange={handleLocationChange}
                 >
-                  <MenuItem value="dining-hall-1">Dining Hall 1</MenuItem>
-                  <MenuItem value="dining-hall-2">Dining Hall 2</MenuItem>
-                  {/* Add more location options as needed */}
+                  {Object.values(DiningLocation).map((location) => (
+                    <MenuItem key={location} value={location}>
+                      {location}
+                    </MenuItem>
+                  ))}
                 </Select>
               </StyledFormControl>
             </Grid>
