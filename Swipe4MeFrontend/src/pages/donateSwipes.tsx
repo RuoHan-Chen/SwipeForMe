@@ -121,7 +121,12 @@ const DonateSwipes: React.FC = () => {
 
   const handleConfirm = () => {
     // Handle form submission logic here
-    console.log({ date, location, checkInTime, checkOutTime });
+    console.log({
+      date: date?.format("YYYY-MM-DD"),
+      location,
+      checkInTime,
+      checkOutTime,
+    });
   };
 
   return (
