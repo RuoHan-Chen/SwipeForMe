@@ -19,7 +19,6 @@ import {
   ThemeProvider,
   Typography,
   Box,
-  Alert,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import {
@@ -35,7 +34,8 @@ import {
   TransactionStatus,
 } from "../clients/transactionClient";
 import { getCurrentUser, User } from "../clients/userClient";
-import Snackbar from "@mui/material/Snackbar";
+import { useSnackbar } from "../context/SnackbarContext";
+import { DiningLocation } from "../types";
 
 const theme = createTheme({
   palette: {
@@ -99,11 +99,11 @@ const buySwipes: React.FC = () => {
     currentUserPendingAvailabilityIds,
     setCurrentUserPendingAvailabilityIds,
   ] = useState<Set<number>>(new Set());
-  const [open, setOpen] = useState(false);
-  const [sendInviteSuccess, setSendInviteSuccess] = useState(false);
   const [loadingAvailabilityId, setLoadingAvailabilityId] = useState<
     number | null
-  >(null); // Used for loading state of the button
+  >(null);
+
+  const { success, error } = useSnackbar();
 
   // Fetch all availabilities
   useEffect(() => {
@@ -182,6 +182,10 @@ const buySwipes: React.FC = () => {
     });
   };
 
+  const convertEnumStringToDiningLocation = (location: string) => {
+    return DiningLocation[location as keyof typeof DiningLocation];
+  };
+
   /**
    * Handles the sending of an invite
    * @param availabilityId - The id of the availability
@@ -197,22 +201,19 @@ const buySwipes: React.FC = () => {
       status: TransactionStatus.PENDING,
     };
 
-    // Set only the button of this row to loading
     setLoadingAvailabilityId(availabilityId);
 
     try {
       await createTransaction(transaction);
-      setSendInviteSuccess(true); // Show success snackbar
+      success("Invite sent!");
       setCurrentUserPendingAvailabilityIds(
-        new Set(currentUserPendingAvailabilityIds.add(availabilityId)) // Add the availabilityId to the set of pending availabilityIds
+        new Set(currentUserPendingAvailabilityIds.add(availabilityId))
       );
-    } catch (error) {
-      setSendInviteSuccess(false);
+    } catch (err) {
+      error("Failed to send invite");
     } finally {
       setLoadingAvailabilityId(null);
     }
-
-    setOpen(true);
   };
 
   /**
@@ -226,20 +227,6 @@ const buySwipes: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={() => setOpen(false)}
-      >
-        <Alert
-          severity={sendInviteSuccess ? "success" : "error"}
-          onClose={() => setOpen(false)}
-          sx={{ width: "100%" }}
-        >
-          {sendInviteSuccess ? "Invite sent!" : "Failed to send invite"}
-        </Alert>
-      </Snackbar>
-
       <div style={{ paddingTop: "50px" }}>
         <TableContainer
           component={Paper}
@@ -305,7 +292,9 @@ const buySwipes: React.FC = () => {
                         <TableCell align="left">
                           {row.firstName} {row.lastName}
                         </TableCell>
-                        <TableCell align="center">{row.location}</TableCell>
+                        <TableCell align="center">
+                          {convertEnumStringToDiningLocation(row.location)}
+                        </TableCell>
                         <TableCell align="center">
                           {formatAvailableTime(row.startTime, row.endTime)}
                         </TableCell>

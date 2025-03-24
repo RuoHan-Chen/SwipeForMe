@@ -7,12 +7,13 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import GetSwipes from "./pages/getSwipes";
-import TradeSwipes from "./pages/tradeSwipes";
+import TradeSwipes from "./pages/DonateSwipes/donateSwipes.tsx";
 import TransactionHistory from "./pages/transactionHistory.tsx";
 import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
 import createTheme from "@mui/material/styles/createTheme";
 import { ThemeProvider } from "@mui/material/styles";
+import { SnackbarProvider } from "./context/SnackbarContext";
 
 function App() {
   const theme = createTheme({
@@ -25,27 +26,29 @@ function App() {
   });
 
   return (
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <Router>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/getSwipes" element={<GetSwipes />} />
-            <Route path="/donateSwipes" element={<TradeSwipes />} />
-            <Route path="/transaction" element={<TransactionHistory />} />
-            <Route
-              path="*"
-              element={
-                <h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>
-              }
-            />
-          </Routes>
-        </Router>
-      </ThemeProvider>
-    </AuthProvider>
+    <SnackbarProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/getSwipes" element={<GetSwipes />} />
+              <Route path="/donateSwipes" element={<TradeSwipes />} />
+              <Route path="/transaction" element={<TransactionHistory />} />
+              <Route
+                path="*"
+                element={
+                  <h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>
+                }
+              />
+            </Routes>
+          </Router>
+        </ThemeProvider>
+      </AuthProvider>
+    </SnackbarProvider>
   );
 }
 
