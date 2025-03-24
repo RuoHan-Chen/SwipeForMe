@@ -39,8 +39,6 @@ logging:
   level:
     org.springframework: TRACE
     org.apache.coyote.http11.Http11InputBuffer: TRACE
-    org.springframework.jdbc.core: DEBUG
-    org.springframework.jdbc.datasource.init: DEBUG
 
 swipe4me:
   jwt:

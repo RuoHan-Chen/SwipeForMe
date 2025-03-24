@@ -13,9 +13,9 @@ import java.util.List;
 
 @Repository
 public interface TransactionsRepository extends JpaRepository<TransactionEntity, Long> {
-	List<TransactionEntity> findByBuyerId(Long buyerId);
+	List<TransactionEntity> findByBuyer_Id(Long buyerId);
 
-	List<TransactionEntity> findBySellerId(Long sellerId);
+	List<TransactionEntity> findBySeller_Id(Long sellerId);
 
 	List<TransactionEntity> findByStatus(TransactionStatus status);
 }

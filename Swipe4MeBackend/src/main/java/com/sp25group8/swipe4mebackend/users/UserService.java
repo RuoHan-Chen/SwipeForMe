@@ -19,7 +19,13 @@ public class UserService {
 
     public UserEntity createUser(String firstName, String lastName, String email, String phoneNumber,
             String profilePicUrl) {
-        UserEntity user = new UserEntity(null, firstName, lastName, email, phoneNumber, null, profilePicUrl);
+        UserEntity user = UserEntity.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .profilePicUrl(profilePicUrl)
+                .build();
         return userRepository.save(user);
     }
 

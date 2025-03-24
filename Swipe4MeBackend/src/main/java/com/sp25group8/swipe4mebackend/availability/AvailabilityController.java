@@ -4,7 +4,6 @@
 package com.sp25group8.swipe4mebackend.availability;
 
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
-import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityJoinResult;
 import com.sp25group8.swipe4mebackend.models.enums.DiningLocation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,8 +21,8 @@ public class AvailabilityController {
     private final AvailabilityService availabilityService;
 
     @GetMapping
-    public ResponseEntity<List<AvailabilityJoinResult>> getAllAvailabilities() {
-        List<AvailabilityJoinResult> availabilities = availabilityService.getAvailabilities();
+    public ResponseEntity<List<AvailabilityEntity>> getAllAvailabilities() {
+        List<AvailabilityEntity> availabilities = availabilityService.getAvailabilities();
         return ResponseEntity.ok(availabilities);
     }
 

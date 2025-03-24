@@ -5,7 +5,6 @@ package com.sp25group8.swipe4mebackend.transactions;
 
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
-import com.sp25group8.swipe4mebackend.models.transactions.DetailedTransactionResponse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -45,23 +44,5 @@ public class TransactionsController {
     public ResponseEntity<TransactionEntity> updateTransactionStatus(@PathVariable Long transactionId,
             @RequestParam TransactionStatus status) {
         return ResponseEntity.ok(transactionsService.updateTransactionStatus(transactionId, status));
-    }
-
-    @GetMapping("/detailed/buyer/{buyerId}")
-    public ResponseEntity<List<DetailedTransactionResponse>> getDetailedTransactionsByBuyer(
-            @PathVariable Long buyerId) {
-        return ResponseEntity.ok(transactionsService.getDetailedTransactionsByBuyer(buyerId));
-    }
-
-    @GetMapping("/detailed/seller/{sellerId}")
-    public ResponseEntity<List<DetailedTransactionResponse>> getDetailedTransactionsBySeller(
-            @PathVariable Long sellerId) {
-        return ResponseEntity.ok(transactionsService.getDetailedTransactionsBySeller(sellerId));
-    }
-
-    @GetMapping("/detailed/{transactionId}")
-    public ResponseEntity<DetailedTransactionResponse> getDetailedTransaction(
-            @PathVariable Long transactionId) {
-        return ResponseEntity.ok(transactionsService.getDetailedTransaction(transactionId));
     }
 }

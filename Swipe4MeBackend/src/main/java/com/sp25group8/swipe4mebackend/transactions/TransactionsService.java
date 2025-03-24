@@ -5,10 +5,8 @@ package com.sp25group8.swipe4mebackend.transactions;
 
 import com.sp25group8.swipe4mebackend.emails.EmailService;
 import com.sp25group8.swipe4mebackend.models.dtos.UserDto;
-import com.sp25group8.swipe4mebackend.models.transactions.DetailedTransactionResponse;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
-import com.sp25group8.swipe4mebackend.models.transactions.TransactionWithUsersAndAvailability;
 import com.sp25group8.swipe4mebackend.users.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +26,7 @@ public class TransactionsService {
     // 创建交易
     public TransactionEntity createTransaction(TransactionEntity transaction) {
         // Send email to seller to notify them of the new transaction
-        sendInvitationNotificationEmail(transaction.sellerId());
+        sendInvitationNotificationEmail(transaction.getSeller().getId());
 
         return transactionRepository.save(transaction);
     }
@@ -41,47 +38,19 @@ public class TransactionsService {
 
     // 获取用户的所有交易（作为买家）
     public List<TransactionEntity> getTransactionsByBuyer(Long buyerId) {
-        return transactionRepository.findByBuyerId(buyerId);
+        return transactionRepository.findByBuyer_Id(buyerId);
     }
 
     // 获取用户的所有交易（作为卖家）
     public List<TransactionEntity> getTransactionsBySeller(Long sellerId) {
-        return transactionRepository.findBySellerId(sellerId);
+        return transactionRepository.findBySeller_Id(sellerId);
     }
 
-    public List<DetailedTransactionResponse> getDetailedTransactionsByBuyer(Long buyerId) {
-        List<TransactionWithUsersAndAvailability> transactions = transactionRepository
-                .findByBuyerIdWithUsersAndAvailability(buyerId);
-        return transactions.stream()
-                .map(DetailedTransactionResponse::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<DetailedTransactionResponse> getDetailedTransactionsBySeller(Long sellerId) {
-        List<TransactionWithUsersAndAvailability> transactions = transactionRepository
-                .findBySellerIdWithUsersAndAvailability(sellerId);
-        return transactions.stream()
-                .map(DetailedTransactionResponse::new)
-                .collect(Collectors.toList());
-    }
-
-    public DetailedTransactionResponse getDetailedTransaction(Long transactionId) {
-        TransactionWithUsersAndAvailability transaction = transactionRepository
-                .findTransactionWithUsersAndAvailability(transactionId);
-        return new DetailedTransactionResponse(transaction);
-    }
-
-    // 更新交易状态
     public TransactionEntity updateTransactionStatus(Long transactionId, TransactionStatus status) {
         Optional<TransactionEntity> transactionOptional = transactionRepository.findById(transactionId);
         TransactionEntity transaction = transactionOptional.orElseThrow();
-        TransactionEntity updatedTx = new TransactionEntity(
-                transaction.id(),
-                transaction.availabilityId(),
-                transaction.buyerId(),
-                transaction.sellerId(),
-                status);
-        return transactionRepository.save(updatedTx);
+        transaction.setStatus(status);
+        return transactionRepository.save(transaction);
     }
 
     private void sendInvitationNotificationEmail(Long sellerId) {

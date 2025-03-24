@@ -3,8 +3,6 @@
 
 package com.sp25group8.swipe4mebackend.models.users;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -18,21 +16,26 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Entity
-@Table("users")
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserEntity implements UserDetails, OAuth2User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,19 +61,24 @@ public class UserEntity implements UserDetails, OAuth2User {
 
 	// Relationships
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<AvailabilityEntity> availabilities;
+	@Builder.Default
+	private Set<AvailabilityEntity> availabilities = new HashSet<>();
 
 	@OneToMany(mappedBy = "buyer")
-	private Set<TransactionEntity> transactionsAsBuyer;
+	@Builder.Default
+	private Set<TransactionEntity> transactionsAsBuyer = new HashSet<>();
 
 	@OneToMany(mappedBy = "seller")
-	private Set<TransactionEntity> transactionsAsSeller;
+	@Builder.Default
+	private Set<TransactionEntity> transactionsAsSeller = new HashSet<>();
 
 	@OneToMany(mappedBy = "buyer")
-	private Set<RatingEntity> ratingsAsBuyer;
+	@Builder.Default
+	private Set<RatingEntity> ratingsAsBuyer = new HashSet<>();
 
 	@OneToMany(mappedBy = "seller")
-	private Set<RatingEntity> ratingsAsSeller;
+	@Builder.Default
+	private Set<RatingEntity> ratingsAsSeller = new HashSet<>();
 
 	@Override
 	public Map<String, Object> getAttributes() {

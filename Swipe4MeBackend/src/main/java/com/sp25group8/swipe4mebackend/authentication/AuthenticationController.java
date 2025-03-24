@@ -25,15 +25,15 @@ public class AuthenticationController {
 
     @PostMapping("/oauth2/google/login")
     public LoginResponse googleLogin(
-            @RequestParam("id_token") String idToken
-    ) throws GeneralSecurityException, IOException, InvalidGoogleIdTokenException {
+            @RequestParam("id_token") String idToken)
+            throws GeneralSecurityException, IOException, InvalidGoogleIdTokenException {
         UserEntity authenticatedUser = authenticationService.processGoogleIdTokenString(idToken);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         String token = jwtService.generateToken(authenticatedUser);
 
-        return new LoginResponse(token, authenticatedUser.id());
+        return new LoginResponse(token, authenticatedUser.getId());
     }
 
 }
