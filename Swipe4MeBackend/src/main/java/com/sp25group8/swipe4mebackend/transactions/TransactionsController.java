@@ -5,14 +5,13 @@ package com.sp25group8.swipe4mebackend.transactions;
 
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
-import com.sp25group8.swipe4mebackend.models.transactions.TransactionWithAvailability;
+import com.sp25group8.swipe4mebackend.models.transactions.DetailedTransactionResponse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/transactions")
@@ -48,21 +47,21 @@ public class TransactionsController {
         return ResponseEntity.ok(transactionsService.updateTransactionStatus(transactionId, status));
     }
 
-    @GetMapping("/with-availability/buyer/{buyerId}")
-    public ResponseEntity<List<TransactionWithAvailability>> getTransactionsByBuyerWithAvailability(
+    @GetMapping("/detailed/buyer/{buyerId}")
+    public ResponseEntity<List<DetailedTransactionResponse>> getDetailedTransactionsByBuyer(
             @PathVariable Long buyerId) {
-        return ResponseEntity.ok(transactionsService.getTransactionsByBuyerWithAvailability(buyerId));
+        return ResponseEntity.ok(transactionsService.getDetailedTransactionsByBuyer(buyerId));
     }
 
-    @GetMapping("/with-availability/seller/{sellerId}")
-    public ResponseEntity<List<TransactionWithAvailability>> getTransactionsBySellerWithAvailability(
+    @GetMapping("/detailed/seller/{sellerId}")
+    public ResponseEntity<List<DetailedTransactionResponse>> getDetailedTransactionsBySeller(
             @PathVariable Long sellerId) {
-        return ResponseEntity.ok(transactionsService.getTransactionsBySellerWithAvailability(sellerId));
+        return ResponseEntity.ok(transactionsService.getDetailedTransactionsBySeller(sellerId));
     }
 
-    @GetMapping("/with-availability/{transactionId}")
-    public ResponseEntity<TransactionWithAvailability> getTransactionWithAvailability(
+    @GetMapping("/detailed/{transactionId}")
+    public ResponseEntity<DetailedTransactionResponse> getDetailedTransaction(
             @PathVariable Long transactionId) {
-        return ResponseEntity.ok(transactionsService.getTransactionWithAvailability(transactionId));
+        return ResponseEntity.ok(transactionsService.getDetailedTransaction(transactionId));
     }
 }

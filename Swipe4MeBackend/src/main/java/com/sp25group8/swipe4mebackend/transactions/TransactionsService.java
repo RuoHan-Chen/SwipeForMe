@@ -5,9 +5,10 @@ package com.sp25group8.swipe4mebackend.transactions;
 
 import com.sp25group8.swipe4mebackend.emails.EmailService;
 import com.sp25group8.swipe4mebackend.models.dtos.UserDto;
+import com.sp25group8.swipe4mebackend.models.transactions.DetailedTransactionResponse;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
-import com.sp25group8.swipe4mebackend.models.transactions.TransactionWithAvailability;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionWithUsersAndAvailability;
 import com.sp25group8.swipe4mebackend.users.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,20 +49,26 @@ public class TransactionsService {
         return transactionRepository.findBySellerId(sellerId);
     }
 
-    public List<TransactionWithAvailability> getTransactionsWithAvailability() {
-        return transactionRepository.findAllTransactionsWithAvailabilities();
+    public List<DetailedTransactionResponse> getDetailedTransactionsByBuyer(Long buyerId) {
+        List<TransactionWithUsersAndAvailability> transactions = transactionRepository
+                .findByBuyerIdWithUsersAndAvailability(buyerId);
+        return transactions.stream()
+                .map(DetailedTransactionResponse::new)
+                .collect(Collectors.toList());
     }
 
-    public List<TransactionWithAvailability> getTransactionsByBuyerWithAvailability(Long buyerId) {
-        return transactionRepository.findByBuyerIdWithAvailability(buyerId);
+    public List<DetailedTransactionResponse> getDetailedTransactionsBySeller(Long sellerId) {
+        List<TransactionWithUsersAndAvailability> transactions = transactionRepository
+                .findBySellerIdWithUsersAndAvailability(sellerId);
+        return transactions.stream()
+                .map(DetailedTransactionResponse::new)
+                .collect(Collectors.toList());
     }
 
-    public List<TransactionWithAvailability> getTransactionsBySellerWithAvailability(Long sellerId) {
-        return transactionRepository.findBySellerIdWithAvailability(sellerId);
-    }
-
-    public TransactionWithAvailability getTransactionWithAvailability(Long transactionId) {
-        return transactionRepository.findTransactionWithAvailability(transactionId);
+    public DetailedTransactionResponse getDetailedTransaction(Long transactionId) {
+        TransactionWithUsersAndAvailability transaction = transactionRepository
+                .findTransactionWithUsersAndAvailability(transactionId);
+        return new DetailedTransactionResponse(transaction);
     }
 
     // 更新交易状态
