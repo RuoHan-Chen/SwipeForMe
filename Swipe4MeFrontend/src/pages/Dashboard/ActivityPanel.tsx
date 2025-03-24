@@ -178,7 +178,7 @@ const ActivityPanel = () => {
           }}
         >
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            {viewMode === "buyer" ? "Your Purchases" : "Your Availabilities"}
+            {viewMode === "buyer" ? "Your Transactions" : "Your Availabilities"}
           </Typography>
 
           <Box sx={{ display: "flex", gap: 2 }}>
