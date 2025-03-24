@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar";
 import Home from "./pages/home";
 import Login from "./pages/login";
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/Dashboard/dashboard.tsx";
 import GetSwipes from "./pages/getSwipes";
 import TradeSwipes from "./pages/DonateSwipes/donateSwipes.tsx";
 import TransactionHistory from "./pages/transactionHistory.tsx";
@@ -28,31 +28,65 @@ function App() {
   });
 
   return (
-   <SnackbarProvider>
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <Router>
+    <SnackbarProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <Router>
             <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="/getSwipes" element={<PrivateRoute><GetSwipes /></PrivateRoute>} />
-            <Route path="/donateSwipes" element={<PrivateRoute><TradeSwipes /></PrivateRoute>} />
-            <Route path="/transaction" element={<PrivateRoute><TransactionHistory /></PrivateRoute>} />
-            <Route path="/rating" element={<PrivateRoute><Rating /></PrivateRoute>} />
-            <Route
-              path="*"
-              element={
-                <h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>
-              }
-            />
-          </Routes>
-        </Router>
-      </ThemeProvider>
-    </AuthProvider>
-   </SnackbarProvider>
-
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <Dashboard />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/getSwipes"
+                element={
+                  <PrivateRoute>
+                    <GetSwipes />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/donateSwipes"
+                element={
+                  <PrivateRoute>
+                    <TradeSwipes />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/transaction"
+                element={
+                  <PrivateRoute>
+                    <TransactionHistory />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/rating"
+                element={
+                  <PrivateRoute>
+                    <Rating />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <h1 style={{ textAlign: "center" }}>404 - Page Not Found</h1>
+                }
+              />
+            </Routes>
+          </Router>
+        </ThemeProvider>
+      </AuthProvider>
+    </SnackbarProvider>
   );
 }
 
