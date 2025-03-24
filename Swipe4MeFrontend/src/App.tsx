@@ -7,7 +7,7 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import GetSwipes from "./pages/getSwipes";
-import TradeSwipes from "./pages/donateSwipes.tsx";
+import TradeSwipes from "./pages/DonateSwipes/donateSwipes.tsx";
 import TransactionHistory from "./pages/transactionHistory.tsx";
 import "./App.css";
 import { AuthProvider } from "./context/AuthContext";
