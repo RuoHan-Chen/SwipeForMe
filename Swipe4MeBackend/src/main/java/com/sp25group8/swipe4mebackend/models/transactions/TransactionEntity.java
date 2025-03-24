@@ -3,18 +3,40 @@
 
 package com.sp25group8.swipe4mebackend.models.transactions;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Builder;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
-@Table("transactions")
-public record TransactionEntity(
-        @Id
-        Long id,
-        Long availabilityId,
-        Long buyerId,
-        Long sellerId,
-        TransactionStatus status
-) {
+@Entity
+@Table(name = "transactions")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class TransactionEntity {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "availability_id", nullable = false)
+	private AvailabilityEntity availability;
+
+	@ManyToOne
+	@JoinColumn(name = "buyer_id", nullable = false)
+	private UserEntity buyer;
+
+	@ManyToOne
+	@JoinColumn(name = "seller_id", nullable = false)
+	private UserEntity seller;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", nullable = false)
+	private TransactionStatus status;
 }

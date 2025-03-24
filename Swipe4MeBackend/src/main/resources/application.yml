@@ -9,6 +9,9 @@ spring:
   sql:
     init:
       mode: always
+  jpa:
+    hibernate:
+      ddl-auto: validate
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/postgres

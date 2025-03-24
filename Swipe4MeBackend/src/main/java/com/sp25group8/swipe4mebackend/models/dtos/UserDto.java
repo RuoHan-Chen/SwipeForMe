@@ -12,31 +12,17 @@ public record UserDto(
         String email,
         String phoneNumber,
         Double rating,
-        String profilePicUrl
-) {
+        String profilePicUrl) {
 
     public static UserDto fromEntity(UserEntity userEntity) {
         return new UserDto(
-                userEntity.id(),
-                userEntity.firstName(),
-                userEntity.lastName(),
-                userEntity.email(),
-                userEntity.phoneNumber(),
-                userEntity.rating(),
-                userEntity.ProfilePicUrl()
-        );
-    }
-
-    public UserEntity toEntity() {
-        return new UserEntity(
-                id,
-                firstName,
-                lastName,
-                email,
-                phoneNumber,
-                rating,
-                profilePicUrl
-        );
+                userEntity.getId(),
+                userEntity.getFirstName(),
+                userEntity.getLastName(),
+                userEntity.getEmail(),
+                userEntity.getPhoneNumber(),
+                userEntity.getRating(),
+                userEntity.getProfilePicUrl());
     }
 
 }

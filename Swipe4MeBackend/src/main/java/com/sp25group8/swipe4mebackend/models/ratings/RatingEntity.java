@@ -3,16 +3,38 @@
 
 package com.sp25group8.swipe4mebackend.models.ratings;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Table("ratings")
-public record RatingEntity(
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "ratings")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RatingEntity {
+
         @Id
-        Long rId,
-        Long sellerId,
-        Long buyerId,
-        Double toSellerRating,
-        Double toBuyerRating
-) {
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "r_id")
+        private Long rId;
+
+        @ManyToOne
+        @JoinColumn(name = "seller_id", nullable = false)
+        private UserEntity seller;
+
+        @ManyToOne
+        @JoinColumn(name = "buyer_id", nullable = false)
+        private UserEntity buyer;
+
+        @Column(name = "to_seller_rating")
+        private Double toSellerRating;
+
+        @Column(name = "to_buyer_rating")
+        private Double toBuyerRating;
 }
