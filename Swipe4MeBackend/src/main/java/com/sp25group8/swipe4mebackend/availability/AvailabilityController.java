@@ -3,8 +3,7 @@
 
 package com.sp25group8.swipe4mebackend.availability;
 
-import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
-import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityJoinResult;
+import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityDto;
 import com.sp25group8.swipe4mebackend.models.enums.DiningLocation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,13 +21,19 @@ public class AvailabilityController {
     private final AvailabilityService availabilityService;
 
     @GetMapping
-    public ResponseEntity<List<AvailabilityJoinResult>> getAllAvailabilities() {
-        List<AvailabilityJoinResult> availabilities = availabilityService.getAvailabilities();
+    public ResponseEntity<List<AvailabilityDto>> getAllAvailabilities() {
+        List<AvailabilityDto> availabilities = availabilityService.getAvailabilities();
+        return ResponseEntity.ok(availabilities);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AvailabilityDto>> getAvailabilitiesByUserId(@PathVariable Long userId) {
+        List<AvailabilityDto> availabilities = availabilityService.getAvailabilitiesByUserId(userId);
         return ResponseEntity.ok(availabilities);
     }
 
     @PostMapping
-    public ResponseEntity<AvailabilityEntity> addAvailability(
+    public ResponseEntity<AvailabilityDto> addAvailability(
             @RequestParam Long userId,
             @RequestParam DiningLocation location,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,

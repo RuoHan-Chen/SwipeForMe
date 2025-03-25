@@ -4,7 +4,7 @@
 package com.sp25group8.swipe4mebackend.users;
 
 import com.sp25group8.swipe4mebackend.exceptions.UserNotFoundException;
-import com.sp25group8.swipe4mebackend.models.dtos.UserDto;
+import com.sp25group8.swipe4mebackend.models.users.UserDto;
 import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -19,7 +19,13 @@ public class UserService {
 
     public UserEntity createUser(String firstName, String lastName, String email, String phoneNumber,
             String profilePicUrl) {
-        UserEntity user = new UserEntity(null, firstName, lastName, email, phoneNumber, null, profilePicUrl);
+        UserEntity user = UserEntity.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .profilePicUrl(profilePicUrl)
+                .build();
         return userRepository.save(user);
     }
 

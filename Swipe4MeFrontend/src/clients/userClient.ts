@@ -1,17 +1,8 @@
 // Author: Steven Yi
 // Time spent: 15 minutes
 
+import { User } from "../types";
 import { toEndpointUrl } from "./utils";
-
-export interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  rating: number;
-  profilePicUrl: string;
-}
 
 export const getCurrentUser = async () => {
   const response = await fetch(toEndpointUrl("/api/users/me"), {

@@ -1,14 +1,13 @@
 // Author: Steven Yi
 // Time spent: 30 minutes
 
+import { Transaction } from "../types";
 import { toEndpointUrl } from "./utils";
 
-export interface Transaction {
-  id?: number;
+export interface CreateTransactionRequest {
   availabilityId: number;
   buyerId: number;
   sellerId: number;
-  status: TransactionStatus;
 }
 
 export enum TransactionStatus {
@@ -19,14 +18,22 @@ export enum TransactionStatus {
   REJECTED = "REJECTED",
 }
 
-export const createTransaction = async (transaction: Transaction) => {
-  const response = await fetch(toEndpointUrl("/api/transactions"), {
+export const createTransaction = async (request: CreateTransactionRequest) => {
+  const urlWithParams =
+    "/api/transactions?" +
+    new URLSearchParams({
+      availabilityId: request.availabilityId.toString(),
+      buyerId: request.buyerId.toString(),
+      sellerId: request.sellerId.toString(),
+      status: TransactionStatus.PENDING,
+    }).toString();
+
+  const response = await fetch(toEndpointUrl(urlWithParams), {
     method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(transaction),
   });
 
   if (!response.ok) {
@@ -55,6 +62,74 @@ export const getCurrentUserTransactionsAsBuyer = async (): Promise<
 
   if (!response.ok) {
     throw new Error("Failed to fetch transactions");
+  }
+
+  return await response.json();
+};
+
+export const getCurrentUserTransactionsAsSeller = async (): Promise<
+  Transaction[]
+> => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    throw new Error("User ID not found");
+  }
+
+  const response = await fetch(
+    toEndpointUrl(`/api/transactions/seller/${userId}`),
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch transactions");
+  }
+
+  return await response.json();
+};
+
+export const acceptTransaction = async (transactionId: number) => {
+  const urlWithParams =
+    `/api/transactions/${transactionId}/status?` +
+    new URLSearchParams({
+      status: TransactionStatus.IN_PROGRESS,
+    }).toString();
+
+  const response = await fetch(toEndpointUrl(urlWithParams), {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to accept transaction");
+  }
+
+  return await response.json();
+};
+
+export const rejectTransaction = async (transactionId: number) => {
+  const urlWithParams =
+    `/api/transactions/${transactionId}/status?` +
+    new URLSearchParams({
+      status: TransactionStatus.REJECTED,
+    }).toString();
+
+  const response = await fetch(toEndpointUrl(urlWithParams), {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to reject transaction");
   }
 
   return await response.json();

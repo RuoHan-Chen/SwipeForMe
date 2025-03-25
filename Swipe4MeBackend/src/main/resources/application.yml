@@ -9,6 +9,9 @@ spring:
   sql:
     init:
       mode: always
+  jpa:
+    hibernate:
+      ddl-auto: validate
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/postgres
@@ -34,10 +37,9 @@ server:
 
 logging:
   level:
-    org.springframework: TRACE
+    org.springframework: DEBUG
     org.apache.coyote.http11.Http11InputBuffer: TRACE
-    org.springframework.jdbc.core: DEBUG
-    org.springframework.jdbc.datasource.init: DEBUG
+    com.sp25group8: DEBUG
 
 swipe4me:
   jwt:

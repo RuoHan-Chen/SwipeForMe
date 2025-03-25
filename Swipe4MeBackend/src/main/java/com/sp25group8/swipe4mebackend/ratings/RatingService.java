@@ -15,21 +15,22 @@ public class RatingService {
 
     private final RatingRepository ratingRepository;
 
-    //find the user's rating according to its user
-    public double getUserRating(Long userId){
+    // find the user's rating according to its user
+    public double getUserRating(Long userId) {
         List<RatingEntity> ratingsAsSeller = ratingRepository.findAllBySellerId(userId);
         List<RatingEntity> ratingsAsBuyer = ratingRepository.findAllByBuyerId(userId);
 
-        int numEntries = ratingsAsBuyer.size()+ratingsAsSeller.size();
-        if (numEntries == 0) return -1;
+        int numEntries = ratingsAsBuyer.size() + ratingsAsSeller.size();
+        if (numEntries == 0)
+            return -1;
 
         Double sum = 0.0;
         for (RatingEntity ratingEntity : ratingsAsSeller) {
-            sum += ratingEntity.toSellerRating(); //getter method
+            sum += ratingEntity.getToSellerRating(); // getter method
         }
 
         for (RatingEntity ratingEntity : ratingsAsBuyer) {
-            sum += ratingEntity.toBuyerRating();
+            sum += ratingEntity.getToBuyerRating();
         }
 
         return sum / numEntries;

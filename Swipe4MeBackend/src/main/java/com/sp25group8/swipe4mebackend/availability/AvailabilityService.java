@@ -3,9 +3,11 @@
 
 package com.sp25group8.swipe4mebackend.availability;
 
+import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityDto;
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
-import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityJoinResult;
 import com.sp25group8.swipe4mebackend.models.enums.DiningLocation;
+import com.sp25group8.swipe4mebackend.users.UserRepository;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +19,26 @@ import java.util.List;
 public class AvailabilityService {
 
     private final AvailabilityRepository availabilityRepository;
+    private final UserRepository userRepository;
 
-    public List<AvailabilityJoinResult> getAvailabilities() {
-        return availabilityRepository.findAllAvailabilities();
+    public List<AvailabilityDto> getAvailabilities() {
+        return availabilityRepository.findAll().stream().map(AvailabilityDto::fromEntity).toList();
     }
 
-    public AvailabilityEntity createAvailability(
+    public List<AvailabilityDto> getAvailabilitiesByUserId(Long userId) {
+        return availabilityRepository.findAllByUserId(userId).stream().map(AvailabilityDto::fromEntity).toList();
+    }
+
+    public AvailabilityDto createAvailability(
             Long userId,
             DiningLocation location,
             LocalDateTime startTime,
             LocalDateTime endTime) {
-        AvailabilityEntity availabilityEntity = new AvailabilityEntity(null, userId, location, startTime, endTime);
-        return availabilityRepository.save(availabilityEntity);
+
+        UserEntity user = userRepository.findById(userId).orElseThrow();
+
+        AvailabilityEntity availabilityEntity = new AvailabilityEntity(null, user, location, startTime, endTime);
+        return AvailabilityDto.fromEntity(availabilityRepository.save(availabilityEntity));
     }
 
     public void removeAvailability(Long userId) {

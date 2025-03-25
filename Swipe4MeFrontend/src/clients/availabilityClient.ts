@@ -2,21 +2,7 @@
 // Time spent: 15 minutes
 
 import { toEndpointUrl } from "./utils";
-
-export interface AvailabilityResponse {
-  id: number;
-  userId: number;
-  firstName: string;
-  lastName: string;
-  location: string;
-  startTime: string;
-  endTime: string;
-  email: string;
-  rating?: number;
-}
-
-export type GetAllAvailabilityResponse = AvailabilityResponse[];
-
+import { Availability } from "../types";
 export interface CreateAvailabilityRequest {
   userId: number;
   location: string;
@@ -24,21 +10,63 @@ export interface CreateAvailabilityRequest {
   endTime: string;
 }
 
-export const getAllAvailabilities =
-  async (): Promise<GetAllAvailabilityResponse> => {
-    const response = await fetch(toEndpointUrl("/api/availabilities"), {
+export const getAllAvailabilities = async (): Promise<Availability[]> => {
+  const response = await fetch(toEndpointUrl("/api/availabilities"), {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  return await response.json();
+};
+
+export const getAvailabilityByUserId = async (
+  userId: number
+): Promise<Availability[]> => {
+  const response = await fetch(
+    toEndpointUrl(`/api/availabilities/user/${userId}`),
+    {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
-    });
+    }
+  );
 
-    return await response.json();
-  };
+  if (!response.ok) {
+    throw new Error("Failed to get availability by user ID");
+  }
+
+  return await response.json();
+};
+
+export const getCurrentUserAvailability = async (): Promise<Availability[]> => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    throw new Error("User ID not found");
+  }
+
+  const response = await fetch(
+    toEndpointUrl(`/api/availabilities/user/${userId}`),
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to get current user availability");
+  }
+
+  return await response.json();
+};
 
 export const createAvailability = async (
   request: CreateAvailabilityRequest
-): Promise<AvailabilityResponse> => {
+): Promise<Availability> => {
   const urlWithParams =
     "/api/availabilities?" +
     new URLSearchParams({

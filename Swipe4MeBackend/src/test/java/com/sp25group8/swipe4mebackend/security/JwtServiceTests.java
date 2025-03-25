@@ -26,14 +26,14 @@ public class JwtServiceTests {
         ReflectionTestUtils.setField(jwtService, "expirationTime", EXPIRATION_TIME);
 
         // Mock UserDetails
-        user = new UserEntity(
-                1L,
-                "John",
-                "Doe",
-                "jd@gmail.com",
-                "123",
-                null,
-                "abc.com");
+        user = UserEntity.builder()
+                .id(1L)
+                .firstName("John")
+                .lastName("Doe")
+                .email("jd@gmail.com")
+                .phoneNumber("123")
+                .profilePicUrl("abc.com")
+                .build();
     }
 
     @Test
@@ -61,14 +61,14 @@ public class JwtServiceTests {
     void isTokenValid_WithInvalidUsername_ShouldReturnFalse() {
         // Arrange
         String token = jwtService.generateToken(user);
-        UserEntity differentUser = new UserEntity(
-                2L,
-                "Jane",
-                "Doe",
-                "different@example.com",
-                "password123",
-                null,
-                null);
+        UserEntity differentUser = UserEntity.builder()
+                .id(2L)
+                .firstName("Jane")
+                .lastName("Doe")
+                .email("different@example.com")
+                .phoneNumber("password123")
+                .profilePicUrl("abc.com")
+                .build();
 
         // Act & Assert
         assertThat(jwtService.isTokenValid(token, differentUser)).isFalse();
