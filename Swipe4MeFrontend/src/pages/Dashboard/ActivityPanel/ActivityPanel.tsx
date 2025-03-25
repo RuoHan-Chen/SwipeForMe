@@ -27,7 +27,6 @@ const ActivityPanel = () => {
 
   // Function to format time duration
   const formatDuration = (startTime: string, endTime: string) => {
-    const start = new Date(startTime);
     const end = new Date(endTime);
 
     return `${formatDateTime(startTime)} - ${end.toLocaleTimeString("en-US", {
