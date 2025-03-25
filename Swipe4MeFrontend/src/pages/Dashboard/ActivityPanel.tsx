@@ -94,7 +94,7 @@ const ActivityPanel = () => {
   };
 
   return (
-    <Grid size={8} sx={{ mt: 3 }}>
+    <Grid size={12} sx={{ mt: 3 }}>
       <Paper sx={{ p: 3, borderRadius: 4 }}>
         <Box
           sx={{
@@ -281,67 +281,181 @@ const ActivityPanel = () => {
           ) : (
             // Seller View
             <>
-              <Typography variant="h6" sx={{ mb: 2, color: "text.secondary" }}>
-                Upcoming Availabilities
-              </Typography>
-
-              {availabilities.length > 0 ? (
-                availabilities.map((availability, index) => (
-                  <Paper
-                    key={index}
-                    elevation={1}
-                    sx={{
-                      p: 2,
-                      mb: 2,
-                      borderLeft: "4px solid #4caf50",
-                      "&:hover": { boxShadow: 3 },
-                    }}
+              <Box sx={{ display: "flex", gap: 3 }}>
+                {/* Left panel - Upcoming Availabilities */}
+                <Box sx={{ flex: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ mb: 2, color: "text.secondary" }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: "bold" }}
+                    Upcoming Availabilities
+                  </Typography>
+
+                  <Box sx={{ maxHeight: 250, overflow: "auto", pr: 1 }}>
+                    {availabilities.length > 0 ? (
+                      availabilities.map((availability, index) => (
+                        <Paper
+                          key={index}
+                          elevation={1}
+                          sx={{
+                            p: 2,
+                            mb: 2,
+                            borderLeft: "4px solid #4caf50",
+                            "&:hover": { boxShadow: 3 },
+                          }}
                         >
-                          {formatDuration(
-                            availability.startTime,
-                            availability.endTime
-                          )}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Location: {availability.location}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Paper>
-                ))
-              ) : (
-                <Typography variant="body1" color="text.secondary">
-                  No upcoming availabilities
-                </Typography>
-              )}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                sx={{ fontWeight: "bold" }}
+                              >
+                                {formatDuration(
+                                  availability.startTime,
+                                  availability.endTime
+                                )}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                Location: {availability.location}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Paper>
+                      ))
+                    ) : (
+                      <Typography variant="body1" color="text.secondary">
+                        No upcoming availabilities
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
+
+                {/* Right panel - Pending Invites */}
+                <Box sx={{ flex: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ mb: 2, color: "text.secondary" }}
+                  >
+                    Pending Invites
+                  </Typography>
+
+                  <Box sx={{ maxHeight: 250, overflow: "auto", pr: 1 }}>
+                    {sellerTransactions.filter(
+                      (transaction) => transaction.status === "PENDING"
+                    ).length > 0 ? (
+                      sellerTransactions
+                        .filter(
+                          (transaction) => transaction.status === "PENDING"
+                        )
+                        .map((transaction, index) => (
+                          <Paper
+                            key={index}
+                            elevation={1}
+                            sx={{
+                              p: 2,
+                              mb: 2,
+                              borderLeft: "4px solid #ff9800",
+                              "&:hover": { boxShadow: 3 },
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 2,
+                                }}
+                              >
+                                <Avatar
+                                  src={transaction.buyer.profilePicUrl}
+                                  alt={
+                                    transaction.buyer.firstName +
+                                    " " +
+                                    transaction.buyer.lastName
+                                  }
+                                  sx={{ width: 40, height: 40 }}
+                                />
+                                <Box>
+                                  <Typography
+                                    variant="subtitle1"
+                                    sx={{ fontWeight: "bold" }}
+                                  >
+                                    {formatDuration(
+                                      transaction.availability.startTime,
+                                      transaction.availability.endTime
+                                    )}{" "}
+                                    @ {transaction.availability.location}
+                                  </Typography>
+                                  <Typography
+                                    variant="body2"
+                                    sx={{ fontWeight: "medium" }}
+                                  >
+                                    From{" "}
+                                    {transaction.buyer.firstName +
+                                      " " +
+                                      transaction.buyer.lastName}
+                                  </Typography>
+                                </Box>
+                              </Box>
+
+                              <Box sx={{ display: "flex", gap: 1 }}>
+                                <Button
+                                  size="small"
+                                  variant="outlined"
+                                  color="error"
+                                  sx={{ borderRadius: 2 }}
+                                >
+                                  Decline
+                                </Button>
+                                <Button
+                                  size="small"
+                                  variant="contained"
+                                  color="primary"
+                                  sx={{ borderRadius: 2 }}
+                                >
+                                  Accept
+                                </Button>
+                              </Box>
+                            </Box>
+                          </Paper>
+                        ))
+                    ) : (
+                      <Typography variant="body1" color="text.secondary">
+                        No pending invites
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Add New Availability button */}
+              <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ borderRadius: 2, px: 3 }}
+                >
+                  Add New Availability
+                </Button>
+              </Box>
             </>
           )}
         </Box>
-
-        {/* Add New Availability button - only shown in seller view */}
-        {viewMode === "seller" && (
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ borderRadius: 2, px: 3 }}
-            >
-              Add New Availability
-            </Button>
-          </Box>
-        )}
       </Paper>
     </Grid>
   );
