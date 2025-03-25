@@ -94,7 +94,7 @@ const ActivityPanel = () => {
   };
 
   return (
-    <Grid size={6} sx={{ mt: 3 }}>
+    <Grid size={8} sx={{ mt: 3 }}>
       <Paper sx={{ p: 3, borderRadius: 4 }}>
         <Box
           sx={{
@@ -230,14 +230,21 @@ const ActivityPanel = () => {
                             variant="subtitle1"
                             sx={{ fontWeight: "bold" }}
                           >
-                            {transaction.availability.location}
+                            {formatDuration(
+                              transaction.availability.startTime,
+                              transaction.availability.endTime
+                            )}{" "}
+                            @ {transaction.availability.location}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {formatDateTime(transaction.availability.startTime)}
+                          {/* <Typography variant="body2" color="text.secondary">
+                            {formatDuration(
+                              transaction.availability.startTime,
+                              transaction.availability.endTime
+                            )}
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
                             Location: {transaction.availability.location}
-                          </Typography>
+                          </Typography> */}
                         </Box>
 
                         <Box
