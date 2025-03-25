@@ -4,16 +4,12 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import {
-  AvailabilityResponse,
-  getAvailabilityByUserId,
-  getCurrentUserAvailability,
-} from "../../clients/availabilityClient";
+import { getCurrentUserAvailability } from "../../clients/availabilityClient";
 import {
   getCurrentUserTransactionsAsBuyer,
   getCurrentUserTransactionsAsSeller,
-  Transaction,
 } from "../../clients/transactionClient";
+import { Availability, Transaction } from "../../types";
 
 const ActivityPanel = () => {
   const [viewMode, setViewMode] = useState<"buyer" | "seller">("buyer");
@@ -21,9 +17,7 @@ const ActivityPanel = () => {
     "pending" | "inProgress"
   >("pending");
 
-  const [availabilities, setAvailabilities] = useState<AvailabilityResponse[]>(
-    []
-  );
+  const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const [buyerTransactions, setBuyerTransactions] = useState<Transaction[]>([]);
   const [sellerTransactions, setSellerTransactions] = useState<Transaction[]>(
     []
@@ -269,84 +263,47 @@ const ActivityPanel = () => {
           {viewMode === "buyer" ? (
             // Buyer View
             <>
-              {transactionType === "pending" ? (
-                // Pending Transactions
-                <>
-                  {buyerTransactions.length > 0 ? (
-                    buyerTransactions.map((transaction, index) => (
-                      <Paper
-                        key={index}
-                        elevation={1}
-                        sx={{
-                          p: 2,
-                          mb: 2,
-                          borderLeft: "4px solid #ff9800",
-                          "&:hover": { boxShadow: 3 },
-                        }}
+              {buyerTransactions.length > 0 ? (
+                buyerTransactions
+                  .filter(
+                    (transaction) =>
+                      transaction.status ===
+                      (transactionType === "pending"
+                        ? "PENDING"
+                        : "IN_PROGRESS")
+                  )
+                  .map((transaction, index) => (
+                    <Paper
+                      key={index}
+                      elevation={1}
+                      sx={{
+                        p: 2,
+                        mb: 2,
+                        borderLeft: `4px solid ${
+                          transactionType === "pending" ? "#ff9800" : "#2196f3"
+                        }`,
+                        "&:hover": { boxShadow: 3 },
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "bold" }}
                       >
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: "bold" }}
-                        >
-                          {transaction.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {formatDateTime(transaction.availability.startTime)}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Location: {transaction.availability.location}
-                        </Typography>
-                        <Typography variant="body2" sx={{ mt: 1 }}>
-                          ${transaction.amount.toFixed(2)}
-                        </Typography>
-                      </Paper>
-                    ))
-                  ) : (
-                    <Typography variant="body1" color="text.secondary">
-                      No pending purchases
-                    </Typography>
-                  )}
-                </>
+                        {transaction.availability.location}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {formatDateTime(transaction.availability.startTime)}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Location: {transaction.availability.location}
+                      </Typography>
+                    </Paper>
+                  ))
               ) : (
-                // In Progress Transactions
-                <>
-                  {placeholderData.asBuyer.inProgress.length > 0 ? (
-                    placeholderData.asBuyer.inProgress.map(
-                      (transaction, index) => (
-                        <Paper
-                          key={index}
-                          elevation={1}
-                          sx={{
-                            p: 2,
-                            mb: 2,
-                            borderLeft: "4px solid #2196f3",
-                            "&:hover": { boxShadow: 3 },
-                          }}
-                        >
-                          <Typography
-                            variant="subtitle1"
-                            sx={{ fontWeight: "bold" }}
-                          >
-                            {transaction.title}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {formatDateTime(transaction.availability.startTime)}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Location: {transaction.availability.location}
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 1 }}>
-                            ${transaction.amount.toFixed(2)}
-                          </Typography>
-                        </Paper>
-                      )
-                    )
-                  ) : (
-                    <Typography variant="body1" color="text.secondary">
-                      No in-progress purchases
-                    </Typography>
-                  )}
-                </>
+                <Typography variant="body1" color="text.secondary">
+                  No {transactionType === "pending" ? "pending" : "in-progress"}{" "}
+                  purchases
+                </Typography>
               )}
             </>
           ) : (

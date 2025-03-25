@@ -26,10 +26,11 @@ import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient"
 import {
   createTransaction,
   TransactionStatus,
+  CreateTransactionRequest,
 } from "../clients/transactionClient";
 import { getCurrentUser } from "../clients/userClient";
 import { useSnackbar } from "../context/SnackbarContext";
-import { DiningLocation, User, Transaction, Availability } from "../types";
+import { DiningLocation, User, Availability } from "../types";
 
 const theme = createTheme({
   palette: {
@@ -132,7 +133,7 @@ const buySwipes: React.FC = () => {
             .filter(
               (transaction) => transaction.status === TransactionStatus.PENDING
             )
-            .map((transaction) => transaction.availabilityId)
+            .map((transaction) => transaction.availability.id)
         )
       );
       console.log(currentUserPendingAvailabilityIds);
@@ -186,17 +187,16 @@ const buySwipes: React.FC = () => {
   const handleSendInvite = async (availabilityId: number, sellerId: number) => {
     const currentUser: User = await getCurrentUser();
 
-    const transaction: Transaction = {
+    const createTransactionRequest: CreateTransactionRequest = {
       availabilityId: availabilityId,
       buyerId: currentUser.id,
       sellerId: sellerId,
-      status: TransactionStatus.PENDING,
     };
 
     setLoadingAvailabilityId(availabilityId);
 
     try {
-      await createTransaction(transaction);
+      await createTransaction(createTransactionRequest);
       success("Invite sent!");
       setCurrentUserPendingAvailabilityIds(
         new Set(currentUserPendingAvailabilityIds.add(availabilityId))

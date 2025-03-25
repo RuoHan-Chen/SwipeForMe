@@ -36,9 +36,9 @@ export interface User {
 
 export interface Transaction {
   id?: number;
-  availabilityId: number;
-  buyerId: number;
-  sellerId: number;
+  availability: Availability;
+  buyer: User;
+  seller: User;
   status: TransactionStatus;
 }
 
