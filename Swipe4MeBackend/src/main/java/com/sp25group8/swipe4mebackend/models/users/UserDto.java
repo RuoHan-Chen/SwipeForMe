@@ -1,9 +1,7 @@
 // Author: Steven Yi
 // Time spent: 1 minute
 
-package com.sp25group8.swipe4mebackend.models.dtos;
-
-import com.sp25group8.swipe4mebackend.models.users.UserEntity;
+package com.sp25group8.swipe4mebackend.models.users;
 
 public record UserDto(
         Long id,
