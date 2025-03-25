@@ -3,6 +3,7 @@
 
 package com.sp25group8.swipe4mebackend.availability;
 
+import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityDto;
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
 import com.sp25group8.swipe4mebackend.models.enums.DiningLocation;
 import com.sp25group8.swipe4mebackend.users.UserRepository;
@@ -20,15 +21,15 @@ public class AvailabilityService {
     private final AvailabilityRepository availabilityRepository;
     private final UserRepository userRepository;
 
-    public List<AvailabilityEntity> getAvailabilities() {
-        return availabilityRepository.findAll();
+    public List<AvailabilityDto> getAvailabilities() {
+        return availabilityRepository.findAll().stream().map(AvailabilityDto::fromEntity).toList();
     }
 
-    public List<AvailabilityEntity> getAvailabilitiesByUserId(Long userId) {
-        return availabilityRepository.findAllByUserId(userId);
+    public List<AvailabilityDto> getAvailabilitiesByUserId(Long userId) {
+        return availabilityRepository.findAllByUserId(userId).stream().map(AvailabilityDto::fromEntity).toList();
     }
 
-    public AvailabilityEntity createAvailability(
+    public AvailabilityDto createAvailability(
             Long userId,
             DiningLocation location,
             LocalDateTime startTime,
@@ -37,7 +38,7 @@ public class AvailabilityService {
         UserEntity user = userRepository.findById(userId).orElseThrow();
 
         AvailabilityEntity availabilityEntity = new AvailabilityEntity(null, user, location, startTime, endTime);
-        return availabilityRepository.save(availabilityEntity);
+        return AvailabilityDto.fromEntity(availabilityRepository.save(availabilityEntity));
     }
 
     public void removeAvailability(Long userId) {
