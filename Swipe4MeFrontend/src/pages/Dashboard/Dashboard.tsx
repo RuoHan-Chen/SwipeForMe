@@ -8,7 +8,7 @@ import Profile from "./Profile";
 import { User } from "../../clients/userClient";
 import { getCurrentUser } from "../../clients/userClient";
 import Rating from "./Rating";
-import ActivityPanel from "./ActivityPanel";
+import ActivityPanel from "./ActivityPanel/ActivityPanel";
 const Dashboard: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
 
