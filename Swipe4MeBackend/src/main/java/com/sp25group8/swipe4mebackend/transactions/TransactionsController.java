@@ -3,6 +3,8 @@
 
 package com.sp25group8.swipe4mebackend.transactions;
 
+import com.sp25group8.swipe4mebackend.models.transactions.CreateTransactionDto;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionDto;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
 
@@ -26,22 +28,26 @@ public class TransactionsController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<TransactionEntity> createTransaction(@RequestBody TransactionEntity transaction) {
-        return ResponseEntity.ok(transactionsService.createTransaction(transaction));
+    public ResponseEntity<TransactionDto> createTransaction(
+            @RequestParam Long buyerId,
+            @RequestParam Long sellerId,
+            @RequestParam Long availabilityId,
+            @RequestParam TransactionStatus status) {
+        return ResponseEntity.ok(transactionsService.createTransaction(buyerId, sellerId, availabilityId, status));
     }
 
     @GetMapping("/buyer/{buyerId}")
-    public ResponseEntity<List<TransactionEntity>> getTransactionsByBuyer(@PathVariable Long buyerId) {
+    public ResponseEntity<List<TransactionDto>> getTransactionsByBuyer(@PathVariable Long buyerId) {
         return ResponseEntity.ok(transactionsService.getTransactionsByBuyer(buyerId));
     }
 
     @GetMapping("/seller/{sellerId}")
-    public ResponseEntity<List<TransactionEntity>> getTransactionsBySeller(@PathVariable Long sellerId) {
+    public ResponseEntity<List<TransactionDto>> getTransactionsBySeller(@PathVariable Long sellerId) {
         return ResponseEntity.ok(transactionsService.getTransactionsBySeller(sellerId));
     }
 
     @PutMapping("/{transactionId}/status")
-    public ResponseEntity<TransactionEntity> updateTransactionStatus(@PathVariable Long transactionId,
+    public ResponseEntity<TransactionDto> updateTransactionStatus(@PathVariable Long transactionId,
             @RequestParam TransactionStatus status) {
         return ResponseEntity.ok(transactionsService.updateTransactionStatus(transactionId, status));
     }
