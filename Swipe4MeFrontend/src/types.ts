@@ -35,7 +35,7 @@ export interface User {
 }
 
 export interface Transaction {
-  id?: number;
+  id: number;
   availability: Availability;
   buyer: User;
   seller: User;

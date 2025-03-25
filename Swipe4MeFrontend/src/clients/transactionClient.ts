@@ -90,3 +90,47 @@ export const getCurrentUserTransactionsAsSeller = async (): Promise<
 
   return await response.json();
 };
+
+export const acceptTransaction = async (transactionId: number) => {
+  const urlWithParams =
+    `/api/transactions/${transactionId}/status?` +
+    new URLSearchParams({
+      status: TransactionStatus.IN_PROGRESS,
+    }).toString();
+
+  const response = await fetch(toEndpointUrl(urlWithParams), {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to accept transaction");
+  }
+
+  return await response.json();
+};
+
+export const rejectTransaction = async (transactionId: number) => {
+  const urlWithParams =
+    `/api/transactions/${transactionId}/status?` +
+    new URLSearchParams({
+      status: TransactionStatus.REJECTED,
+    }).toString();
+
+  const response = await fetch(toEndpointUrl(urlWithParams), {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to reject transaction");
+  }
+
+  return await response.json();
+};
