@@ -1,21 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import { Transaction } from "../../../types";
+import { getCurrentUserTransactionsAsBuyer } from "../../../clients/transactionClient";
 
 interface BuyerViewProps {
-  buyerTransactions: Transaction[];
   transactionType: "pending" | "inProgress";
   formatDuration: (startTime: string, endTime: string) => string;
 }
 
 const BuyerView: React.FC<BuyerViewProps> = ({
-  buyerTransactions,
   transactionType,
   formatDuration,
 }) => {
+  const [buyerTransactions, setBuyerTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchBuyerTransactions = async () => {
+    try {
+      setLoading(true);
+      const response = await getCurrentUserTransactionsAsBuyer();
+      setBuyerTransactions(response);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBuyerTransactions();
+  }, []);
+
+  if (loading) {
+    return <Typography>Loading transactions...</Typography>;
+  }
+
   return (
     <>
       {buyerTransactions.length > 0 ? (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -8,17 +8,21 @@ import { Availability, Transaction } from "../../../types";
 import {
   acceptTransaction,
   rejectTransaction,
+  getCurrentUserTransactionsAsSeller,
 } from "../../../clients/transactionClient";
+import { getCurrentUserAvailability } from "../../../clients/availabilityClient";
 import { useSnackbar } from "../../../context/SnackbarContext";
 
 interface PendingInviteCardProps {
   transaction: Transaction;
   formatDuration: (startTime: string, endTime: string) => string;
+  onTransactionUpdated: () => void;
 }
 
 const PendingInviteCard = ({
   transaction,
   formatDuration,
+  onTransactionUpdated,
 }: PendingInviteCardProps) => {
   const [loadingAccept, setLoadingAccept] = useState(false);
   const [loadingDecline, setLoadingDecline] = useState(false);
@@ -29,6 +33,7 @@ const PendingInviteCard = ({
       setLoadingAccept(true);
       await acceptTransaction(transactionId);
       success("Transaction accepted");
+      onTransactionUpdated(); // Call the refetch function after successful acceptance
     } catch (e) {
       error((e as Error).message);
     } finally {
@@ -41,6 +46,7 @@ const PendingInviteCard = ({
       setLoadingDecline(true);
       await rejectTransaction(transactionId);
       success("Transaction rejected");
+      onTransactionUpdated(); // Call the refetch function after successful rejection
     } catch (e) {
       error((e as Error).message);
     } finally {
@@ -92,7 +98,7 @@ const PendingInviteCard = ({
             variant="outlined"
             color="error"
             sx={{ borderRadius: 2 }}
-            loading={loadingDecline}
+            disabled={loadingDecline || loadingAccept}
             onClick={() => handleDecline(transaction.id)}
           >
             Decline
@@ -102,7 +108,7 @@ const PendingInviteCard = ({
             variant="contained"
             color="primary"
             sx={{ borderRadius: 2 }}
-            loading={loadingAccept}
+            disabled={loadingDecline || loadingAccept}
             onClick={() => handleAccept(transaction.id)}
           >
             Accept
@@ -114,16 +120,53 @@ const PendingInviteCard = ({
 };
 
 interface SellerViewProps {
-  availabilities: Availability[];
-  sellerTransactions: Transaction[];
   formatDuration: (startTime: string, endTime: string) => string;
 }
 
-const SellerView: React.FC<SellerViewProps> = ({
-  availabilities,
-  sellerTransactions,
-  formatDuration,
-}) => {
+const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
+  const [availabilities, setAvailabilities] = useState<Availability[]>([]);
+  const [sellerTransactions, setSellerTransactions] = useState<Transaction[]>(
+    []
+  );
+  const [loading, setLoading] = useState(false);
+
+  const fetchAvailabilities = async () => {
+    try {
+      const response = await getCurrentUserAvailability();
+
+      // Filter out availabilities that have already passed
+      const currentTime = new Date();
+      const upcomingAvailabilities = response.filter(
+        (availability) => new Date(availability.startTime) > currentTime
+      );
+
+      setAvailabilities(upcomingAvailabilities);
+    } catch (error) {
+      console.error("Error fetching availabilities:", error);
+    }
+  };
+
+  const fetchSellerTransactions = async () => {
+    try {
+      setLoading(true);
+      const response = await getCurrentUserTransactionsAsSeller();
+      setSellerTransactions(response);
+    } catch (error) {
+      console.error("Error fetching seller transactions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailabilities();
+    fetchSellerTransactions();
+  }, []);
+
+  if (loading && sellerTransactions.length === 0) {
+    return <Typography>Loading...</Typography>;
+  }
+
   return (
     <Box sx={{ display: "flex", gap: 3 }}>
       {/* Left panel - Upcoming Availabilities */}
@@ -188,8 +231,10 @@ const SellerView: React.FC<SellerViewProps> = ({
               .filter((transaction) => transaction.status === "PENDING")
               .map((transaction) => (
                 <PendingInviteCard
+                  key={transaction.id}
                   transaction={transaction}
                   formatDuration={formatDuration}
+                  onTransactionUpdated={fetchSellerTransactions}
                 />
               ))
           ) : (

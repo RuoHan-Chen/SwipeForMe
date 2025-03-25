@@ -3,13 +3,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
-import { getCurrentUserAvailability } from "../../../clients/availabilityClient";
-import {
-  getCurrentUserTransactionsAsBuyer,
-  getCurrentUserTransactionsAsSeller,
-} from "../../../clients/transactionClient";
-import { Availability, Transaction } from "../../../types";
+import { useState } from "react";
 import BuyerView from "./BuyerView";
 import SellerView from "./SellerView";
 
@@ -18,57 +12,6 @@ const ActivityPanel = () => {
   const [transactionType, setTransactionType] = useState<
     "pending" | "inProgress"
   >("pending");
-
-  const [availabilities, setAvailabilities] = useState<Availability[]>([]);
-  const [buyerTransactions, setBuyerTransactions] = useState<Transaction[]>([]);
-  const [sellerTransactions, setSellerTransactions] = useState<Transaction[]>(
-    []
-  );
-
-  // Fetch transactions for the current user
-  useEffect(() => {
-    const fetchBuyerTransactions = async () => {
-      try {
-        const response = await getCurrentUserTransactionsAsBuyer();
-        setBuyerTransactions(response);
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-      }
-    };
-
-    const fetchSellerTransactions = async () => {
-      try {
-        const response = await getCurrentUserTransactionsAsSeller();
-        setSellerTransactions(response);
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-      }
-    };
-
-    fetchBuyerTransactions();
-    fetchSellerTransactions();
-  }, []);
-
-  // Fetch availabilities for the current user
-  useEffect(() => {
-    const fetchAvailabilities = async () => {
-      try {
-        const response = await getCurrentUserAvailability();
-
-        // Filter out availabilities that have already passed
-        const currentTime = new Date();
-        const upcomingAvailabilities = response.filter(
-          (availability) => new Date(availability.startTime) > currentTime
-        );
-
-        setAvailabilities(upcomingAvailabilities);
-      } catch (error) {
-        console.error("Error fetching availabilities:", error);
-      }
-    };
-
-    fetchAvailabilities();
-  }, []);
 
   // Function to format date and time
   const formatDateTime = (dateTimeString: string) => {
@@ -196,16 +139,11 @@ const ActivityPanel = () => {
         >
           {viewMode === "buyer" ? (
             <BuyerView
-              buyerTransactions={buyerTransactions}
               transactionType={transactionType}
               formatDuration={formatDuration}
             />
           ) : (
-            <SellerView
-              availabilities={availabilities}
-              sellerTransactions={sellerTransactions}
-              formatDuration={formatDuration}
-            />
+            <SellerView formatDuration={formatDuration} />
           )}
         </Box>
 
