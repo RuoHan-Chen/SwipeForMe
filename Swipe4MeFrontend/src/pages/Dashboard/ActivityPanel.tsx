@@ -10,6 +10,7 @@ import {
   getCurrentUserTransactionsAsSeller,
 } from "../../clients/transactionClient";
 import { Availability, Transaction } from "../../types";
+import Avatar from "@mui/material/Avatar";
 
 const ActivityPanel = () => {
   const [viewMode, setViewMode] = useState<"buyer" | "seller">("buyer");
@@ -68,74 +69,6 @@ const ActivityPanel = () => {
     fetchAvailabilities();
   }, []);
 
-  const placeholderData = {
-    asBuyer: {
-      pending: [
-        {
-          id: 1,
-          title: "Book Purchase",
-          status: "PENDING",
-          availability: {
-            location: "University Library",
-            startTime: "2023-05-15T14:00:00Z",
-            endTime: "2023-05-15T15:00:00Z",
-          },
-          amount: 25.99,
-        },
-        {
-          id: 2,
-          title: "Laptop Purchase",
-          status: "PENDING",
-          availability: {
-            location: "Student Center",
-            startTime: "2023-05-20T10:30:00Z",
-            endTime: "2023-05-20T11:30:00Z",
-          },
-          amount: 899.0,
-        },
-      ],
-      inProgress: [
-        {
-          id: 3,
-          title: "Phone Repair Service",
-          status: "IN_PROGRESS",
-          availability: {
-            location: "Tech Building",
-            startTime: "2023-05-10T16:00:00Z",
-            endTime: "2023-05-10T17:00:00Z",
-          },
-          amount: 150.0,
-        },
-      ],
-    },
-    availabilities: [
-      {
-        id: 1,
-        location: "Campus Coffee Shop",
-        startTime: "2023-05-18T09:15:00Z",
-        endTime: "2023-05-18T10:00:00Z",
-      },
-      {
-        id: 2,
-        location: "Engineering Building",
-        startTime: "2023-05-22T13:00:00Z",
-        endTime: "2023-05-22T14:30:00Z",
-      },
-      {
-        id: 3,
-        location: "Math Department",
-        startTime: "2023-05-25T11:00:00Z",
-        endTime: "2023-05-25T12:00:00Z",
-      },
-      {
-        id: 4,
-        location: "Student Union",
-        startTime: "2023-05-30T15:30:00Z",
-        endTime: "2023-05-30T16:30:00Z",
-      },
-    ],
-  };
-
   // Function to format date and time
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
@@ -161,7 +94,7 @@ const ActivityPanel = () => {
   };
 
   return (
-    <Grid size={12} sx={{ mt: 3 }}>
+    <Grid size={6} sx={{ mt: 3 }}>
       <Paper sx={{ p: 3, borderRadius: 4 }}>
         <Box
           sx={{
@@ -213,7 +146,7 @@ const ActivityPanel = () => {
                     }),
               }}
             >
-              Pending
+              Pending Invites
             </Button>
             <Button
               variant={
@@ -285,18 +218,50 @@ const ActivityPanel = () => {
                         "&:hover": { boxShadow: 3 },
                       }}
                     >
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ fontWeight: "bold" }}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
                       >
-                        {transaction.availability.location}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {formatDateTime(transaction.availability.startTime)}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Location: {transaction.availability.location}
-                      </Typography>
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            sx={{ fontWeight: "bold" }}
+                          >
+                            {transaction.availability.location}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {formatDateTime(transaction.availability.startTime)}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Location: {transaction.availability.location}
+                          </Typography>
+                        </Box>
+
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
+                          <Avatar
+                            src={transaction.seller.profilePicUrl}
+                            alt={
+                              transaction.seller.firstName +
+                              " " +
+                              transaction.seller.lastName
+                            }
+                            sx={{ width: 40, height: 40 }}
+                          />
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: "medium" }}
+                          >
+                            {transaction.seller.firstName +
+                              " " +
+                              transaction.seller.lastName}
+                          </Typography>
+                        </Box>
+                      </Box>
                     </Paper>
                   ))
               ) : (
