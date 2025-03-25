@@ -2,21 +2,7 @@
 // Time spent: 15 minutes
 
 import { toEndpointUrl } from "./utils";
-
-export interface AvailabilityResponse {
-  id: number;
-  userId: number;
-  firstName: string;
-  lastName: string;
-  location: string;
-  startTime: string;
-  endTime: string;
-  email: string;
-  rating?: number;
-}
-
-export type GetAllAvailabilityResponse = AvailabilityResponse[];
-
+import { Availability } from "../types";
 export interface CreateAvailabilityRequest {
   userId: number;
   location: string;
@@ -24,9 +10,7 @@ export interface CreateAvailabilityRequest {
   endTime: string;
 }
 
-export const getAllAvailabilities = async (): Promise<
-  AvailabilityResponse[]
-> => {
+export const getAllAvailabilities = async (): Promise<Availability[]> => {
   const response = await fetch(toEndpointUrl("/api/availabilities"), {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -39,7 +23,7 @@ export const getAllAvailabilities = async (): Promise<
 
 export const getAvailabilityByUserId = async (
   userId: number
-): Promise<AvailabilityResponse[]> => {
+): Promise<Availability[]> => {
   const response = await fetch(
     toEndpointUrl(`/api/availabilities/user/${userId}`),
     {
@@ -57,9 +41,7 @@ export const getAvailabilityByUserId = async (
   return await response.json();
 };
 
-export const getCurrentUserAvailability = async (): Promise<
-  AvailabilityResponse[]
-> => {
+export const getCurrentUserAvailability = async (): Promise<Availability[]> => {
   const userId = localStorage.getItem("userId");
   if (!userId) {
     throw new Error("User ID not found");
@@ -84,7 +66,7 @@ export const getCurrentUserAvailability = async (): Promise<
 
 export const createAvailability = async (
   request: CreateAvailabilityRequest
-): Promise<AvailabilityResponse> => {
+): Promise<Availability> => {
   const urlWithParams =
     "/api/availabilities?" +
     new URLSearchParams({

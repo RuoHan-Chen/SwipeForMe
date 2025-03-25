@@ -1,14 +1,13 @@
 // Author: Steven Yi
 // Time spent: 30 minutes
 
+import { Transaction } from "../types";
 import { toEndpointUrl } from "./utils";
 
-export interface Transaction {
-  id?: number;
+export interface CreateTransactionRequest {
   availabilityId: number;
   buyerId: number;
   sellerId: number;
-  status: TransactionStatus;
 }
 
 export enum TransactionStatus {
@@ -19,14 +18,22 @@ export enum TransactionStatus {
   REJECTED = "REJECTED",
 }
 
-export const createTransaction = async (transaction: Transaction) => {
-  const response = await fetch(toEndpointUrl("/api/transactions"), {
+export const createTransaction = async (request: CreateTransactionRequest) => {
+  const urlWithParams =
+    "/api/transactions?" +
+    new URLSearchParams({
+      availabilityId: request.availabilityId.toString(),
+      buyerId: request.buyerId.toString(),
+      sellerId: request.sellerId.toString(),
+      status: TransactionStatus.PENDING,
+    }).toString();
+
+  const response = await fetch(toEndpointUrl(urlWithParams), {
     method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(transaction),
   });
 
   if (!response.ok) {

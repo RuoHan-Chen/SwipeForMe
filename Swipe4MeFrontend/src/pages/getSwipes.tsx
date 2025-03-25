@@ -21,21 +21,15 @@ import {
   Box,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import {
-  AvailabilityResponse,
-  getAllAvailabilities,
-} from "../clients/availabilityClient";
-import {
-  getCurrentUserTransactionsAsBuyer,
-  Transaction,
-} from "../clients/transactionClient";
+import { getAllAvailabilities } from "../clients/availabilityClient";
+import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
 import {
   createTransaction,
   TransactionStatus,
 } from "../clients/transactionClient";
-import { getCurrentUser, User } from "../clients/userClient";
+import { getCurrentUser } from "../clients/userClient";
 import { useSnackbar } from "../context/SnackbarContext";
-import { DiningLocation } from "../types";
+import { DiningLocation, User, Transaction, Availability } from "../types";
 
 const theme = createTheme({
   palette: {
@@ -92,9 +86,7 @@ const TableHeader: React.FC = () => (
 const buySwipes: React.FC = () => {
   // State variables
   const [page, setPage] = useState(0);
-  const [availabilities, setAvailabilities] = useState<AvailabilityResponse[]>(
-    []
-  );
+  const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const [
     currentUserPendingAvailabilityIds,
     setCurrentUserPendingAvailabilityIds,
@@ -115,7 +107,7 @@ const buySwipes: React.FC = () => {
         const userId = localStorage.getItem("userId");
         if (!!userId) {
           const availabilities = response.filter(
-            (user) => user.userId !== parseInt(userId)
+            (availability) => availability.user.id !== parseInt(userId)
           );
           setAvailabilities(availabilities);
         } else {
@@ -290,7 +282,7 @@ const buySwipes: React.FC = () => {
                     .map((row, index) => (
                       <TableRow key={index}>
                         <TableCell align="left">
-                          {row.firstName} {row.lastName}
+                          {row.user.firstName} {row.user.lastName}
                         </TableCell>
                         <TableCell align="center">
                           {convertEnumStringToDiningLocation(row.location)}
@@ -301,9 +293,9 @@ const buySwipes: React.FC = () => {
                         <TableCell align="center">
                           {formatDate(row.startTime)}
                         </TableCell>
-                        <TableCell align="left">{row.email}</TableCell>
+                        <TableCell align="left">{row.user.email}</TableCell>
                         <TableCell align="center">
-                          {row.rating || "N/A"}
+                          {row.user.rating || "N/A"}
                         </TableCell>
                         <TableCell align="center">
                           <Button
@@ -311,7 +303,9 @@ const buySwipes: React.FC = () => {
                             color="primary"
                             fullWidth={true}
                             style={{ width: "80%" }}
-                            onClick={() => handleSendInvite(row.id, row.userId)}
+                            onClick={() =>
+                              handleSendInvite(row.id, row.user.id)
+                            }
                             disabled={isTransactionPending(row.id)}
                             loading={loadingAvailabilityId === row.id}
                           >
