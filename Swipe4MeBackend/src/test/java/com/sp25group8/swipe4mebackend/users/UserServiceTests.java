@@ -1,6 +1,6 @@
 package com.sp25group8.swipe4mebackend.users;
 
-import com.sp25group8.swipe4mebackend.models.dtos.UserDto;
+import com.sp25group8.swipe4mebackend.models.users.UserDto;
 import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

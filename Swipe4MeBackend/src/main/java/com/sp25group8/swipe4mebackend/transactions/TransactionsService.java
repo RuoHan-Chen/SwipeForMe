@@ -4,9 +4,9 @@
 package com.sp25group8.swipe4mebackend.transactions;
 
 import com.sp25group8.swipe4mebackend.emails.EmailService;
-import com.sp25group8.swipe4mebackend.models.dtos.UserDto;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
+import com.sp25group8.swipe4mebackend.models.users.UserDto;
 import com.sp25group8.swipe4mebackend.users.UserService;
 
 import lombok.RequiredArgsConstructor;
