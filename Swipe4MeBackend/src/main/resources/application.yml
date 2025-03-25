@@ -37,8 +37,9 @@ server:
 
 logging:
   level:
-    org.springframework: TRACE
+    org.springframework: DEBUG
     org.apache.coyote.http11.Http11InputBuffer: TRACE
+    com.sp25group8: DEBUG
 
 swipe4me:
   jwt:
