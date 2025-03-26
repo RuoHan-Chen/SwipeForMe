@@ -23,17 +23,6 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
   const displayUser =
     status === "buyer" ? transaction.seller : transaction.buyer;
 
-  // Determine card border color based on transaction status
-  const getBorderColor = () => {
-    if (transaction.status === "PENDING") {
-      return "#ff9800"; // Orange for pending
-    } else if (transaction.status === "IN_PROGRESS") {
-      return "#2196f3"; // Blue for in progress
-    } else {
-      return "#4caf50"; // Green for completed
-    }
-  };
-
   return (
     <Paper
       elevation={1}

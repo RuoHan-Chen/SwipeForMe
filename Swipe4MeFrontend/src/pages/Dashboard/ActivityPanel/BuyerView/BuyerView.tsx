@@ -39,7 +39,7 @@ const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
 
   // Handle tab change
   const handleTabChange = (
-    event: React.SyntheticEvent,
+    _: React.SyntheticEvent,
     newValue: "pending" | "inProgress"
   ) => {
     setTransactionType(newValue);

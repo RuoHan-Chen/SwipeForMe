@@ -3,7 +3,7 @@ import { styled } from "@mui/material";
 import { Tabs, Tab } from "@mui/material";
 
 // Custom styled Tabs component
-export const StyledTabs = styled(Tabs)(({ theme }) => ({
+export const StyledTabs = styled(Tabs)(() => ({
   borderBottom: "1px solid #e0e0e0",
   marginBottom: "20px",
   minHeight: "48px",
@@ -14,7 +14,7 @@ export const StyledTabs = styled(Tabs)(({ theme }) => ({
 }));
 
 // Custom styled Tab component
-export const StyledTab = styled(Tab)(({ theme }) => ({
+export const StyledTab = styled(Tab)(() => ({
   textTransform: "none",
   fontSize: "1rem",
   fontWeight: 400,

@@ -1,7 +1,7 @@
 import { Box, styled } from "@mui/material";
 
 // Custom styled toggle component to match the design
-export const StyledToggleBox = styled(Box)(({ theme }) => ({
+export const StyledToggleBox = styled(Box)(() => ({
   display: "inline-flex",
   position: "relative",
   backgroundColor: "#f1f1f1",
