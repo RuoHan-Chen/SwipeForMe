@@ -1,6 +1,6 @@
 import React from "react";
 import { Paper, Typography, Box, Avatar, Button } from "@mui/material";
-import { Transaction } from "../../../types";
+import { Transaction } from "../../../../types";
 
 interface TransactionCardProps {
   transaction: Transaction;

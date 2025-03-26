@@ -41,10 +41,9 @@ public class AvailabilityController {
         return ResponseEntity.ok(availabilityService.createAvailability(userId, location, startTime, endTime));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> removeAvailability(
-            @RequestParam Long userId) {
-        availabilityService.removeAvailability(userId);
+    @DeleteMapping("/{availabilityId}")
+    public ResponseEntity<Void> removeAvailability(@PathVariable Long availabilityId) {
+        availabilityService.removeAvailability(availabilityId);
         return ResponseEntity.ok().build();
     }
 

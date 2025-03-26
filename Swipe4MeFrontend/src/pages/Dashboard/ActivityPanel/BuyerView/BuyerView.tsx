@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid2";
-import { Transaction } from "../../../types";
-import { getCurrentUserTransactionsAsBuyer } from "../../../clients/transactionClient";
-import { StyledTab } from "./styledComponents";
-import { StyledTabs } from "./styledComponents";
+import { Transaction } from "../../../../types";
+import { getCurrentUserTransactionsAsBuyer } from "../../../../clients/transactionClient";
+import { StyledTab, StyledTabs } from "../styledComponents";
 import TransactionCard from "./TransactionCard";
 import Box from "@mui/material/Box";
-import { mapLocationsToEnum } from "../../../utils/enumUtils";
+import { mapLocationsToEnum } from "../../../../utils/enumUtils";
 
 interface BuyerViewProps {
   viewMode: "buyer" | "seller";

@@ -2,8 +2,8 @@ import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import BuyerView from "./BuyerView";
-import SellerView from "./SellerView";
+import BuyerView from "./BuyerView/BuyerView";
+import SellerView from "./SellerView/SellerView";
 
 interface ActivityPanelProps {
   viewMode: "buyer" | "seller";
