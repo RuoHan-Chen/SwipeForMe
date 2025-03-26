@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -26,7 +25,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
     []
   );
   const [loading, setLoading] = useState(false);
-  const { success, error } = useSnackbar();
+  const { snackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const fetchAvailabilities = async () => {
@@ -74,23 +73,25 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
     console.log(`Edit availability with ID: ${id}`);
     // TODO: Implement edit functionality, e.g., open a dialog or navigate to edit page
     // For now, we'll just show a notification
-    success("Edit availability feature coming soon!");
+    snackbar.success("Edit availability feature coming soon!");
   };
 
   // Handler for deleting an availability
   const handleDeleteAvailability = async (id: number) => {
     try {
+      snackbar.loading("Deleting availability...");
+
       // Confirm deletion with the user
       if (
         window.confirm("Are you sure you want to delete this availability?")
       ) {
         await deleteAvailability(id);
-        success("Availability deleted successfully");
+        snackbar.success("Availability deleted successfully");
         // Refresh the availabilities list
         fetchAvailabilities();
       }
     } catch (err) {
-      error((err as Error).message || "Failed to delete availability");
+      snackbar.error((err as Error).message || "Failed to delete availability");
     }
   };
 

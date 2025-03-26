@@ -20,16 +20,16 @@ const PendingInviteCard = ({
 }: PendingInviteCardProps) => {
   const [loadingAccept, setLoadingAccept] = useState(false);
   const [loadingDecline, setLoadingDecline] = useState(false);
-  const { success, error } = useSnackbar();
+  const { snackbar } = useSnackbar();
 
   const handleAccept = async (transactionId: number) => {
     try {
       setLoadingAccept(true);
       await acceptTransaction(transactionId);
-      success("Transaction accepted");
+      snackbar.success("Transaction accepted");
       onTransactionUpdated(); // Call the refetch function after successful acceptance
     } catch (e) {
-      error((e as Error).message);
+      snackbar.error((e as Error).message);
     } finally {
       setLoadingAccept(false);
     }
@@ -39,10 +39,10 @@ const PendingInviteCard = ({
     try {
       setLoadingDecline(true);
       await rejectTransaction(transactionId);
-      success("Transaction rejected");
+      snackbar.success("Transaction rejected");
       onTransactionUpdated(); // Call the refetch function after successful rejection
     } catch (e) {
-      error((e as Error).message);
+      snackbar.error((e as Error).message);
     } finally {
       setLoadingDecline(false);
     }

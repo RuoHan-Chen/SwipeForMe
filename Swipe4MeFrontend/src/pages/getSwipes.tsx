@@ -96,7 +96,7 @@ const buySwipes: React.FC = () => {
     number | null
   >(null);
 
-  const { success, error } = useSnackbar();
+  const { snackbar } = useSnackbar();
 
   // Fetch all availabilities
   useEffect(() => {
@@ -197,12 +197,12 @@ const buySwipes: React.FC = () => {
 
     try {
       await createTransaction(createTransactionRequest);
-      success("Invite sent!");
+      snackbar.success("Invite sent!");
       setCurrentUserPendingAvailabilityIds(
         new Set(currentUserPendingAvailabilityIds.add(availabilityId))
       );
     } catch (err) {
-      error("Failed to send invite");
+      snackbar.error("Failed to send invite");
     } finally {
       setLoadingAvailabilityId(null);
     }

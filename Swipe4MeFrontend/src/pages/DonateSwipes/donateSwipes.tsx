@@ -36,7 +36,7 @@ const DonateSwipes: React.FC = () => {
   const [checkOutTime, setCheckOutTime] = useState<Dayjs | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const { success, error } = useSnackbar();
+  const { snackbar } = useSnackbar();
 
   const handleDateChange = (newValue: Dayjs | null) => {
     setDate(newValue);
@@ -88,9 +88,9 @@ const DonateSwipes: React.FC = () => {
 
       try {
         await createAvailability(request);
-        success("Availability created!");
+        snackbar.success("Availability created!");
       } catch (err) {
-        error("Failed to create availability");
+        snackbar.error("Failed to create availability");
       }
     }
   };

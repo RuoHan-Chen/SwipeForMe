@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 import CustomSnackbar from "../components/CustomSnackbar";
 
-type SnackbarSeverity = "success" | "error" | "warning" | "info";
+type SnackbarSeverity = "success" | "error" | "warning" | "info" | "loading";
 
 interface SnackbarContextType {
   showMessage: (message: string, severity: SnackbarSeverity) => void;
@@ -9,6 +9,7 @@ interface SnackbarContextType {
   error: (message: string) => void;
   warning: (message: string) => void;
   info: (message: string) => void;
+  loading: (message: string) => void;
 }
 
 const SnackbarContext = createContext<SnackbarContextType | undefined>(
@@ -36,10 +37,11 @@ export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({
   const error = (message: string) => showMessage(message, "error");
   const warning = (message: string) => showMessage(message, "warning");
   const info = (message: string) => showMessage(message, "info");
+  const loading = (message: string) => showMessage(message, "loading");
 
   return (
     <SnackbarContext.Provider
-      value={{ showMessage, success, error, warning, info }}
+      value={{ showMessage, success, error, warning, info, loading }}
     >
       {children}
       <CustomSnackbar
@@ -52,10 +54,21 @@ export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-export const useSnackbar = (): SnackbarContextType => {
+export const useSnackbar = () => {
   const context = useContext(SnackbarContext);
   if (context === undefined) {
     throw new Error("useSnackbar must be used within a SnackbarProvider");
   }
-  return context;
+
+  // Return an object with all the snackbar methods
+  return {
+    snackbar: {
+      success: context.success,
+      error: context.error,
+      warning: context.warning,
+      info: context.info,
+      loading: context.loading,
+      showMessage: context.showMessage,
+    },
+  };
 };
