@@ -77,7 +77,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
               )}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {transaction.availability.location}
+              @ <strong>{transaction.availability.location}</strong>
             </Typography>
           </Box>
         </Box>
