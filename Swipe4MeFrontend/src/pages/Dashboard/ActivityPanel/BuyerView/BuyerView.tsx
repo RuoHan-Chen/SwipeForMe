@@ -7,6 +7,7 @@ import { StyledTab, StyledTabs } from "../styledComponents";
 import TransactionCard from "./TransactionCard";
 import Box from "@mui/material/Box";
 import { mapLocationsToEnum } from "../../../../utils/enumUtils";
+import Paper from "@mui/material/Paper";
 
 interface BuyerViewProps {
   viewMode: "buyer" | "seller";
@@ -69,22 +70,26 @@ const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
     <>
       {/* Transaction type toggle */}
       {viewMode === "buyer" && (
-        <StyledTabs
-          value={transactionType}
-          onChange={handleTabChange}
-          aria-label="transaction tabs"
-          variant="fullWidth"
-          TabIndicatorProps={{
-            sx: { transition: "all 0.2s ease" },
-          }}
-        >
-          <StyledTab
-            value="pending"
-            label="Pending Confirmation"
-            disableRipple
-          />
-          <StyledTab value="inProgress" label="Confirmed" disableRipple />
-        </StyledTabs>
+        <Box sx={{ position: "sticky", top: 0, zIndex: 1000 }}>
+          <Paper elevation={0}>
+            <StyledTabs
+              value={transactionType}
+              onChange={handleTabChange}
+              aria-label="transaction tabs"
+              variant="fullWidth"
+              TabIndicatorProps={{
+                sx: { transition: "all 0.2s ease" },
+              }}
+            >
+              <StyledTab
+                value="pending"
+                label="Pending Confirmation"
+                disableRipple
+              />
+              <StyledTab value="inProgress" label="Confirmed" disableRipple />
+            </StyledTabs>
+          </Paper>
+        </Box>
       )}
 
       {filteredTransactions.length > 0 ? (
