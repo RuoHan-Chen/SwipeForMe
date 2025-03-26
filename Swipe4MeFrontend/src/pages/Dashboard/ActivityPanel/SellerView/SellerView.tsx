@@ -14,6 +14,7 @@ import { mapLocationsToEnum } from "../../../../utils/enumUtils";
 import PendingInviteCard from "./PendingInviteCard";
 import AvailabilityCard from "./AvailabilityCard";
 import { useSnackbar } from "../../../../context/SnackbarContext";
+import { useNavigate } from "react-router-dom";
 
 interface SellerViewProps {
   formatDuration: (startTime: string, endTime: string) => string;
@@ -26,6 +27,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
   );
   const [loading, setLoading] = useState(false);
   const { success, error } = useSnackbar();
+  const navigate = useNavigate();
 
   const fetchAvailabilities = async () => {
     try {
@@ -132,6 +134,9 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
                     textTransform: "none",
                     fontSize: "1rem",
                     transition: "all 0.3s ease",
+                  }}
+                  onClick={() => {
+                    navigate("/donateSwipes");
                   }}
                 >
                   Add New Availability
