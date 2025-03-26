@@ -6,10 +6,49 @@ import {
   Box as MuiBox,
   ToggleButtonGroup,
   ToggleButton,
+  Switch,
+  styled,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import React, { Dispatch, SetStateAction } from "react";
 import { User } from "../../types";
+
+// Custom styled toggle component to match the design
+const StyledToggleBox = styled(MuiBox)(({ theme }) => ({
+  display: "inline-flex",
+  position: "relative",
+  backgroundColor: "#f1f1f1",
+  borderRadius: "30px",
+  padding: "4px",
+  width: "280px",
+  height: "40px",
+  alignItems: "center",
+  "& .toggle-option": {
+    padding: "0",
+    width: "50%",
+    height: "100%",
+    borderRadius: "30px",
+    fontWeight: 500,
+    position: "relative",
+    zIndex: 1,
+    transition: "color 0.3s ease",
+    fontSize: "0.875rem",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+    textAlign: "center",
+  },
+  "& .toggle-slider": {
+    position: "absolute",
+    top: "4px",
+    height: "calc(100% - 8px)",
+    borderRadius: "30px",
+    backgroundColor: "#8A2BE2",
+    transition: "all 0.3s ease",
+    zIndex: 0,
+  },
+}));
 
 interface StatusToggleProps {
   viewMode: "buyer" | "seller";
@@ -20,13 +59,19 @@ const StatusToggle: React.FC<StatusToggleProps> = ({
   viewMode,
   setViewMode,
 }) => {
-  const handleToggleChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newMode: "buyer" | "seller"
-  ) => {
-    if (newMode !== null) {
-      setViewMode(newMode);
-    }
+  // Calculate slider width and position dynamically
+  const getBuyerSliderStyle = () => {
+    return {
+      left: "4px",
+      width: "calc(50% - 4px)",
+    };
+  };
+
+  const getSellerSliderStyle = () => {
+    return {
+      left: "calc(50%)",
+      width: "calc(50% - 4px)",
+    };
   };
 
   return (
@@ -38,69 +83,42 @@ const StatusToggle: React.FC<StatusToggleProps> = ({
       >
         Status
       </Typography>
-      <ToggleButtonGroup
-        value={viewMode}
-        exclusive
-        onChange={handleToggleChange}
-        aria-label="swipe mode"
-        size="small"
-        sx={{
-          "& .MuiToggleButtonGroup-grouped": {
-            border: "1px solid #e0e0e0",
-            "&:not(:first-of-type)": {
-              borderRadius: "24px",
-              borderLeft: "1px solid #e0e0e0",
-            },
-            "&:first-of-type": {
-              borderRadius: "24px",
-            },
-          },
-        }}
-      >
-        <ToggleButton
-          value="buyer"
-          aria-label="get swipes"
-          sx={{
-            px: 2,
-            color: viewMode === "buyer" ? "white" : "text.secondary",
-            bgcolor: viewMode === "buyer" ? "#8A2BE2" : "transparent",
-            "&.Mui-selected": {
-              bgcolor: "#8A2BE2",
-              color: "white",
-              "&:hover": {
-                bgcolor: "#7B1FA2",
-              },
-            },
-            "&:hover": {
-              bgcolor: viewMode === "buyer" ? "#7B1FA2" : "rgba(0, 0, 0, 0.04)",
-            },
+
+      <StyledToggleBox>
+        {/* The slider element */}
+        <div
+          className="toggle-slider"
+          style={
+            viewMode === "buyer"
+              ? getBuyerSliderStyle()
+              : getSellerSliderStyle()
+          }
+        />
+
+        {/* Get Swipes option */}
+        <div
+          className="toggle-option"
+          onClick={() => setViewMode("buyer")}
+          style={{
+            color: viewMode === "buyer" ? "white" : "rgba(0, 0, 0, 0.6)",
+            fontWeight: viewMode === "buyer" ? 600 : 400,
           }}
         >
           Get Swipes
-        </ToggleButton>
-        <ToggleButton
-          value="seller"
-          aria-label="donate swipes"
-          sx={{
-            px: 2,
-            color: viewMode === "seller" ? "white" : "text.secondary",
-            bgcolor: viewMode === "seller" ? "#8A2BE2" : "transparent",
-            "&.Mui-selected": {
-              bgcolor: "#8A2BE2",
-              color: "white",
-              "&:hover": {
-                bgcolor: "#7B1FA2",
-              },
-            },
-            "&:hover": {
-              bgcolor:
-                viewMode === "seller" ? "#7B1FA2" : "rgba(0, 0, 0, 0.04)",
-            },
+        </div>
+
+        {/* Donate Swipes option */}
+        <div
+          className="toggle-option"
+          onClick={() => setViewMode("seller")}
+          style={{
+            color: viewMode === "seller" ? "white" : "rgba(0, 0, 0, 0.6)",
+            fontWeight: viewMode === "seller" ? 600 : 400,
           }}
         >
           Donate Swipes
-        </ToggleButton>
-      </ToggleButtonGroup>
+        </div>
+      </StyledToggleBox>
     </MuiBox>
   );
 };
@@ -169,6 +187,11 @@ const Profile: React.FC<ProfileProps> = ({ user, viewMode, setViewMode }) => {
                   bgcolor: "#1de9b6",
                   color: "white",
                   "&:hover": { bgcolor: "#00bfa5" },
+                  borderRadius: "8px",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  fontWeight: "bold",
+                  padding: "6px 16px",
                 }}
               >
                 Edit
