@@ -2,17 +2,14 @@ import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import { useState } from "react";
-import BuyerView from "./BuyerView";
-import SellerView from "./SellerView";
+import BuyerView from "./BuyerView/BuyerView";
+import SellerView from "./SellerView/SellerView";
 
-const ActivityPanel = () => {
-  const [viewMode, setViewMode] = useState<"buyer" | "seller">("buyer");
-  const [transactionType, setTransactionType] = useState<
-    "pending" | "inProgress"
-  >("pending");
+interface ActivityPanelProps {
+  viewMode: "buyer" | "seller";
+}
 
+const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
   // Function to format date and time
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
@@ -44,74 +41,13 @@ const ActivityPanel = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            mb: 3,
+            mb: 1,
           }}
         >
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
             {viewMode === "buyer" ? "Your Transactions" : "Your Availabilities"}
           </Typography>
-
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button
-              variant={viewMode === "buyer" ? "contained" : "outlined"}
-              color="primary"
-              onClick={() => setViewMode("buyer")}
-              sx={{ borderRadius: 2 }}
-            >
-              As Buyer
-            </Button>
-            <Button
-              variant={viewMode === "seller" ? "contained" : "outlined"}
-              color="primary"
-              onClick={() => setViewMode("seller")}
-              sx={{ borderRadius: 2 }}
-            >
-              As Seller
-            </Button>
-          </Box>
         </Box>
-
-        {/* Buyer view with transaction type toggle */}
-        {viewMode === "buyer" && (
-          <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-            <Button
-              variant={transactionType === "pending" ? "contained" : "outlined"}
-              color="primary"
-              onClick={() => setTransactionType("pending")}
-              sx={{
-                borderRadius: 2,
-                ...(transactionType === "pending"
-                  ? { bgcolor: "#ff9800", "&:hover": { bgcolor: "#f57c00" } }
-                  : {
-                      color: "#ff9800",
-                      borderColor: "#ff9800",
-                      "&:hover": { borderColor: "#f57c00", color: "#f57c00" },
-                    }),
-              }}
-            >
-              Pending Invites
-            </Button>
-            <Button
-              variant={
-                transactionType === "inProgress" ? "contained" : "outlined"
-              }
-              color="primary"
-              onClick={() => setTransactionType("inProgress")}
-              sx={{
-                borderRadius: 2,
-                ...(transactionType === "inProgress"
-                  ? { bgcolor: "#2196f3", "&:hover": { bgcolor: "#1976d2" } }
-                  : {
-                      color: "#2196f3",
-                      borderColor: "#2196f3",
-                      "&:hover": { borderColor: "#1976d2", color: "#1976d2" },
-                    }),
-              }}
-            >
-              In Progress
-            </Button>
-          </Box>
-        )}
 
         {/* Scrollable content container */}
         <Box
@@ -137,27 +73,11 @@ const ActivityPanel = () => {
           }}
         >
           {viewMode === "buyer" ? (
-            <BuyerView
-              transactionType={transactionType}
-              formatDuration={formatDuration}
-            />
+            <BuyerView viewMode={viewMode} formatDuration={formatDuration} />
           ) : (
             <SellerView formatDuration={formatDuration} />
           )}
         </Box>
-
-        {/* Add New Availability button - only shown in seller view */}
-        {viewMode === "seller" && (
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ borderRadius: 2, px: 3 }}
-            >
-              Add New Availability
-            </Button>
-          </Box>
-        )}
       </Paper>
     </Grid>
   );

@@ -89,3 +89,25 @@ export const createAvailability = async (
 
   return await response.json();
 };
+
+/**
+ * Delete an availability by its ID
+ * @param id The ID of the availability to delete
+ * @returns A Promise that resolves when the deletion is complete
+ */
+export const deleteAvailability = async (id: number): Promise<void> => {
+  const response = await fetch(toEndpointUrl(`/api/availabilities/${id}`), {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to delete availability: ${response.status} ${response.statusText}`
+    );
+  }
+};

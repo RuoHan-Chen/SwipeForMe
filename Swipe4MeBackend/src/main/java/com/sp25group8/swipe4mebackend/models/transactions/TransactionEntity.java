@@ -3,6 +3,9 @@
 
 package com.sp25group8.swipe4mebackend.models.transactions;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
 import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import lombok.AllArgsConstructor;
@@ -26,6 +29,7 @@ public class TransactionEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "availability_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private AvailabilityEntity availability;
 
 	@ManyToOne

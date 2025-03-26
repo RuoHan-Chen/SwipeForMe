@@ -45,7 +45,7 @@ export interface Transaction {
 export interface Availability {
   id: number;
   user: User;
-  location: string;
+  location: DiningLocation;
   startTime: string;
   endTime: string;
 }
