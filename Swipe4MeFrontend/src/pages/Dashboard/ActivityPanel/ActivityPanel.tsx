@@ -2,7 +2,6 @@ import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import BuyerView from "./BuyerView";
 import SellerView from "./SellerView";
 
@@ -79,19 +78,6 @@ const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
             <SellerView formatDuration={formatDuration} />
           )}
         </Box>
-
-        {/* Add New Availability button - only shown in seller view */}
-        {viewMode === "seller" && (
-          <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ borderRadius: 2, px: 3 }}
-            >
-              Add New Availability
-            </Button>
-          </Box>
-        )}
       </Paper>
     </Grid>
   );

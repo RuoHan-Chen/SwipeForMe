@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
+import AddIcon from "@mui/icons-material/Add";
 import { Availability, Transaction } from "../../../types";
 import {
   acceptTransaction,
@@ -210,9 +211,28 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
               </Paper>
             ))
           ) : (
-            <Typography variant="body1" color="text.secondary">
-              No upcoming availabilities
-            </Typography>
+            <Box>
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                You don't have any upcoming availabilities. Add one now!
+              </Typography>
+              <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddIcon />}
+                  sx={{
+                    borderRadius: 8,
+                    px: 4,
+                    py: 1,
+                    textTransform: "none",
+                    fontSize: "1rem",
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  Add New Availability
+                </Button>
+              </Box>
+            </Box>
           )}
         </Box>
       </Box>
