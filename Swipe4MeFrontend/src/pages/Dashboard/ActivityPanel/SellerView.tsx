@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import AddIcon from "@mui/icons-material/Add";
-import { Availability, Transaction } from "../../../types";
+import { Availability, DiningLocation, Transaction } from "../../../types";
 import {
   acceptTransaction,
   rejectTransaction,
@@ -13,6 +13,7 @@ import {
 } from "../../../clients/transactionClient";
 import { getCurrentUserAvailability } from "../../../clients/availabilityClient";
 import { useSnackbar } from "../../../context/SnackbarContext";
+import { mapLocationsToEnum } from "../../../utils/enumUtils";
 
 interface PendingInviteCardProps {
   transaction: Transaction;
@@ -141,7 +142,10 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
         (availability) => new Date(availability.startTime) > currentTime
       );
 
-      setAvailabilities(upcomingAvailabilities);
+      // Convert location strings to enum values using our utility function
+      const mappedAvailabilities = mapLocationsToEnum(upcomingAvailabilities);
+
+      setAvailabilities(mappedAvailabilities);
     } catch (error) {
       console.error("Error fetching availabilities:", error);
     }
@@ -151,7 +155,11 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
     try {
       setLoading(true);
       const response = await getCurrentUserTransactionsAsSeller();
-      setSellerTransactions(response);
+
+      // Convert location strings to enum values using our utility function
+      const mappedTransactions = mapLocationsToEnum(response);
+
+      setSellerTransactions(mappedTransactions);
     } catch (error) {
       console.error("Error fetching seller transactions:", error);
     } finally {

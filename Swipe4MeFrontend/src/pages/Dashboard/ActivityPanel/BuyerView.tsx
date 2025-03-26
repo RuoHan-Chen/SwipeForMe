@@ -7,7 +7,7 @@ import { StyledTab } from "./styledComponents";
 import { StyledTabs } from "./styledComponents";
 import TransactionCard from "./TransactionCard";
 import Box from "@mui/material/Box";
-import { DiningLocation } from "../../../types";
+import { mapLocationsToEnum } from "../../../utils/enumUtils";
 
 interface BuyerViewProps {
   viewMode: "buyer" | "seller";
@@ -25,19 +25,9 @@ const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
     try {
       setLoading(true);
       const response = await getCurrentUserTransactionsAsBuyer();
-      console.log(response);
 
-      // Map the response to convert location string to enum
-      const mappedTransactions = response.map((transaction) => ({
-        ...transaction,
-        availability: {
-          ...transaction.availability,
-          location:
-            DiningLocation[
-              transaction.availability.location as keyof typeof DiningLocation
-            ],
-        },
-      }));
+      // Convert location strings to enum values using our utility function
+      const mappedTransactions = mapLocationsToEnum(response);
 
       setBuyerTransactions(mappedTransactions);
     } catch (error) {
