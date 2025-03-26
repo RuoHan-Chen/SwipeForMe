@@ -7,6 +7,7 @@ import { StyledTab } from "./styledComponents";
 import { StyledTabs } from "./styledComponents";
 import TransactionCard from "./TransactionCard";
 import Box from "@mui/material/Box";
+import { DiningLocation } from "../../../types";
 
 interface BuyerViewProps {
   viewMode: "buyer" | "seller";
@@ -24,7 +25,21 @@ const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
     try {
       setLoading(true);
       const response = await getCurrentUserTransactionsAsBuyer();
-      setBuyerTransactions(response);
+      console.log(response);
+
+      // Map the response to convert location string to enum
+      const mappedTransactions = response.map((transaction) => ({
+        ...transaction,
+        availability: {
+          ...transaction.availability,
+          location:
+            DiningLocation[
+              transaction.availability.location as keyof typeof DiningLocation
+            ],
+        },
+      }));
+
+      setBuyerTransactions(mappedTransactions);
     } catch (error) {
       console.error("Error fetching transactions:", error);
     } finally {
