@@ -9,8 +9,10 @@ import { User } from "../../types";
 import { getCurrentUser } from "../../clients/userClient";
 import Rating from "./Rating";
 import ActivityPanel from "./ActivityPanel/ActivityPanel";
+
 const Dashboard: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [viewMode, setViewMode] = useState<"buyer" | "seller">("buyer");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,13 +30,13 @@ const Dashboard: React.FC = () => {
     <Box sx={{ flexGrow: 1, p: 3, bgcolor: "#2e1a80" }}>
       <Grid container spacing={3}>
         {/* Profile section */}
-        <Profile user={user} />
+        <Profile user={user} viewMode={viewMode} setViewMode={setViewMode} />
 
         {/* Rating section - more compact */}
         <Rating />
 
         {/* Combined Transactions/Availabilities section */}
-        <ActivityPanel />
+        <ActivityPanel viewMode={viewMode} />
       </Grid>
     </Box>
   );

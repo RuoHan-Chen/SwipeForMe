@@ -7,8 +7,11 @@ import { useState } from "react";
 import BuyerView from "./BuyerView";
 import SellerView from "./SellerView";
 
-const ActivityPanel = () => {
-  const [viewMode, setViewMode] = useState<"buyer" | "seller">("buyer");
+interface ActivityPanelProps {
+  viewMode: "buyer" | "seller";
+}
+
+const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
   const [transactionType, setTransactionType] = useState<
     "pending" | "inProgress"
   >("pending");
@@ -48,27 +51,8 @@ const ActivityPanel = () => {
           }}
         >
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            {viewMode === "buyer" ? "Your Transactions" : "Your Availabilities"}
+            {viewMode === "buyer" ? "Your Transaction" : "Your Availabilities"}
           </Typography>
-
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button
-              variant={viewMode === "buyer" ? "contained" : "outlined"}
-              color="primary"
-              onClick={() => setViewMode("buyer")}
-              sx={{ borderRadius: 2 }}
-            >
-              As Buyer
-            </Button>
-            <Button
-              variant={viewMode === "seller" ? "contained" : "outlined"}
-              color="primary"
-              onClick={() => setViewMode("seller")}
-              sx={{ borderRadius: 2 }}
-            >
-              As Seller
-            </Button>
-          </Box>
         </Box>
 
         {/* Buyer view with transaction type toggle */}
@@ -89,7 +73,7 @@ const ActivityPanel = () => {
                     }),
               }}
             >
-              Pending Invites
+              Pending
             </Button>
             <Button
               variant={
