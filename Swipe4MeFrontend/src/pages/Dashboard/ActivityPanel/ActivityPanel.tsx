@@ -3,7 +3,6 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { useState } from "react";
 import BuyerView from "./BuyerView";
 import SellerView from "./SellerView";
 
@@ -12,10 +11,6 @@ interface ActivityPanelProps {
 }
 
 const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
-  const [transactionType, setTransactionType] = useState<
-    "pending" | "inProgress"
-  >("pending");
-
   // Function to format date and time
   const formatDateTime = (dateTimeString: string) => {
     const date = new Date(dateTimeString);
@@ -47,55 +42,13 @@ const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            mb: 3,
+            mb: 1,
           }}
         >
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            {viewMode === "buyer" ? "Your Transaction" : "Your Availabilities"}
+            {viewMode === "buyer" ? "Your Transactions" : "Your Availabilities"}
           </Typography>
         </Box>
-
-        {/* Buyer view with transaction type toggle */}
-        {viewMode === "buyer" && (
-          <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-            <Button
-              variant={transactionType === "pending" ? "contained" : "outlined"}
-              color="primary"
-              onClick={() => setTransactionType("pending")}
-              sx={{
-                borderRadius: 2,
-                ...(transactionType === "pending"
-                  ? { bgcolor: "#ff9800", "&:hover": { bgcolor: "#f57c00" } }
-                  : {
-                      color: "#ff9800",
-                      borderColor: "#ff9800",
-                      "&:hover": { borderColor: "#f57c00", color: "#f57c00" },
-                    }),
-              }}
-            >
-              Pending
-            </Button>
-            <Button
-              variant={
-                transactionType === "inProgress" ? "contained" : "outlined"
-              }
-              color="primary"
-              onClick={() => setTransactionType("inProgress")}
-              sx={{
-                borderRadius: 2,
-                ...(transactionType === "inProgress"
-                  ? { bgcolor: "#2196f3", "&:hover": { bgcolor: "#1976d2" } }
-                  : {
-                      color: "#2196f3",
-                      borderColor: "#2196f3",
-                      "&:hover": { borderColor: "#1976d2", color: "#1976d2" },
-                    }),
-              }}
-            >
-              In Progress
-            </Button>
-          </Box>
-        )}
 
         {/* Scrollable content container */}
         <Box
@@ -121,10 +74,7 @@ const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
           }}
         >
           {viewMode === "buyer" ? (
-            <BuyerView
-              transactionType={transactionType}
-              formatDuration={formatDuration}
-            />
+            <BuyerView viewMode={viewMode} formatDuration={formatDuration} />
           ) : (
             <SellerView formatDuration={formatDuration} />
           )}

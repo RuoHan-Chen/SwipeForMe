@@ -5,17 +5,19 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import { Transaction } from "../../../types";
 import { getCurrentUserTransactionsAsBuyer } from "../../../clients/transactionClient";
+import { StyledTab } from "./styledComponents";
+import { StyledTabs } from "./styledComponents";
 
 interface BuyerViewProps {
-  transactionType: "pending" | "inProgress";
+  viewMode: "buyer" | "seller";
   formatDuration: (startTime: string, endTime: string) => string;
 }
 
-const BuyerView: React.FC<BuyerViewProps> = ({
-  transactionType,
-  formatDuration,
-}) => {
+const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
   const [buyerTransactions, setBuyerTransactions] = useState<Transaction[]>([]);
+  const [transactionType, setTransactionType] = useState<
+    "pending" | "inProgress"
+  >("pending");
   const [loading, setLoading] = useState(false);
 
   const fetchBuyerTransactions = async () => {
@@ -30,6 +32,14 @@ const BuyerView: React.FC<BuyerViewProps> = ({
     }
   };
 
+  // Handle tab change
+  const handleTabChange = (
+    event: React.SyntheticEvent,
+    newValue: "pending" | "inProgress"
+  ) => {
+    setTransactionType(newValue);
+  };
+
   useEffect(() => {
     fetchBuyerTransactions();
   }, []);
@@ -40,6 +50,26 @@ const BuyerView: React.FC<BuyerViewProps> = ({
 
   return (
     <>
+      {/* Transaction type toggle */}
+      {viewMode === "buyer" && (
+        <StyledTabs
+          value={transactionType}
+          onChange={handleTabChange}
+          aria-label="transaction tabs"
+          variant="fullWidth"
+          TabIndicatorProps={{
+            sx: { transition: "all 0.2s ease" },
+          }}
+        >
+          <StyledTab
+            value="pending"
+            label="Pending Confirmation"
+            disableRipple
+          />
+          <StyledTab value="inProgress" label="Confirmed" disableRipple />
+        </StyledTabs>
+      )}
+
       {buyerTransactions.length > 0 ? (
         buyerTransactions
           .filter(
@@ -98,8 +128,9 @@ const BuyerView: React.FC<BuyerViewProps> = ({
           ))
       ) : (
         <Typography variant="body1" color="text.secondary">
-          No {transactionType === "pending" ? "pending" : "in-progress"}{" "}
-          purchases
+          No{" "}
+          {transactionType === "pending" ? "pending confirmation" : "confirmed"}{" "}
+          transactions
         </Typography>
       )}
     </>
