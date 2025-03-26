@@ -1,20 +1,10 @@
-import {
-  Avatar,
-  Paper,
-  Typography,
-  Button,
-  Box as MuiBox,
-  ToggleButtonGroup,
-  ToggleButton,
-  Switch,
-  styled,
-} from "@mui/material";
+import { Avatar, Paper, Typography, Button, Box, styled } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import React, { Dispatch, SetStateAction } from "react";
 import { User } from "../../types";
 
 // Custom styled toggle component to match the design
-const StyledToggleBox = styled(MuiBox)(({ theme }) => ({
+const StyledToggleBox = styled(Box)(({ theme }) => ({
   display: "inline-flex",
   position: "relative",
   backgroundColor: "#f1f1f1",
@@ -75,7 +65,7 @@ const StatusToggle: React.FC<StatusToggleProps> = ({
   };
 
   return (
-    <MuiBox sx={{ display: "flex", alignItems: "center" }}>
+    <Box sx={{ display: "flex", alignItems: "center" }}>
       <Typography
         variant="subtitle1"
         color="text.secondary"
@@ -119,7 +109,7 @@ const StatusToggle: React.FC<StatusToggleProps> = ({
           Donate Swipes
         </div>
       </StyledToggleBox>
-    </MuiBox>
+    </Box>
   );
 };
 
@@ -170,7 +160,7 @@ const Profile: React.FC<ProfileProps> = ({ user, viewMode, setViewMode }) => {
           </Grid>
           <Grid size={9} sx={{ pl: 2 }}>
             {/* Header with name and edit button */}
-            <MuiBox
+            <Box
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -196,7 +186,7 @@ const Profile: React.FC<ProfileProps> = ({ user, viewMode, setViewMode }) => {
               >
                 Edit
               </Button>
-            </MuiBox>
+            </Box>
 
             <Typography
               variant="body1"
@@ -207,7 +197,7 @@ const Profile: React.FC<ProfileProps> = ({ user, viewMode, setViewMode }) => {
             </Typography>
 
             {/* Email section */}
-            <MuiBox sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Typography
                 variant="subtitle1"
                 color="text.secondary"
@@ -216,7 +206,7 @@ const Profile: React.FC<ProfileProps> = ({ user, viewMode, setViewMode }) => {
                 Email
               </Typography>
               <Typography variant="body1">{user.email}</Typography>
-            </MuiBox>
+            </Box>
 
             {/* Status section */}
             <StatusToggle viewMode={viewMode} setViewMode={setViewMode} />
