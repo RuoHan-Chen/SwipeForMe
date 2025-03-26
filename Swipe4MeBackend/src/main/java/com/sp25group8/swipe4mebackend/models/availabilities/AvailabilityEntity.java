@@ -5,6 +5,7 @@ package com.sp25group8.swipe4mebackend.models.availabilities;
 
 import com.sp25group8.swipe4mebackend.models.enums.DiningLocation;
 import com.sp25group8.swipe4mebackend.models.users.UserEntity;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,8 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "availabilities")
@@ -44,4 +47,8 @@ public class AvailabilityEntity {
 
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
+
+    @OneToMany(mappedBy = "availability", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<TransactionEntity> transactions = new ArrayList<>();
 }
