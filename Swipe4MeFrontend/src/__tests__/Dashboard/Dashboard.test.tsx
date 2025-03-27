@@ -1,9 +1,7 @@
-import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Dashboard from '../../pages/Dashboard/Dashboard';
 import { SnackbarProvider } from '../../context/SnackbarContext';
-import { getCurrentUser } from '../../clients/userClient';
 
 // Mock child components
 jest.mock('../../pages/Dashboard/Profile/Profile', () => {

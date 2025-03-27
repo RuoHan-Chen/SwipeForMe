@@ -1,7 +1,7 @@
-export const login = async (email: string, password: string) => {
+export const login = async (_: string, __: string) => {
   return { token: 'mock-token' };
 };
 
-export const signup = async (email: string, password: string) => {
+export const signup = async (_: string, __: string) => {
   return { token: 'mock-token' };
 }; 

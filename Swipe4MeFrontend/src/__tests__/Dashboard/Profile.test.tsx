@@ -1,7 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Profile from '../../pages/Dashboard/Profile/Profile';
 import { BrowserRouter } from 'react-router-dom';
+import { User } from '../../types';
 
 describe('Profile Component', () => {
   const mockUser = {
@@ -14,7 +14,7 @@ describe('Profile Component', () => {
   const renderProfile = (viewMode: string = 'buyer') => {
     return render(
       <BrowserRouter>
-        <Profile viewMode={viewMode} user={mockUser} onViewModeChange={() => {}} />
+        <Profile viewMode={viewMode as 'buyer' | 'seller'} user={mockUser as User} setViewMode={() => {}} />
       </BrowserRouter>
     );
   };

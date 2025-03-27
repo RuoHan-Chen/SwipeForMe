@@ -39,7 +39,7 @@ describe('BuyerView Component', () => {
     return render(
       <BrowserRouter>
         <SnackbarProvider>
-          <BuyerView />
+          <BuyerView viewMode="buyer" formatDuration={() => ''} />
         </SnackbarProvider>
       </BrowserRouter>
     );

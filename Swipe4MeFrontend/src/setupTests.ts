@@ -12,8 +12,8 @@ const env = {
   DEV: true,
 };
 
-global.import = {
+(global as any).import = {
   meta: {
     env,
   },
-} as any; 
+};

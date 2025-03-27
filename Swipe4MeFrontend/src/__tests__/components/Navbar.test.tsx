@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Navbar from '../../components/navbar';
@@ -127,7 +126,7 @@ describe('Navbar Component', () => {
       logout: mockLogout
     });
 
-    const { container } = renderNavbar();
+    renderNavbar();
     
     // Open dropdown
     const profileImage = screen.getByAltText('User Profile');
@@ -148,7 +147,7 @@ describe('Navbar Component', () => {
       logout: mockLogout
     });
 
-    const { container } = renderNavbar();
+    renderNavbar();
     
     // Open dropdown
     const profileImage = screen.getByAltText('User Profile');

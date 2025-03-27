@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import SellerView from '../../../pages/Dashboard/ActivityPanel/SellerView/SellerView';
@@ -65,7 +64,7 @@ describe('SellerView Component', () => {
     return render(
       <BrowserRouter>
         <SnackbarProvider>
-          <SellerView formatDuration={(start, end) => '12:00 PM - 1:00 PM'} />
+          <SellerView formatDuration={() => '12:00 PM - 1:00 PM'} />
         </SnackbarProvider>
       </BrowserRouter>
     );

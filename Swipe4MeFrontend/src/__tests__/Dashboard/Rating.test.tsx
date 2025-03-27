@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Rating from '../../pages/Dashboard/Rating';
 

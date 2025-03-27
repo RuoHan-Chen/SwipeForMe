@@ -1,11 +1,9 @@
-import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import GetSwipes from '../pages/getSwipes';
 import { SnackbarProvider } from '../context/SnackbarContext';
 import { getAllAvailabilities } from '../clients/availabilityClient';
 import { getCurrentUserTransactionsAsBuyer } from '../clients/transactionClient';
-import { DiningLocation } from '../types';
 
 // Mock the modules
 jest.mock('../clients/availabilityClient');
