@@ -104,16 +104,22 @@ const buySwipes: React.FC = () => {
       try {
         const response = await getAllAvailabilities();
 
+        // Filter out past availabilities
+        const currentTime = new Date();
+        const futureAvailabilities = response.filter(
+          (availability) => new Date(availability.startTime) > currentTime
+        );
+
         // If the user is logged in, filter out their own availability
         const userId = localStorage.getItem("userId");
         if (!!userId) {
-          const availabilities = response.filter(
+          const filteredAvailabilities = futureAvailabilities.filter(
             (availability) => availability.user.id !== parseInt(userId)
           );
-          setAvailabilities(availabilities);
+          setAvailabilities(filteredAvailabilities);
         } else {
           // If the user is not logged in, show all availabilities
-          setAvailabilities(response);
+          setAvailabilities(futureAvailabilities);
         }
       } catch (error) {
         console.error("Error fetching availabilities:", error);
