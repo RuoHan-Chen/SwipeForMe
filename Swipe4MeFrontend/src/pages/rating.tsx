@@ -69,6 +69,7 @@ const Rating: React.FC = () => {
                   {[1, 2, 3, 4, 5].map((i) => (
                     <FaStar
                       key={i}
+                      data-testid="star-icon"
                       className={ratings[cat.name] >= i ? "star selected" : "star"}
                       onClick={() => handleRatingChange(cat.name, i)}
                     />
