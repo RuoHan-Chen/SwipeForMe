@@ -1,0 +1,32 @@
+# Test database configuration
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    # Optional: Show SQL statements for debugging
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  # Disable Liquibase for tests
+  liquibase:
+    enabled: false
+
+# Security config for tests
+jwt:
+  secret: testsecrettestsecrettestsecrettestsecrettestsecrettestsecrettestsecrettestsecret
+  expiration: 86400000
+
+# Logging configuration for tests
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    # Comment out the following line if you want to see parameter binding
+    # org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    com.sp25group8.swipe4mebackend: DEBUG
