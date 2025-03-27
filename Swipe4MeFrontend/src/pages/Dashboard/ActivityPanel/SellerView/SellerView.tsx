@@ -41,7 +41,13 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
       // Convert location strings to enum values using our utility function
       const mappedAvailabilities = mapLocationsToEnum(upcomingAvailabilities);
 
-      setAvailabilities(mappedAvailabilities);
+      // Sort availabilities by start time
+      const sortedAvailabilities = mappedAvailabilities.sort(
+        (a, b) =>
+          new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+      );
+
+      setAvailabilities(sortedAvailabilities);
     } catch (error) {
       console.error("Error fetching availabilities:", error);
     }
