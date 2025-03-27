@@ -14,8 +14,12 @@ const Rating: React.FC = () => {
       </p>
 
       <div className="rating-score">
-        <span className="rating-value">4.5</span>
-        <span className="stars">⭐⭐⭐⭐⭐</span>
+        <span className="rating-value" data-testid="rating-value">4.5</span>
+        <span className="stars">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span key={star} data-testid="rating-star">⭐</span>
+          ))}
+        </span>
         <span className="rating-count">256</span>
       </div>
 

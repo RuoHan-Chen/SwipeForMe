@@ -5,8 +5,12 @@ import React from "react";
 import "../styles/profile.css";
 
 const MealSwipeCalculator: React.FC = () => {
+  const handleCalculate = () => {
+    // Implementation of handleCalculate function
+  };
+
   return (
-    <div className="calculator-card">
+    <div className="calculator-card" data-testid="calculator-form">
       <h3>Meal Swipe Calculator</h3>
       <table>
         <tbody>
@@ -16,7 +20,13 @@ const MealSwipeCalculator: React.FC = () => {
           </tr>
           <tr>
             <td>Current Swipes</td>
-            <td>120</td>
+            <td>
+              <input 
+                type="number" 
+                defaultValue={120} 
+                data-testid="swipes-input"
+              />
+            </td>
           </tr>
           <tr>
             <td>Days off Campus</td>
@@ -32,6 +42,16 @@ const MealSwipeCalculator: React.FC = () => {
           </tr>
         </tbody>
       </table>
+      <button 
+        type="button"
+        onClick={handleCalculate}
+        aria-label="Calculate"
+      >
+        Calculate
+      </button>
+      <div data-testid="calculation-result">
+        {/* calculation result content */}
+      </div>
     </div>
   );
 };

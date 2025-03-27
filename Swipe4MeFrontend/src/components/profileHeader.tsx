@@ -9,12 +9,16 @@ const ProfileHeader: React.FC = () => {
     <div className="profile-header">
       <div className="profile-card">
         <div className="profile-photo-container">
-          <img src="/profile_pic.png" alt="Profile" className="profile-photo" />
+          <img 
+            src="/profile_pic.png" 
+            alt="Profile Picture" 
+            className="profile-photo"
+          />
         </div>
 
         <div className="profile-details">
           <div className="profile-header-row">
-            <h2 className="user-name">RuoHan Chen</h2>
+            <h2 className="user-name" data-testid="user-name">RuoHan Chen</h2>
             <div className="profile-actions">
               <img
                 src="/notification-icon.png"
@@ -25,7 +29,7 @@ const ProfileHeader: React.FC = () => {
             </div>
           </div>
 
-          <div className="profile-info">
+          <div className="profile-info" data-testid="user-stats">
             <div className="profile-column">
               <p>
                 <strong>Email:</strong> ruohan@gmail.com
