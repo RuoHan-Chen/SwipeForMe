@@ -21,7 +21,24 @@ const config: Config = {
     '/node_modules/',
     '^.+\\.module\\.(css|sass|scss)$',
   ],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node']
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  collectCoverage: true,
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/**/*.test.{ts,tsx}',
+    '!src/**/__tests__/**',
+    '!src/**/__mocks__/**',
+    '!src/setupTests.ts',
+    '!src/vite-env.d.ts',
+    '!src/main.tsx',
+  ],
+  coverageDirectory: 'coverage',
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.json'
+    }
+  }
 };
 
 export default config; 
