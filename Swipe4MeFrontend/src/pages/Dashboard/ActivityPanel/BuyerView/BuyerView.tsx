@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid2";
 import { Transaction } from "../../../../types";
-import { getCurrentUserTransactionsAsBuyer } from "../../../../clients/transactionClient";
+import {
+  cancelTransaction,
+  getCurrentUserTransactionsAsBuyer,
+} from "../../../../clients/transactionClient";
 import { StyledTab, StyledTabs } from "../styledComponents";
 import TransactionCard from "./TransactionCard";
 import Box from "@mui/material/Box";
 import { mapLocationsToEnum } from "../../../../utils/enumUtils";
 import Paper from "@mui/material/Paper";
+import { useSnackbar } from "../../../../context/SnackbarContext";
 
 interface BuyerViewProps {
   viewMode: "buyer" | "seller";
@@ -20,6 +24,7 @@ const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
     "pending" | "inProgress"
   >("pending");
   const [loading, setLoading] = useState(false);
+  const { snackbar } = useSnackbar();
 
   const fetchBuyerTransactions = async () => {
     try {
@@ -31,7 +36,7 @@ const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
 
       setBuyerTransactions(mappedTransactions);
     } catch (error) {
-      console.error("Error fetching transactions:", error);
+      snackbar.error("Failed to fetch transactions");
     } finally {
       setLoading(false);
     }
@@ -50,9 +55,15 @@ const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
   }, []);
 
   // Handle transaction actions
-  const handleCancel = (transactionId: number) => {
-    console.log(`Cancel transaction ${transactionId}`);
-    // Implement cancellation logic here
+  const handleCancel = async (transactionId: number) => {
+    try {
+      snackbar.loading("Cancelling transaction...");
+      await cancelTransaction(transactionId);
+      snackbar.success("Transaction cancelled");
+      fetchBuyerTransactions();
+    } catch (error) {
+      snackbar.error("Failed to cancel transaction");
+    }
   };
 
   if (loading) {

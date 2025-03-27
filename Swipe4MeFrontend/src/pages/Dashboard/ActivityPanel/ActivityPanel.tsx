@@ -45,7 +45,9 @@ const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
           }}
         >
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            {viewMode === "buyer" ? "Your Transactions" : "Your Availabilities"}
+            {viewMode === "buyer"
+              ? "Your Swipe Sessions"
+              : "Your Availabilities"}
           </Typography>
         </Box>
 
