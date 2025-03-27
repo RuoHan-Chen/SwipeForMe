@@ -113,7 +113,7 @@ export const acceptTransaction = async (transactionId: number) => {
   return await response.json();
 };
 
-export const rejectTransaction = async (transactionId: number) => {
+export const cancelTransaction = async (transactionId: number) => {
   const urlWithParams =
     `/api/transactions/${transactionId}/status?` +
     new URLSearchParams({
@@ -129,7 +129,7 @@ export const rejectTransaction = async (transactionId: number) => {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to reject transaction");
+    throw new Error("Failed to cancel transaction");
   }
 
   return await response.json();

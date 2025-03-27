@@ -3,7 +3,7 @@ import { Transaction } from "../../../../types";
 import { useSnackbar } from "../../../../context/SnackbarContext";
 import {
   acceptTransaction,
-  rejectTransaction,
+  cancelTransaction,
 } from "../../../../clients/transactionClient";
 import { Paper, Box, Avatar, Button, Typography } from "@mui/material";
 
@@ -38,7 +38,7 @@ const PendingInviteCard = ({
   const handleDecline = async (transactionId: number) => {
     try {
       setLoadingDecline(true);
-      await rejectTransaction(transactionId);
+      await cancelTransaction(transactionId);
       snackbar.success("Transaction rejected");
       onTransactionUpdated(); // Call the refetch function after successful rejection
     } catch (e) {
