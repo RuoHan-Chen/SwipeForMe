@@ -104,7 +104,16 @@ const Profile: React.FC<ProfileProps> = ({ user, viewMode, setViewMode }) => {
 
   return (
     <Grid size={6}>
-      <Paper sx={{ p: 3, borderRadius: 4 }}>
+      <Paper 
+        sx={{ 
+          p: 3, 
+          borderRadius: 4,
+          height: '220px', // Fixed height to match rating card
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
+        }}
+      >
         <Grid container alignItems="center" spacing={3}>
           <Grid
             size={3}
@@ -147,7 +156,7 @@ const Profile: React.FC<ProfileProps> = ({ user, viewMode, setViewMode }) => {
                   padding: "6px 16px",
                 }}
               >
-                Edit
+                EDIT
               </Button>
             </Box>
 
