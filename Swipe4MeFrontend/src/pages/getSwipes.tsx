@@ -75,8 +75,10 @@ const TableHeader: React.FC = () => (
     style={{ width: "90%", margin: "0 auto", paddingTop: "20px" }}
   >
     <Grid2>
-      <Typography variant="h6">All Students</Typography>
-      <Typography variant="subtitle1" color="#16C098">
+      <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "22.4066px", lineHeight: "34px" }}>
+        All Students
+      </Typography>
+      <Typography variant="subtitle1" sx={{ color: "#16C098", fontWeight: 400, fontSize: "14.2588px", lineHeight: "21px" }}>
         Active Students
       </Typography>
     </Grid2>
