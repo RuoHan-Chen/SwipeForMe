@@ -19,8 +19,10 @@ import {
   ThemeProvider,
   Typography,
   Box,
+  InputAdornment,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import SearchIcon from "@mui/icons-material/Search";
 import { getAllAvailabilities } from "../clients/availabilityClient";
 import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
 import {
@@ -35,7 +37,7 @@ import { DiningLocation, User, Availability } from "../types";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#16C098",
+      main: "#25DAC5",
     },
   },
   typography: {
@@ -73,13 +75,33 @@ const TableHeader: React.FC = () => (
     style={{ width: "90%", margin: "0 auto", paddingTop: "20px" }}
   >
     <Grid2>
-      <Typography variant="h6">All Students</Typography>
-      <Typography variant="subtitle1" color="#16C098">
+      <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "22.4066px", lineHeight: "34px" }}>
+        All Students
+      </Typography>
+      <Typography variant="subtitle1" sx={{ color: "#16C098", fontWeight: 400, fontSize: "14.2588px", lineHeight: "21px" }}>
         Active Students
       </Typography>
     </Grid2>
     <Grid2>
-      <TextField variant="outlined" placeholder="Search" size="small" />
+      <TextField 
+        variant="outlined" 
+        placeholder="Search" 
+        size="small"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon sx={{ 
+                color: '#7E7E7E',
+                width: '24.59px',
+                height: '21.7px',
+                '& path': {
+                  strokeWidth: '2.03697px',
+                }
+              }} />
+            </InputAdornment>
+          ),
+        }}
+      />
     </Grid2>
   </Grid2>
 );
@@ -308,14 +330,25 @@ const buySwipes: React.FC = () => {
                             variant="contained"
                             color="primary"
                             fullWidth={true}
-                            style={{ width: "80%" }}
+                            style={{ 
+                              width: "120px",
+                              whiteSpace: "nowrap",
+                              minWidth: "fit-content",
+                              boxShadow: "none",
+                              ...(isTransactionPending(row.id) ? {
+                                backgroundColor: "#F4F4F4",
+                                border: "1px solid #757171",
+                              } : {})
+                            }}
                             onClick={() =>
                               handleSendInvite(row.id, row.user.id)
                             }
                             disabled={isTransactionPending(row.id)}
                             loading={loadingAvailabilityId === row.id}
                           >
-                            <div style={{ color: "white" }}>
+                            <div style={{ 
+                              color: isTransactionPending(row.id) ? "#757171" : "white"
+                            }}>
                               {isTransactionPending(row.id)
                                 ? "Pending"
                                 : "Send Invite"}
