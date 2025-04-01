@@ -14,8 +14,6 @@ import {
   TableRow,
   Button,
   TextField,
-  Select,
-  MenuItem,
   IconButton,
   InputAdornment,
   Grid2,
@@ -79,8 +77,8 @@ const TransactionHistory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Calculate completed transactions
-  const completedTransactions = mockTransactions.filter(t => t.status === "completed").length;
-  const totalTransactions = mockTransactions.length;
+  // const completedTransactions = mockTransactions.filter(t => t.status === "completed").length;
+  // const totalTransactions = mockTransactions.length;
 
   const getStatusButtonStyle = (status: Transaction["status"]) => {
     switch (status) {
@@ -117,22 +115,22 @@ const TransactionHistory: React.FC = () => {
   };
 
   const getRateButtonStyle = () => ({
-    boxSizing: 'border-box',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '4.07393px 12px 4.07393px 12.2218px',
-    gap: '5px',
-    width: '80px',
-    height: '29.15px',
-    background: '#FFFFFF',
-    border: '1.01848px solid #482BE7',
-    borderRadius: '4.07393px',
-    textTransform: 'none',
-    '&:hover': {
-      background: '#FFFFFF',
-    }
+    boxSizing: "border-box",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "4.07393px 12px 4.07393px 12.2218px",
+    gap: "5px",
+    width: "80px",
+    height: "29.15px",
+    background: "#FFFFFF",
+    border: "1.01848px solid #482BE7",
+    borderRadius: "4.07393px",
+    textTransform: "none",
+    "&:hover": {
+      background: "#FFFFFF",
+    },
   });
 
   return (
@@ -190,14 +188,16 @@ const TransactionHistory: React.FC = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ 
-                      color: '#7E7E7E',
-                      width: '24.59px',
-                      height: '21.7px',
-                      '& path': {
-                        strokeWidth: '2.03697px',
-                      }
-                    }} />
+                    <SearchIcon
+                      sx={{
+                        color: "#7E7E7E",
+                        width: "24.59px",
+                        height: "21.7px",
+                        "& path": {
+                          strokeWidth: "2.03697px",
+                        },
+                      }}
+                    />
                   </InputAdornment>
                 ),
               }}
@@ -243,12 +243,48 @@ const TransactionHistory: React.FC = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ color: "#B5B7C0", bgcolor: "white" }}>Name & Email</TableCell>
-                <TableCell sx={{ color: "#B5B7C0", bgcolor: "white", textAlign: "center" }}>Dining Hall</TableCell>
-                <TableCell sx={{ color: "#B5B7C0", bgcolor: "white", textAlign: "center" }}>Date</TableCell>
-                <TableCell sx={{ color: "#B5B7C0", bgcolor: "white", textAlign: "center" }}>Time</TableCell>
-                <TableCell sx={{ color: "#B5B7C0", bgcolor: "white", textAlign: "center" }}>Status</TableCell>
-                <TableCell sx={{ color: "#B5B7C0", bgcolor: "white" }}>Rating</TableCell>
+                <TableCell sx={{ color: "#B5B7C0", bgcolor: "white" }}>
+                  Name & Email
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: "#B5B7C0",
+                    bgcolor: "white",
+                    textAlign: "center",
+                  }}
+                >
+                  Dining Hall
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: "#B5B7C0",
+                    bgcolor: "white",
+                    textAlign: "center",
+                  }}
+                >
+                  Date
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: "#B5B7C0",
+                    bgcolor: "white",
+                    textAlign: "center",
+                  }}
+                >
+                  Time
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: "#B5B7C0",
+                    bgcolor: "white",
+                    textAlign: "center",
+                  }}
+                >
+                  Status
+                </TableCell>
+                <TableCell sx={{ color: "#B5B7C0", bgcolor: "white" }}>
+                  Rating
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -298,39 +334,37 @@ const TransactionHistory: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {transaction.status === "completed" && !transaction.rating && (
-                        <Button
-                          size="small"
-                          sx={getRateButtonStyle()}
-                        >
-                          <EditIcon 
-                            sx={{ 
-                              width: '15px',
-                              height: '15px',
-                              opacity: 0.6,
-                              color: '#482BE7',
-                              '& path': {
-                                border: '1.2px solid #482BE7',
-                              }
-                            }} 
-                          />
-                          <Typography
-                            sx={{
-                              fontFamily: 'Poppins',
-                              fontStyle: 'normal',
-                              fontWeight: 500,
-                              fontSize: '14.2588px',
-                              lineHeight: '21px',
-                              display: 'flex',
-                              alignItems: 'flex-end',
-                              letterSpacing: '-0.01em',
-                              color: '#482BE7',
-                            }}
-                          >
-                            Rate
-                          </Typography>
-                        </Button>
-                      )}
+                      {transaction.status === "completed" &&
+                        !transaction.rating && (
+                          <Button size="small" sx={getRateButtonStyle()}>
+                            <EditIcon
+                              sx={{
+                                width: "15px",
+                                height: "15px",
+                                opacity: 0.6,
+                                color: "#482BE7",
+                                "& path": {
+                                  border: "1.2px solid #482BE7",
+                                },
+                              }}
+                            />
+                            <Typography
+                              sx={{
+                                fontFamily: "Poppins",
+                                fontStyle: "normal",
+                                fontWeight: 500,
+                                fontSize: "14.2588px",
+                                lineHeight: "21px",
+                                display: "flex",
+                                alignItems: "flex-end",
+                                letterSpacing: "-0.01em",
+                                color: "#482BE7",
+                              }}
+                            >
+                              Rate
+                            </Typography>
+                          </Button>
+                        )}
                       {transaction.rating && (
                         <>
                           <Typography
@@ -353,7 +387,7 @@ const TransactionHistory: React.FC = () => {
               ))}
             </TableBody>
           </Table>
-          
+
           {/* Pagination Info */}
           <Box
             sx={{
@@ -366,10 +400,16 @@ const TransactionHistory: React.FC = () => {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Typography sx={{ color: "#000000", fontFamily: "Poppins", fontSize: "14px" }}>
+              <Typography
+                sx={{
+                  color: "#000000",
+                  fontFamily: "Poppins",
+                  fontSize: "14px",
+                }}
+              >
                 1-2 of 2
               </Typography>
-              <IconButton 
+              <IconButton
                 size="small"
                 sx={{
                   width: "25px",
@@ -378,14 +418,14 @@ const TransactionHistory: React.FC = () => {
                   color: "#B5B7C0",
                 }}
               >
-                <KeyboardArrowDownIcon 
-                  sx={{ 
+                <KeyboardArrowDownIcon
+                  sx={{
                     transform: "rotate(90deg)",
-                    fontSize: "20px"
-                  }} 
+                    fontSize: "20px",
+                  }}
                 />
               </IconButton>
-              <IconButton 
+              <IconButton
                 size="small"
                 sx={{
                   width: "25px",
@@ -394,11 +434,11 @@ const TransactionHistory: React.FC = () => {
                   color: "#B5B7C0",
                 }}
               >
-                <KeyboardArrowDownIcon 
-                  sx={{ 
+                <KeyboardArrowDownIcon
+                  sx={{
                     transform: "rotate(-90deg)",
-                    fontSize: "20px"
-                  }} 
+                    fontSize: "20px",
+                  }}
                 />
               </IconButton>
             </Box>

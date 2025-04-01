@@ -99,21 +99,14 @@ const DonateSwipes: React.FC = () => {
   const menuProps = {
     PaperProps: {
       sx: {
-        bgcolor: 'rgba(13, 13, 35, 0.95)',
-        '& .MuiMenuItem-root': {
-          color: '#FFFFFF',
-          '&:hover': {
-            bgcolor: 'rgba(255, 255, 255, 0.1)',
+        bgcolor: "rgba(13, 13, 35, 0.95)",
+        "& .MuiMenuItem-root": {
+          color: "#FFFFFF",
+          "&:hover": {
+            bgcolor: "rgba(255, 255, 255, 0.1)",
           },
         },
       },
-    },
-  };
-
-  const commonInputProps = {
-    sx: {
-      m: 1,
-      ...menuProps.PaperProps.sx,
     },
   };
 
@@ -154,22 +147,22 @@ const DonateSwipes: React.FC = () => {
         </Box>
 
         <Box sx={{ maxWidth: "900px", mx: "auto", width: "100%" }}>
-          <Grid 
-            container 
-            spacing={3} 
+          <Grid
+            container
+            spacing={3}
             sx={{
-              '& .MuiFormControl-root': {
-                width: '100%',
-                height: '56px', // Make all inputs same height
+              "& .MuiFormControl-root": {
+                width: "100%",
+                height: "56px", // Make all inputs same height
               },
-              '& .MuiInputBase-root': {
-                height: '56px',
+              "& .MuiInputBase-root": {
+                height: "56px",
               },
-              '& .MuiOutlinedInput-root': {
-                height: '56px',
+              "& .MuiOutlinedInput-root": {
+                height: "56px",
               },
-              '& .MuiInputLabel-root': {
-                lineHeight: '1.4375em',
+              "& .MuiInputLabel-root": {
+                lineHeight: "1.4375em",
               },
             }}
           >
@@ -188,53 +181,53 @@ const DonateSwipes: React.FC = () => {
                         required: false,
                       },
                       sx: {
-                        width: '100%',
-                      }
+                        width: "100%",
+                      },
                     },
                     popper: {
                       sx: {
-                        '& .MuiPaper-root': {
-                          bgcolor: 'rgba(28, 28, 45, 0.95)',
-                          color: '#FFFFFF',
+                        "& .MuiPaper-root": {
+                          bgcolor: "rgba(28, 28, 45, 0.95)",
+                          color: "#FFFFFF",
                         },
-                        '& .MuiPickersDay-root': {
-                          color: '#FFFFFF',
-                          '&:hover': {
-                            bgcolor: 'rgba(255, 255, 255, 0.1)',
+                        "& .MuiPickersDay-root": {
+                          color: "#FFFFFF",
+                          "&:hover": {
+                            bgcolor: "rgba(255, 255, 255, 0.1)",
                           },
-                          '&.Mui-selected': {
-                            bgcolor: 'rgba(255, 255, 255, 0.15)',
+                          "&.Mui-selected": {
+                            bgcolor: "rgba(255, 255, 255, 0.15)",
                           },
-                          '&.Mui-disabled': {
-                            color: '#A897CA',
-                          },
-                        },
-                        '& .MuiDayPicker-header': {
-                          color: '#FFFFFF',
-                        },
-                        '& .MuiPickersCalendarHeader-root': {
-                          color: '#FFFFFF',
-                          '& .MuiPickersCalendarHeader-label': {
-                            color: '#FFFFFF',
-                          },
-                          '& .MuiSvgIcon-root': {
-                            color: '#FFFFFF',
+                          "&.Mui-disabled": {
+                            color: "#A897CA",
                           },
                         },
-                        '& .MuiPickersDay-dayOutsideMonth': {
-                          color: '#A897CA',
+                        "& .MuiDayPicker-header": {
+                          color: "#FFFFFF",
                         },
-                        '& .MuiPickersArrowSwitcher-button': {
-                          color: '#FFFFFF',
-                          '& .MuiSvgIcon-root': {
-                            color: '#FFFFFF',
+                        "& .MuiPickersCalendarHeader-root": {
+                          color: "#FFFFFF",
+                          "& .MuiPickersCalendarHeader-label": {
+                            color: "#FFFFFF",
+                          },
+                          "& .MuiSvgIcon-root": {
+                            color: "#FFFFFF",
                           },
                         },
-                        '& .MuiDayPicker-weekDayLabel': {
-                          color: '#FFFFFF !important',
+                        "& .MuiPickersDay-dayOutsideMonth": {
+                          color: "#A897CA",
                         },
-                        '& .MuiTypography-caption': {
-                          color: '#FFFFFF',
+                        "& .MuiPickersArrowSwitcher-button": {
+                          color: "#FFFFFF",
+                          "& .MuiSvgIcon-root": {
+                            color: "#FFFFFF",
+                          },
+                        },
+                        "& .MuiDayPicker-weekDayLabel": {
+                          color: "#FFFFFF !important",
+                        },
+                        "& .MuiTypography-caption": {
+                          color: "#FFFFFF",
                         },
                       },
                     },
@@ -243,10 +236,7 @@ const DonateSwipes: React.FC = () => {
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6}>
-              <StyledFormControl 
-                fullWidth 
-                error={formSubmitted && !location}
-              >
+              <StyledFormControl fullWidth error={formSubmitted && !location}>
                 <InputLabel required={false} id="location-label">
                   Select Location
                 </InputLabel>
@@ -280,29 +270,29 @@ const DonateSwipes: React.FC = () => {
                         required: false,
                       },
                       sx: {
-                        width: '100%',
-                      }
+                        width: "100%",
+                      },
                     },
                     popper: {
                       sx: {
-                        '& .MuiPaper-root': {
-                          bgcolor: 'rgba(13, 13, 35, 0.98)',
-                          color: '#FFFFFF',
+                        "& .MuiPaper-root": {
+                          bgcolor: "rgba(13, 13, 35, 0.98)",
+                          color: "#FFFFFF",
                         },
-                        '& .MuiClock-pin': {
-                          bgcolor: '#FFFFFF',
+                        "& .MuiClock-pin": {
+                          bgcolor: "#FFFFFF",
                         },
-                        '& .MuiClockPointer-root': {
-                          bgcolor: '#FFFFFF',
+                        "& .MuiClockPointer-root": {
+                          bgcolor: "#FFFFFF",
                         },
-                        '& .MuiClockPointer-thumb': {
-                          border: '16px solid #FFFFFF',
+                        "& .MuiClockPointer-thumb": {
+                          border: "16px solid #FFFFFF",
                         },
-                        '& .MuiClockNumber-root': {
-                          color: '#FFFFFF',
+                        "& .MuiClockNumber-root": {
+                          color: "#FFFFFF",
                         },
-                        '& .MuiPickersArrowSwitcher-button': {
-                          color: '#FFFFFF',
+                        "& .MuiPickersArrowSwitcher-button": {
+                          color: "#FFFFFF",
                         },
                       },
                     },
@@ -324,29 +314,29 @@ const DonateSwipes: React.FC = () => {
                         required: false,
                       },
                       sx: {
-                        width: '100%',
-                      }
+                        width: "100%",
+                      },
                     },
                     popper: {
                       sx: {
-                        '& .MuiPaper-root': {
-                          bgcolor: 'rgba(13, 13, 35, 0.98)',
-                          color: '#FFFFFF',
+                        "& .MuiPaper-root": {
+                          bgcolor: "rgba(13, 13, 35, 0.98)",
+                          color: "#FFFFFF",
                         },
-                        '& .MuiClock-pin': {
-                          bgcolor: '#FFFFFF',
+                        "& .MuiClock-pin": {
+                          bgcolor: "#FFFFFF",
                         },
-                        '& .MuiClockPointer-root': {
-                          bgcolor: '#FFFFFF',
+                        "& .MuiClockPointer-root": {
+                          bgcolor: "#FFFFFF",
                         },
-                        '& .MuiClockPointer-thumb': {
-                          border: '16px solid #FFFFFF',
+                        "& .MuiClockPointer-thumb": {
+                          border: "16px solid #FFFFFF",
                         },
-                        '& .MuiClockNumber-root': {
-                          color: '#FFFFFF',
+                        "& .MuiClockNumber-root": {
+                          color: "#FFFFFF",
                         },
-                        '& .MuiPickersArrowSwitcher-button': {
-                          color: '#FFFFFF',
+                        "& .MuiPickersArrowSwitcher-button": {
+                          color: "#FFFFFF",
                         },
                       },
                     },
