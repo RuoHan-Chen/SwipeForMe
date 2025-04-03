@@ -36,4 +36,41 @@ public class RatingService {
         return sum / numEntries;
     }
 
+    // 创建新的评分
+    public RatingEntity createRating(RatingEntity rating) {
+        return ratingRepository.save(rating);
+    }
+
+    // 更新评分
+    public RatingEntity updateRating(Long ratingId, RatingEntity updatedRating) {
+        RatingEntity existingRating = ratingRepository.findById(ratingId)
+                .orElseThrow(() -> new RuntimeException("Rating not found with id: " + ratingId));
+        
+        existingRating.setToSellerRating(updatedRating.getToSellerRating());
+        existingRating.setToBuyerRating(updatedRating.getToBuyerRating());
+        
+        return ratingRepository.save(existingRating);
+    }
+
+    // 根据ID获取评分
+    public RatingEntity getRatingById(Long ratingId) {
+        return ratingRepository.findById(ratingId)
+                .orElseThrow(() -> new RuntimeException("Rating not found with id: " + ratingId));
+    }
+
+    // 获取所有评分
+    public List<RatingEntity> getAllRatings() {
+        return ratingRepository.findAll();
+    }
+
+    // 获取卖家的所有评分
+    public List<RatingEntity> getRatingsBySellerId(Long sellerId) {
+        return ratingRepository.findAllBySellerId(sellerId);
+    }
+
+    // 获取买家的所有评分
+    public List<RatingEntity> getRatingsByBuyerId(Long buyerId) {
+        return ratingRepository.findAllByBuyerId(buyerId);
+    }
+
 }
