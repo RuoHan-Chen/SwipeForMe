@@ -1,18 +1,18 @@
 package com.sp25group8.swipe4mebackend.ratings;
 
-import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
-import com.sp25group8.swipe4mebackend.models.users.UserEntity;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 
 @ExtendWith(MockitoExtension.class)
 public class RatingServiceTest {
@@ -41,8 +41,8 @@ public class RatingServiceTest {
         RatingEntity buyerRating1 = createTestRating(3L, otherUser1, user, 5.0, 4.0);
         RatingEntity buyerRating2 = createTestRating(4L, otherUser2, user, 3.0, 3.5);
 
-        when(ratingRepository.findAllBySellerId(userId)).thenReturn(Arrays.asList(sellerRating1, sellerRating2));
-        when(ratingRepository.findAllByBuyerId(userId)).thenReturn(Arrays.asList(buyerRating1, buyerRating2));
+        when(ratingRepository.findAllBySeller_Id(userId)).thenReturn(Arrays.asList(sellerRating1, sellerRating2));
+        when(ratingRepository.findAllByBuyer_Id(userId)).thenReturn(Arrays.asList(buyerRating1, buyerRating2));
 
         // When
         double result = ratingService.getUserRating(userId);
@@ -63,8 +63,8 @@ public class RatingServiceTest {
         RatingEntity sellerRating1 = createTestRating(1L, user, otherUser1, 4.5, 5.0);
         RatingEntity sellerRating2 = createTestRating(2L, user, otherUser2, 3.5, 4.0);
 
-        when(ratingRepository.findAllBySellerId(userId)).thenReturn(Arrays.asList(sellerRating1, sellerRating2));
-        when(ratingRepository.findAllByBuyerId(userId)).thenReturn(Collections.emptyList());
+        when(ratingRepository.findAllBySeller_Id(userId)).thenReturn(Arrays.asList(sellerRating1, sellerRating2));
+        when(ratingRepository.findAllByBuyer_Id(userId)).thenReturn(Collections.emptyList());
 
         // When
         double result = ratingService.getUserRating(userId);
@@ -85,8 +85,8 @@ public class RatingServiceTest {
         RatingEntity buyerRating1 = createTestRating(3L, otherUser1, user, 5.0, 4.0);
         RatingEntity buyerRating2 = createTestRating(4L, otherUser2, user, 3.0, 3.5);
 
-        when(ratingRepository.findAllBySellerId(userId)).thenReturn(Collections.emptyList());
-        when(ratingRepository.findAllByBuyerId(userId)).thenReturn(Arrays.asList(buyerRating1, buyerRating2));
+        when(ratingRepository.findAllBySeller_Id(userId)).thenReturn(Collections.emptyList());
+        when(ratingRepository.findAllByBuyer_Id(userId)).thenReturn(Arrays.asList(buyerRating1, buyerRating2));
 
         // When
         double result = ratingService.getUserRating(userId);
@@ -101,8 +101,8 @@ public class RatingServiceTest {
         // Given
         Long userId = 1L;
 
-        when(ratingRepository.findAllBySellerId(userId)).thenReturn(Collections.emptyList());
-        when(ratingRepository.findAllByBuyerId(userId)).thenReturn(Collections.emptyList());
+        when(ratingRepository.findAllBySeller_Id(userId)).thenReturn(Collections.emptyList());
+        when(ratingRepository.findAllByBuyer_Id(userId)).thenReturn(Collections.emptyList());
 
         // When
         double result = ratingService.getUserRating(userId);

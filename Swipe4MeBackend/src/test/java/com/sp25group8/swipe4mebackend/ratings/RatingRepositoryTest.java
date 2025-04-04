@@ -1,15 +1,15 @@
 package com.sp25group8.swipe4mebackend.ratings;
 
-import com.sp25group8.swipe4mebackend.config.BaseRepositoryTest;
-import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
-import com.sp25group8.swipe4mebackend.models.users.UserEntity;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.sp25group8.swipe4mebackend.config.BaseRepositoryTest;
+import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 
 public class RatingRepositoryTest extends BaseRepositoryTest {
 
@@ -73,7 +73,7 @@ public class RatingRepositoryTest extends BaseRepositoryTest {
         entityManager.flush();
 
         // Test repository method
-        List<RatingEntity> sellerRatings = ratingRepository.findAllBySellerId(seller.getId());
+        List<RatingEntity> sellerRatings = ratingRepository.findAllBySeller_Id(seller.getId());
 
         // Assertions
         assertThat(sellerRatings).hasSize(2);
@@ -135,7 +135,7 @@ public class RatingRepositoryTest extends BaseRepositoryTest {
         entityManager.flush();
 
         // Test repository method
-        List<RatingEntity> buyerRatings = ratingRepository.findAllByBuyerId(buyer.getId());
+        List<RatingEntity> buyerRatings = ratingRepository.findAllByBuyer_Id(buyer.getId());
 
         // Assertions
         assertThat(buyerRatings).hasSize(2);
@@ -156,7 +156,7 @@ public class RatingRepositoryTest extends BaseRepositoryTest {
         entityManager.flush();
 
         // Test repository method
-        List<RatingEntity> sellerRatings = ratingRepository.findAllBySellerId(user.getId());
+        List<RatingEntity> sellerRatings = ratingRepository.findAllBySeller_Id(user.getId());
 
         // Assertions
         assertThat(sellerRatings).isEmpty();
@@ -175,7 +175,7 @@ public class RatingRepositoryTest extends BaseRepositoryTest {
         entityManager.flush();
 
         // Test repository method
-        List<RatingEntity> buyerRatings = ratingRepository.findAllByBuyerId(user.getId());
+        List<RatingEntity> buyerRatings = ratingRepository.findAllByBuyer_Id(user.getId());
 
         // Assertions
         assertThat(buyerRatings).isEmpty();
