@@ -3,11 +3,13 @@
 
 package com.sp25group8.swipe4mebackend.ratings;
 
-import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +19,8 @@ public class RatingService {
 
     // find the user's rating according to its user
     public double getUserRating(Long userId) {
-        List<RatingEntity> ratingsAsSeller = ratingRepository.findAllBySellerId(userId);
-        List<RatingEntity> ratingsAsBuyer = ratingRepository.findAllByBuyerId(userId);
+        List<RatingEntity> ratingsAsSeller = ratingRepository.findAllBySeller_Id(userId);
+        List<RatingEntity> ratingsAsBuyer = ratingRepository.findAllByBuyer_Id(userId);
 
         int numEntries = ratingsAsBuyer.size() + ratingsAsSeller.size();
         if (numEntries == 0)
@@ -65,12 +67,12 @@ public class RatingService {
 
     // 获取卖家的所有评分
     public List<RatingEntity> getRatingsBySellerId(Long sellerId) {
-        return ratingRepository.findAllBySellerId(sellerId);
+        return ratingRepository.findAllBySeller_Id(sellerId);
     }
 
-    // 获取买家的所有评分
+    // 获取买家的所有评分   
     public List<RatingEntity> getRatingsByBuyerId(Long buyerId) {
-        return ratingRepository.findAllByBuyerId(buyerId);
+        return ratingRepository.findAllByBuyer_Id(buyerId);
     }
 
 }
