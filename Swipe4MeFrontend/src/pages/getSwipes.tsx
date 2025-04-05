@@ -129,7 +129,7 @@ const TableHeader: React.FC<{
       </Grid2>
       <Grid2 container spacing={2} alignItems="center">
         <Grid2>
-          <FormControl sx={{ m: 1, minWidth: 200 }}>
+          <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
             <InputLabel>Dining Halls</InputLabel>
             <Select
               multiple
