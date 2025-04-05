@@ -20,6 +20,14 @@ import {
   Typography,
   Box,
   InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  OutlinedInput,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  Chip,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import SearchIcon from "@mui/icons-material/Search";
@@ -33,6 +41,7 @@ import {
 import { getCurrentUser } from "../clients/userClient";
 import { useSnackbar } from "../context/SnackbarContext";
 import { DiningLocation, User, Availability } from "../types";
+import { SelectChangeEvent } from "@mui/material/Select";
 
 const theme = createTheme({
   palette: {
@@ -67,44 +76,111 @@ const NoStudentsAvailable: React.FC = () => (
   </Box>
 );
 
-const TableHeader: React.FC = () => (
-  <Grid2
-    container
-    alignItems="center"
-    justifyContent="space-between"
-    style={{ width: "90%", margin: "0 auto", paddingTop: "20px" }}
-  >
-    <Grid2>
-      <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "22.4066px", lineHeight: "34px" }}>
-        All Students
-      </Typography>
-      <Typography variant="subtitle1" sx={{ color: "#16C098", fontWeight: 400, fontSize: "14.2588px", lineHeight: "21px" }}>
-        Active Students
-      </Typography>
+const TableHeader: React.FC<{
+  onDiningHallFilterChange: (selected: DiningLocation[]) => void;
+}> = ({ onDiningHallFilterChange }) => {
+  const [selectedDiningHalls, setSelectedDiningHalls] = useState<
+    DiningLocation[]
+  >([]);
+
+  const handleDiningHallChange = (
+    event: SelectChangeEvent<DiningLocation[]>
+  ) => {
+    const value = event.target.value as DiningLocation[];
+    setSelectedDiningHalls(value);
+    onDiningHallFilterChange(value);
+  };
+
+  return (
+    <Grid2
+      container
+      alignItems="center"
+      justifyContent="space-between"
+      style={{ width: "90%", margin: "0 auto", paddingTop: "20px" }}
+    >
+      <Grid2>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 600, fontSize: "22.4066px", lineHeight: "34px" }}
+        >
+          All Students
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            color: "#16C098",
+            fontWeight: 400,
+            fontSize: "14.2588px",
+            lineHeight: "21px",
+          }}
+        >
+          Active Students
+        </Typography>
+      </Grid2>
+      <Grid2 container spacing={2} alignItems="center">
+        <Grid2>
+          <FormControl sx={{ m: 1, minWidth: 200 }}>
+            <InputLabel>Dining Halls</InputLabel>
+            <Select
+              multiple
+              value={selectedDiningHalls}
+              onChange={handleDiningHallChange}
+              input={<OutlinedInput label="Dining Halls" />}
+              renderValue={(selected) => (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 0.5,
+                    maxWidth: "120px",
+                    maxHeight: "25px",
+                    overflowY: "auto",
+                  }}
+                >
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+            >
+              {Object.values(DiningLocation).map((location) => (
+                <MenuItem key={location} value={location}>
+                  <Checkbox
+                    checked={selectedDiningHalls.indexOf(location) > -1}
+                  />
+                  <ListItemText primary={location} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid2>
+        <Grid2>
+          <TextField
+            variant="outlined"
+            placeholder="Search"
+            size="small"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon
+                    sx={{
+                      color: "#7E7E7E",
+                      width: "24.59px",
+                      height: "21.7px",
+                      "& path": {
+                        strokeWidth: "2.03697px",
+                      },
+                    }}
+                  />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid2>
+      </Grid2>
     </Grid2>
-    <Grid2>
-      <TextField 
-        variant="outlined" 
-        placeholder="Search" 
-        size="small"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon sx={{ 
-                color: '#7E7E7E',
-                width: '24.59px',
-                height: '21.7px',
-                '& path': {
-                  strokeWidth: '2.03697px',
-                }
-              }} />
-            </InputAdornment>
-          ),
-        }}
-      />
-    </Grid2>
-  </Grid2>
-);
+  );
+};
 
 const buySwipes: React.FC = () => {
   // State variables
@@ -117,6 +193,9 @@ const buySwipes: React.FC = () => {
   const [loadingAvailabilityId, setLoadingAvailabilityId] = useState<
     number | null
   >(null);
+  const [filteredDiningHalls, setFilteredDiningHalls] = useState<
+    DiningLocation[]
+  >([]);
 
   const { snackbar } = useSnackbar();
 
@@ -169,6 +248,20 @@ const buySwipes: React.FC = () => {
 
     fetchCurrentUserTransactions();
   }, []);
+
+  // Add this after the existing useEffect hooks
+  useEffect(() => {
+    if (filteredDiningHalls.length === 0) {
+      setAvailabilities(availabilities);
+    } else {
+      const filtered = availabilities.filter((availability) =>
+        filteredDiningHalls.includes(
+          convertEnumStringToDiningLocation(availability.location)
+        )
+      );
+      setAvailabilities(filtered);
+    }
+  }, [filteredDiningHalls]);
 
   /**
    * Formats the available time of the availability
@@ -263,7 +356,7 @@ const buySwipes: React.FC = () => {
           {/* If there are no availabilities, show the NoStudentsAvailable component */}
           {availabilities.length === 0 && <NoStudentsAvailable />}
 
-          <TableHeader />
+          <TableHeader onDiningHallFilterChange={setFilteredDiningHalls} />
 
           {/* Table body */}
           <div
@@ -330,15 +423,17 @@ const buySwipes: React.FC = () => {
                             variant="contained"
                             color="primary"
                             fullWidth={true}
-                            style={{ 
+                            style={{
                               width: "120px",
                               whiteSpace: "nowrap",
                               minWidth: "fit-content",
                               boxShadow: "none",
-                              ...(isTransactionPending(row.id) ? {
-                                backgroundColor: "#F4F4F4",
-                                border: "1px solid #757171",
-                              } : {})
+                              ...(isTransactionPending(row.id)
+                                ? {
+                                    backgroundColor: "#F4F4F4",
+                                    border: "1px solid #757171",
+                                  }
+                                : {}),
                             }}
                             onClick={() =>
                               handleSendInvite(row.id, row.user.id)
@@ -346,9 +441,13 @@ const buySwipes: React.FC = () => {
                             disabled={isTransactionPending(row.id)}
                             loading={loadingAvailabilityId === row.id}
                           >
-                            <div style={{ 
-                              color: isTransactionPending(row.id) ? "#757171" : "white"
-                            }}>
+                            <div
+                              style={{
+                                color: isTransactionPending(row.id)
+                                  ? "#757171"
+                                  : "white",
+                              }}
+                            >
                               {isTransactionPending(row.id)
                                 ? "Pending"
                                 : "Send Invite"}
