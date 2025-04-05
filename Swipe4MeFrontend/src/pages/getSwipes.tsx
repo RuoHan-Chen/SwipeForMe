@@ -42,6 +42,9 @@ import { getCurrentUser } from "../clients/userClient";
 import { useSnackbar } from "../context/SnackbarContext";
 import { DiningLocation, User, Availability } from "../types";
 import { SelectChangeEvent } from "@mui/material/Select";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 const theme = createTheme({
   palette: {
@@ -78,10 +81,12 @@ const NoStudentsAvailable: React.FC = () => (
 
 const TableHeader: React.FC<{
   onDiningHallFilterChange: (selected: DiningLocation[]) => void;
-}> = ({ onDiningHallFilterChange }) => {
+  onDateFilterChange: (date: Date | null) => void;
+}> = ({ onDiningHallFilterChange, onDateFilterChange }) => {
   const [selectedDiningHalls, setSelectedDiningHalls] = useState<
     DiningLocation[]
   >([]);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const handleDiningHallChange = (
     event: SelectChangeEvent<DiningLocation[]>
@@ -89,6 +94,11 @@ const TableHeader: React.FC<{
     const value = event.target.value as DiningLocation[];
     setSelectedDiningHalls(value);
     onDiningHallFilterChange(value);
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date);
+    onDateFilterChange(date);
   };
 
   return (
@@ -155,6 +165,21 @@ const TableHeader: React.FC<{
           </FormControl>
         </Grid2>
         <Grid2>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              slotProps={{
+                textField: {
+                  size: "small",
+                  sx: { width: 200 },
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Grid2>
+        <Grid2>
           <TextField
             variant="outlined"
             placeholder="Search"
@@ -199,6 +224,7 @@ const buySwipes: React.FC = () => {
   const [filteredDiningHalls, setFilteredDiningHalls] = useState<
     DiningLocation[]
   >([]);
+  const [filteredDate, setFilteredDate] = useState<Date | null>(null);
 
   const { snackbar } = useSnackbar();
 
@@ -261,19 +287,33 @@ const buySwipes: React.FC = () => {
     fetchCurrentUserTransactions();
   }, []);
 
-  // Add this after the existing useEffect hooks
+  // Update the filtering useEffect
   useEffect(() => {
-    if (filteredDiningHalls.length === 0) {
-      setAvailabilities(allAvailabilities);
-    } else {
-      const filtered = allAvailabilities.filter((availability) =>
+    let filtered = allAvailabilities;
+
+    // Apply dining hall filter
+    if (filteredDiningHalls.length > 0) {
+      filtered = filtered.filter((availability) =>
         filteredDiningHalls.includes(
           convertEnumStringToDiningLocation(availability.location)
         )
       );
-      setAvailabilities(filtered);
     }
-  }, [filteredDiningHalls, allAvailabilities]);
+
+    // Apply date filter
+    if (filteredDate) {
+      filtered = filtered.filter((availability) => {
+        const availabilityDate = new Date(availability.startTime);
+        return (
+          availabilityDate.getFullYear() === filteredDate.getFullYear() &&
+          availabilityDate.getMonth() === filteredDate.getMonth() &&
+          availabilityDate.getDate() === filteredDate.getDate()
+        );
+      });
+    }
+
+    setAvailabilities(filtered);
+  }, [filteredDiningHalls, filteredDate, allAvailabilities]);
 
   /**
    * Formats the available time of the availability
@@ -368,7 +408,10 @@ const buySwipes: React.FC = () => {
           {/* If there are no availabilities, show the NoStudentsAvailable component */}
           {availabilities.length === 0 && <NoStudentsAvailable />}
 
-          <TableHeader onDiningHallFilterChange={setFilteredDiningHalls} />
+          <TableHeader
+            onDiningHallFilterChange={setFilteredDiningHalls}
+            onDateFilterChange={setFilteredDate}
+          />
 
           {/* Table body */}
           <div
