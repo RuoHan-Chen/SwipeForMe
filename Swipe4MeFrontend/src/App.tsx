@@ -6,7 +6,7 @@ import Navbar from "./components/navbar";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import GetSwipes from "./pages/getSwipes";
+import GetSwipes from "./pages/GetSwipes/getSwipes.tsx";
 import TradeSwipes from "./pages/DonateSwipes/donateSwipes.tsx";
 import TransactionHistory from "./pages/transactionHistory.tsx";
 import "./App.css";

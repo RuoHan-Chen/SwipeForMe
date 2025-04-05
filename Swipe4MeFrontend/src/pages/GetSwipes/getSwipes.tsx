@@ -12,28 +12,19 @@ import TableBody from "@mui/material/TableBody";
 import Button from "@mui/material/Button";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
-import {
-  createTheme,
-  Grid2,
-  TextField,
-  ThemeProvider,
-  Typography,
-  Box,
-  InputAdornment,
-} from "@mui/material";
+import { createTheme, ThemeProvider, Typography, Box } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import SearchIcon from "@mui/icons-material/Search";
-import { getAllAvailabilities } from "../clients/availabilityClient";
-import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
+import { getAllAvailabilities } from "../../clients/availabilityClient";
+import { getCurrentUserTransactionsAsBuyer } from "../../clients/transactionClient";
 import {
   createTransaction,
   TransactionStatus,
   CreateTransactionRequest,
-} from "../clients/transactionClient";
-import { getCurrentUser } from "../clients/userClient";
-import { useSnackbar } from "../context/SnackbarContext";
-import { DiningLocation, User, Availability } from "../types";
-
+} from "../../clients/transactionClient";
+import { getCurrentUser } from "../../clients/userClient";
+import { useSnackbar } from "../../context/SnackbarContext";
+import { DiningLocation, User, Availability } from "../../types";
+import TableHeader from "./TableHeader";
 const theme = createTheme({
   palette: {
     primary: {
@@ -67,48 +58,12 @@ const NoStudentsAvailable: React.FC = () => (
   </Box>
 );
 
-const TableHeader: React.FC = () => (
-  <Grid2
-    container
-    alignItems="center"
-    justifyContent="space-between"
-    style={{ width: "90%", margin: "0 auto", paddingTop: "20px" }}
-  >
-    <Grid2>
-      <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "22.4066px", lineHeight: "34px" }}>
-        All Students
-      </Typography>
-      <Typography variant="subtitle1" sx={{ color: "#16C098", fontWeight: 400, fontSize: "14.2588px", lineHeight: "21px" }}>
-        Active Students
-      </Typography>
-    </Grid2>
-    <Grid2>
-      <TextField 
-        variant="outlined" 
-        placeholder="Search" 
-        size="small"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon sx={{ 
-                color: '#7E7E7E',
-                width: '24.59px',
-                height: '21.7px',
-                '& path': {
-                  strokeWidth: '2.03697px',
-                }
-              }} />
-            </InputAdornment>
-          ),
-        }}
-      />
-    </Grid2>
-  </Grid2>
-);
-
 const buySwipes: React.FC = () => {
   // State variables
   const [page, setPage] = useState(0);
+  const [allAvailabilities, setAllAvailabilities] = useState<Availability[]>(
+    []
+  );
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const [
     currentUserPendingAvailabilityIds,
@@ -117,6 +72,10 @@ const buySwipes: React.FC = () => {
   const [loadingAvailabilityId, setLoadingAvailabilityId] = useState<
     number | null
   >(null);
+  const [filteredDiningHalls, setFilteredDiningHalls] = useState<
+    DiningLocation[]
+  >([]);
+  const [filteredDate, setFilteredDate] = useState<Date | null>(null);
 
   const { snackbar } = useSnackbar();
 
@@ -132,15 +91,24 @@ const buySwipes: React.FC = () => {
           (availability) => new Date(availability.startTime) > currentTime
         );
 
+        // Sort the availabilities by start time
+        futureAvailabilities.sort((a, b) => {
+          return (
+            new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+          );
+        });
+
         // If the user is logged in, filter out their own availability
         const userId = localStorage.getItem("userId");
         if (!!userId) {
           const filteredAvailabilities = futureAvailabilities.filter(
             (availability) => availability.user.id !== parseInt(userId)
           );
+          setAllAvailabilities(filteredAvailabilities);
           setAvailabilities(filteredAvailabilities);
         } else {
           // If the user is not logged in, show all availabilities
+          setAllAvailabilities(futureAvailabilities);
           setAvailabilities(futureAvailabilities);
         }
       } catch (error) {
@@ -169,6 +137,34 @@ const buySwipes: React.FC = () => {
 
     fetchCurrentUserTransactions();
   }, []);
+
+  // Update the filtering useEffect
+  useEffect(() => {
+    let filtered = allAvailabilities;
+
+    // Apply dining hall filter
+    if (filteredDiningHalls.length > 0) {
+      filtered = filtered.filter((availability) =>
+        filteredDiningHalls.includes(
+          convertEnumStringToDiningLocation(availability.location)
+        )
+      );
+    }
+
+    // Apply date filter
+    if (filteredDate) {
+      filtered = filtered.filter((availability) => {
+        const availabilityDate = new Date(availability.startTime);
+        return (
+          availabilityDate.getFullYear() === filteredDate.getFullYear() &&
+          availabilityDate.getMonth() === filteredDate.getMonth() &&
+          availabilityDate.getDate() === filteredDate.getDate()
+        );
+      });
+    }
+
+    setAvailabilities(filtered);
+  }, [filteredDiningHalls, filteredDate, allAvailabilities]);
 
   /**
    * Formats the available time of the availability
@@ -263,7 +259,10 @@ const buySwipes: React.FC = () => {
           {/* If there are no availabilities, show the NoStudentsAvailable component */}
           {availabilities.length === 0 && <NoStudentsAvailable />}
 
-          <TableHeader />
+          <TableHeader
+            onDiningHallFilterChange={setFilteredDiningHalls}
+            onDateFilterChange={setFilteredDate}
+          />
 
           {/* Table body */}
           <div
@@ -330,15 +329,17 @@ const buySwipes: React.FC = () => {
                             variant="contained"
                             color="primary"
                             fullWidth={true}
-                            style={{ 
+                            style={{
                               width: "120px",
                               whiteSpace: "nowrap",
                               minWidth: "fit-content",
                               boxShadow: "none",
-                              ...(isTransactionPending(row.id) ? {
-                                backgroundColor: "#F4F4F4",
-                                border: "1px solid #757171",
-                              } : {})
+                              ...(isTransactionPending(row.id)
+                                ? {
+                                    backgroundColor: "#F4F4F4",
+                                    border: "1px solid #757171",
+                                  }
+                                : {}),
                             }}
                             onClick={() =>
                               handleSendInvite(row.id, row.user.id)
@@ -346,9 +347,13 @@ const buySwipes: React.FC = () => {
                             disabled={isTransactionPending(row.id)}
                             loading={loadingAvailabilityId === row.id}
                           >
-                            <div style={{ 
-                              color: isTransactionPending(row.id) ? "#757171" : "white"
-                            }}>
+                            <div
+                              style={{
+                                color: isTransactionPending(row.id)
+                                  ? "#757171"
+                                  : "white",
+                              }}
+                            >
                               {isTransactionPending(row.id)
                                 ? "Pending"
                                 : "Send Invite"}
