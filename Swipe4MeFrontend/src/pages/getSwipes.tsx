@@ -185,6 +185,9 @@ const TableHeader: React.FC<{
 const buySwipes: React.FC = () => {
   // State variables
   const [page, setPage] = useState(0);
+  const [allAvailabilities, setAllAvailabilities] = useState<Availability[]>(
+    []
+  );
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const [
     currentUserPendingAvailabilityIds,
@@ -211,15 +214,24 @@ const buySwipes: React.FC = () => {
           (availability) => new Date(availability.startTime) > currentTime
         );
 
+        // Sort the availabilities by start time
+        futureAvailabilities.sort((a, b) => {
+          return (
+            new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+          );
+        });
+
         // If the user is logged in, filter out their own availability
         const userId = localStorage.getItem("userId");
         if (!!userId) {
           const filteredAvailabilities = futureAvailabilities.filter(
             (availability) => availability.user.id !== parseInt(userId)
           );
+          setAllAvailabilities(filteredAvailabilities);
           setAvailabilities(filteredAvailabilities);
         } else {
           // If the user is not logged in, show all availabilities
+          setAllAvailabilities(futureAvailabilities);
           setAvailabilities(futureAvailabilities);
         }
       } catch (error) {
@@ -252,16 +264,16 @@ const buySwipes: React.FC = () => {
   // Add this after the existing useEffect hooks
   useEffect(() => {
     if (filteredDiningHalls.length === 0) {
-      setAvailabilities(availabilities);
+      setAvailabilities(allAvailabilities);
     } else {
-      const filtered = availabilities.filter((availability) =>
+      const filtered = allAvailabilities.filter((availability) =>
         filteredDiningHalls.includes(
           convertEnumStringToDiningLocation(availability.location)
         )
       );
       setAvailabilities(filtered);
     }
-  }, [filteredDiningHalls]);
+  }, [filteredDiningHalls, allAvailabilities]);
 
   /**
    * Formats the available time of the availability
