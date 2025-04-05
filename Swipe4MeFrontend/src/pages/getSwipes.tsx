@@ -15,11 +15,9 @@ import TablePagination from "@mui/material/TablePagination";
 import {
   createTheme,
   Grid2,
-  TextField,
   ThemeProvider,
   Typography,
   Box,
-  InputAdornment,
   FormControl,
   InputLabel,
   Select,
@@ -30,7 +28,6 @@ import {
   Chip,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import SearchIcon from "@mui/icons-material/Search";
 import { getAllAvailabilities } from "../clients/availabilityClient";
 import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
 import {
