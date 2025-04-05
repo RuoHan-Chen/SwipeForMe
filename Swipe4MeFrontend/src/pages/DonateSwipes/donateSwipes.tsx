@@ -11,8 +11,8 @@ import {
   SelectChangeEvent,
   Box,
   Container,
-  Grid,
 } from "@mui/material";
+import { Grid2 } from "@mui/material";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -147,7 +147,7 @@ const DonateSwipes: React.FC = () => {
         </Box>
 
         <Box sx={{ maxWidth: "900px", mx: "auto", width: "100%" }}>
-          <Grid
+          <Grid2
             container
             spacing={3}
             sx={{
@@ -166,7 +166,7 @@ const DonateSwipes: React.FC = () => {
               },
             }}
           >
-            <Grid item xs={12} md={6}>
+            <Grid2 size={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <StyledDatePicker
                   label="Select Date"
@@ -234,8 +234,8 @@ const DonateSwipes: React.FC = () => {
                   }}
                 />
               </LocalizationProvider>
-            </Grid>
-            <Grid item xs={12} md={6}>
+            </Grid2>
+            <Grid2 size={6}>
               <StyledFormControl fullWidth error={formSubmitted && !location}>
                 <InputLabel required={false} id="location-label">
                   Select Location
@@ -255,8 +255,8 @@ const DonateSwipes: React.FC = () => {
                   ))}
                 </Select>
               </StyledFormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
+            </Grid2>
+            <Grid2 size={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <StyledTimePicker
                   label="Select Check-in Time"
@@ -299,8 +299,8 @@ const DonateSwipes: React.FC = () => {
                   }}
                 />
               </LocalizationProvider>
-            </Grid>
-            <Grid item xs={12} md={6}>
+            </Grid2>
+            <Grid2 size={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <StyledTimePicker
                   label="Select Check-out Time"
@@ -343,8 +343,8 @@ const DonateSwipes: React.FC = () => {
                   }}
                 />
               </LocalizationProvider>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
             <StyledButton variant="contained" onClick={handleConfirm}>

@@ -4,12 +4,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 export const StyledFormControl = styled(FormControl)({
-  margin: "8px",
-  minWidth: 200,
+  width: "100%",
   "& .MuiOutlinedInput-root": {
     borderRadius: "2rem",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     color: "white",
+    height: "56px",
     "& fieldset": {
       borderColor: "rgba(255, 255, 255, 0.2)",
     },
@@ -19,21 +19,21 @@ export const StyledFormControl = styled(FormControl)({
     "&.Mui-focused fieldset": {
       borderColor: "rgba(255, 255, 255, 0.5)",
     },
-    "&.Mui-focused": {
-      color: "white",
-    },
   },
   "& .MuiInputLabel-root": {
     color: "rgba(255, 255, 255, 0.7)",
   },
   "& .MuiInputLabel-root.Mui-focused": {
-    color: "rgba(255, 255, 255, 0.7)",
+    color: "rgba(255, 255, 255, 0.5)",
   },
   "& .MuiSvgIcon-root": {
     color: "white",
   },
   "& .MuiSelect-select": {
     color: "white",
+    height: "56px",
+    display: "flex",
+    alignItems: "center",
   },
 });
 
