@@ -179,29 +179,6 @@ const TableHeader: React.FC<{
             />
           </LocalizationProvider>
         </Grid2>
-        <Grid2>
-          <TextField
-            variant="outlined"
-            placeholder="Search"
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon
-                    sx={{
-                      color: "#7E7E7E",
-                      width: "24.59px",
-                      height: "21.7px",
-                      "& path": {
-                        strokeWidth: "2.03697px",
-                      },
-                    }}
-                  />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Grid2>
       </Grid2>
     </Grid2>
   );
