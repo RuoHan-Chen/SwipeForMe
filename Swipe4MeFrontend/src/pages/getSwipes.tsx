@@ -153,14 +153,16 @@ const TableHeader: React.FC<{
                 </Box>
               )}
             >
-              {Object.values(DiningLocation).map((location) => (
-                <MenuItem key={location} value={location}>
-                  <Checkbox
-                    checked={selectedDiningHalls.indexOf(location) > -1}
-                  />
-                  <ListItemText primary={location} />
-                </MenuItem>
-              ))}
+              {Object.values(DiningLocation)
+                .sort()
+                .map((location) => (
+                  <MenuItem key={location} value={location}>
+                    <Checkbox
+                      checked={selectedDiningHalls.indexOf(location) > -1}
+                    />
+                    <ListItemText primary={location} />
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </Grid2>
