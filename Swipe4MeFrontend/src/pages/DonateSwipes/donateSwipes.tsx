@@ -39,20 +39,20 @@ const DonateSwipes: React.FC = () => {
 
   const { snackbar } = useSnackbar();
 
-  const handleDateChange = (newValue: Dayjs | null) => {
-    setDate(newValue);
+  const handleDateChange = (newValue: Date | Dayjs | null) => {
+    setDate(newValue as Dayjs | null);
   };
 
   const handleLocationChange = (event: SelectChangeEvent) => {
     setLocation(event.target.value as DiningLocation);
   };
 
-  const handleCheckInTimeChange = (newValue: Dayjs | null) => {
-    setCheckInTime(newValue);
+  const handleCheckInTimeChange = (newValue: Date | Dayjs | null) => {
+    setCheckInTime(newValue as Dayjs | null);
   };
 
-  const handleCheckOutTimeChange = (newValue: Dayjs | null) => {
-    setCheckOutTime(newValue);
+  const handleCheckOutTimeChange = (newValue: Date | Dayjs | null) => {
+    setCheckOutTime(newValue as Dayjs | null);
   };
 
   const handleConfirm = async () => {
