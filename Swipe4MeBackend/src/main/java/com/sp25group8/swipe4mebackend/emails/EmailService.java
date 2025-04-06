@@ -71,4 +71,35 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
+    public void sendInvitationAcceptedEmail(AvailabilityEntity availability, String to) {
+        final String SUBJECT = "Swipe4Me - Invitation Accepted";
+        final String TEXT = String.format("""
+                Hey Swiper!
+                
+                Great news — a swipe session you registered for has been confirmed by the seller!
+                Details: \s
+                Location: %s \s
+                Time: %s to %s \s
+                 
+                Feel free to connect with your swiper and don’t forget to leave a rating after the meal!
+                You can view more details or manage your swipes at: \s
+                %s/getSwipes
+                
+                Best, \s
+                The Swipe4Me Team
+                """,availability.getLocation(),
+                availability.getStartTime().format(DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a")),
+                availability.getEndTime().format(DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a")),SWIPE4ME_URL);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("no-reply@swipe4me.com");
+        message.setTo(to);
+        message.setSubject(SUBJECT);
+        message.setText(TEXT);
+
+        javaMailSender.send(message);
+
+    }
+
+
 }

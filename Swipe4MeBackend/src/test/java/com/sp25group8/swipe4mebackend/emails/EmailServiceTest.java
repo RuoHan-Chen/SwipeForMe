@@ -128,4 +128,36 @@ public class EmailServiceTest {
         assertThat(capturedMessage.getFrom()).isEqualTo("no-reply@swipe4me.com");
         assertThat(capturedMessage.getSubject()).isEqualTo("Swipe4Me - Availability Cancelled");
     }
+    @Test
+    void sendInvitationAcceptedEmail_ShouldSendCorrectEmail() {
+        // Given
+        String toEmail = "buyer3@example.com";
+        LocalDateTime startTime = LocalDateTime.of(2025, 4, 12, 13, 0);
+        LocalDateTime endTime = LocalDateTime.of(2025, 4, 12, 14, 0);
+
+        AvailabilityEntity availability = AvailabilityEntity.builder()
+                .location(DiningLocation.RAND)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+
+        // When
+        emailService.sendInvitationAcceptedEmail(availability, toEmail);
+
+        // Then
+        verify(javaMailSender).send(messageCaptor.capture());
+        SimpleMailMessage message = messageCaptor.getValue();
+
+        String formattedStart = startTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a"));
+        String formattedEnd = endTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm a"));
+
+        assertThat(message.getTo()).containsExactly(toEmail);
+        assertThat(message.getFrom()).isEqualTo("no-reply@swipe4me.com");
+        assertThat(message.getSubject()).isEqualTo("Swipe4Me - Invitation Accepted");
+        assertThat(message.getText()).contains("Location: " + DiningLocation.RAND);
+        assertThat(message.getText()).contains("Time: " + formattedStart + " to " + formattedEnd);
+        assertThat(message.getText()).contains(SWIPE4ME_URL + "/getSwipes");
+    }
+
+
 }
