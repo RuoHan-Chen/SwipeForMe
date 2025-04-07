@@ -10,6 +10,12 @@ export interface CreateAvailabilityRequest {
   endTime: string;
 }
 
+export interface UpdateAvailabilityRequest {
+  location: string;
+  startTime: string;
+  endTime: string;
+}
+
 export const getAllAvailabilities = async (): Promise<Availability[]> => {
   const response = await fetch(toEndpointUrl("/api/availabilities"), {
     headers: {
@@ -110,4 +116,31 @@ export const deleteAvailability = async (id: number): Promise<void> => {
       `Failed to delete availability: ${response.status} ${response.statusText}`
     );
   }
+};
+
+export const updateAvailability = async (
+  id: number,
+  request: UpdateAvailabilityRequest
+): Promise<Availability> => {
+  const urlWithParams =
+    `/api/availabilities/${id}?` +
+    new URLSearchParams({
+      location: request.location,
+      startTime: request.startTime,
+      endTime: request.endTime,
+    }).toString();
+
+  const response = await fetch(toEndpointUrl(urlWithParams), {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update availability");
+  }
+
+  return await response.json();
 };

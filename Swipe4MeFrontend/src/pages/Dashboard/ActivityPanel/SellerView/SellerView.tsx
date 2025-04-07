@@ -12,6 +12,7 @@ import {
 import { mapLocationsToEnum } from "../../../../utils/enumUtils";
 import PendingInviteCard from "./PendingInviteCard";
 import AvailabilityCard from "./AvailabilityCard";
+import AvailabilityDetailsModal from "./AvailabilityDetailsModal";
 import { useSnackbar } from "../../../../context/SnackbarContext";
 import { useNavigate } from "react-router-dom";
 
@@ -25,6 +26,8 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
     []
   );
   const [loading, setLoading] = useState(false);
+  const [selectedAvailability, setSelectedAvailability] =
+    useState<Availability | null>(null);
   const { snackbar } = useSnackbar();
   const navigate = useNavigate();
 
@@ -76,10 +79,15 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
 
   // Handler for editing an availability
   const handleEditAvailability = (id: number) => {
-    console.log(`Edit availability with ID: ${id}`);
-    // TODO: Implement edit functionality, e.g., open a dialog or navigate to edit page
-    // For now, we'll just show a notification
-    snackbar.success("Edit availability feature coming soon!");
+    const availability = availabilities.find((a) => a.id === id);
+    if (availability) {
+      setSelectedAvailability(availability);
+    }
+  };
+
+  const handleAvailabilityUpdated = () => {
+    fetchAvailabilities();
+    setSelectedAvailability(null);
   };
 
   // Handler for deleting an availability
@@ -181,6 +189,16 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
           )}
         </Box>
       </Box>
+
+      {/* Availability Details Modal */}
+      {selectedAvailability && (
+        <AvailabilityDetailsModal
+          open={!!selectedAvailability}
+          onClose={() => setSelectedAvailability(null)}
+          availability={selectedAvailability}
+          onAvailabilityUpdated={handleAvailabilityUpdated}
+        />
+      )}
     </Box>
   );
 };
