@@ -6,7 +6,6 @@ import {
   DialogActions,
   Button,
   Box,
-  Grid,
   Select,
   MenuItem,
   InputLabel,
@@ -18,6 +17,7 @@ import {
   ListItemAvatar,
   ListItemText,
 } from "@mui/material";
+import Grid2 from "@mui/material/Grid2";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -120,32 +120,34 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth="lg"
       fullWidth
       PaperProps={{
         sx: {
           borderRadius: 2,
           bgcolor: "background.paper",
+          minHeight: "60vh",
+          maxHeight: "80vh",
         },
       }}
     >
       <DialogTitle>Edit Availability</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ p: 3 }}>
         <Box sx={{ mt: 2 }}>
-          <Grid container spacing={3}>
+          <Grid2 container spacing={4}>
             {/* Left side - Edit form */}
-            <Grid item xs={8}>
+            <Grid2 size={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                <Grid2 container spacing={3}>
+                  <Grid2 size={12}>
                     <DatePicker
                       label="Date"
                       value={date}
                       onChange={(newValue) => setDate(newValue)}
                       sx={{ width: "100%" }}
                     />
-                  </Grid>
-                  <Grid item xs={12}>
+                  </Grid2>
+                  <Grid2 size={12}>
                     <FormControl fullWidth>
                       <InputLabel>Location</InputLabel>
                       <Select
@@ -162,35 +164,33 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
                         ))}
                       </Select>
                     </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
+                  </Grid2>
+                  <Grid2 size={6}>
                     <TimePicker
                       label="Start Time"
                       value={startTime}
                       onChange={(newValue) => setStartTime(newValue)}
                       sx={{ width: "100%" }}
                     />
-                  </Grid>
-                  <Grid item xs={6}>
+                  </Grid2>
+                  <Grid2 size={6}>
                     <TimePicker
                       label="End Time"
                       value={endTime}
                       onChange={(newValue) => setEndTime(newValue)}
                       sx={{ width: "100%" }}
                     />
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Grid2>
               </LocalizationProvider>
-            </Grid>
+            </Grid2>
 
             {/* Right side - Registered users */}
-            <Grid item xs={4}>
+            <Grid2 size={6}>
               <Box
                 sx={{
-                  p: 2,
-                  bgcolor: "grey.100",
-                  borderRadius: 1,
                   height: "100%",
+                  overflow: "auto",
                 }}
               >
                 <Typography variant="h6" gutterBottom>
@@ -221,11 +221,11 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
                   </Typography>
                 )}
               </Box>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </Box>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose}>Cancel</Button>
         <Button onClick={handleSave} variant="contained" color="primary">
           Save Changes
