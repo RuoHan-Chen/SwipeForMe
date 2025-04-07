@@ -5,4 +5,7 @@ deploy:
 	--region=us-central1 \
 	--env-vars-file env.yml
 
-.PHONY: deploy
+dev:
+	./gradlew bootRun
+
+.PHONY: deploy dev
