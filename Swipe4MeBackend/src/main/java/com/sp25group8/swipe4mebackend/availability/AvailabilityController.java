@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityDto;
 import com.sp25group8.swipe4mebackend.models.enums.DiningLocation;
+import com.sp25group8.swipe4mebackend.models.users.UserDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,6 +40,12 @@ public class AvailabilityController {
     public ResponseEntity<List<AvailabilityDto>> getAvailabilitiesByUserId(@PathVariable Long userId) {
         List<AvailabilityDto> availabilities = availabilityService.getAvailabilitiesByUserId(userId);
         return ResponseEntity.ok(availabilities);
+    }
+
+    @GetMapping("/{availabilityId}/users")
+    public ResponseEntity<List<UserDto>> getUsersByAvailabilityId(@PathVariable Long availabilityId) {
+        List<UserDto> users = availabilityService.getUsersByAvailabilityId(availabilityId);
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping

@@ -16,6 +16,8 @@ import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityDto;
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
 import com.sp25group8.swipe4mebackend.models.enums.DiningLocation;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
+import com.sp25group8.swipe4mebackend.models.users.UserDto;
 import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import com.sp25group8.swipe4mebackend.users.UserRepository;
 
@@ -87,5 +89,15 @@ public class AvailabilityService {
         for (UserEntity buyer : buyers) {
             emailService.sendAvailabilityDeletedEmail(availability, buyer.getEmail());
         }
+    }
+
+    public List<UserDto> getUsersByAvailabilityId(Long availabilityId) {
+        AvailabilityEntity availability = availabilityRepository.findById(availabilityId)
+                .orElseThrow(AvailabilityNotFoundException::new);
+        return availability.getTransactions().stream()
+                .filter(transaction -> transaction.getStatus() == TransactionStatus.IN_PROGRESS)
+                .map(TransactionEntity::getBuyer)
+                .map(UserDto::fromEntity)
+                .collect(Collectors.toList());
     }
 }

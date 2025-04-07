@@ -2,7 +2,7 @@
 // Time spent: 15 minutes
 
 import { toEndpointUrl } from "./utils";
-import { Availability } from "../types";
+import { Availability, User } from "../types";
 export interface CreateAvailabilityRequest {
   userId: number;
   location: string;
@@ -140,6 +140,26 @@ export const updateAvailability = async (
 
   if (!response.ok) {
     throw new Error("Failed to update availability");
+  }
+
+  return await response.json();
+};
+
+export const getUsersByAvailabilityId = async (
+  availabilityId: number
+): Promise<User[]> => {
+  const response = await fetch(
+    toEndpointUrl(`/api/availabilities/${availabilityId}/users`),
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to get users by availability ID");
   }
 
   return await response.json();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -12,6 +12,11 @@ import {
   InputLabel,
   FormControl,
   Typography,
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -19,9 +24,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { Availability, DiningLocation } from "../../../../types";
+import { Availability, DiningLocation, User } from "../../../../types";
 import { useSnackbar } from "../../../../context/SnackbarContext";
-import { updateAvailability } from "../../../../clients/availabilityClient";
+import {
+  updateAvailability,
+  getUsersByAvailabilityId,
+} from "../../../../clients/availabilityClient";
 
 interface AvailabilityDetailsModalProps {
   open: boolean;
@@ -42,7 +50,30 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
   );
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
   const [endTime, setEndTime] = useState<Dayjs | null>(null);
+  const [registeredUsers, setRegisteredUsers] = useState<User[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
   const { snackbar } = useSnackbar();
+  const lastFetchedAvailabilityId = useRef<number | null>(null);
+
+  // Fetch registered users when modal opens
+  useEffect(() => {
+    const fetchRegisteredUsers = async () => {
+      try {
+        setLoadingUsers(true);
+        const users = await getUsersByAvailabilityId(availability.id);
+        setRegisteredUsers(users);
+        lastFetchedAvailabilityId.current = availability.id;
+      } catch (error) {
+        snackbar.error("Failed to fetch registered users");
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+
+    if (open && lastFetchedAvailabilityId.current !== availability.id) {
+      fetchRegisteredUsers();
+    }
+  }, [open, availability.id, snackbar]);
 
   // Initialize form values when availability changes
   React.useEffect(() => {
@@ -152,13 +183,43 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
               </LocalizationProvider>
             </Grid>
 
-            {/* Right side - Reserved for showing registered users */}
+            {/* Right side - Registered users */}
             <Grid item xs={4}>
-              <Box sx={{ p: 2, bgcolor: "grey.100", borderRadius: 1 }}>
+              <Box
+                sx={{
+                  p: 2,
+                  bgcolor: "grey.100",
+                  borderRadius: 1,
+                  height: "100%",
+                }}
+              >
                 <Typography variant="h6" gutterBottom>
                   Registered Users
                 </Typography>
-                {/* TODO: Add list of registered users here */}
+                {loadingUsers ? (
+                  <Typography>Loading users...</Typography>
+                ) : registeredUsers.length > 0 ? (
+                  <List>
+                    {registeredUsers.map((user) => (
+                      <ListItem key={user.id} sx={{ px: 0 }}>
+                        <ListItemAvatar>
+                          <Avatar
+                            src={user.profilePicUrl}
+                            alt={user.firstName}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={`${user.firstName} ${user.lastName}`}
+                          secondary={user.email}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No users registered yet
+                  </Typography>
+                )}
               </Box>
             </Grid>
           </Grid>
