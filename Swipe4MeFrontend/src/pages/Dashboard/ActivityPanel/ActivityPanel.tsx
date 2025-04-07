@@ -34,7 +34,7 @@ const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
   };
 
   return (
-    <Grid size={12} sx={{ mt: 3 }}>
+    <Grid size={12}>
       <Paper sx={{ p: 3, borderRadius: 4 }}>
         <Box
           sx={{
