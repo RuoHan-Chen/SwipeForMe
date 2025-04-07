@@ -30,7 +30,7 @@ public class TransactionsService {
     private final EmailService emailService;
     private final AvailabilityRepository availabilityRepository;
 
-    // 创建交易
+    // create transaction
     public TransactionDto createTransaction(
             Long buyerId,
             Long sellerId,
@@ -68,6 +68,14 @@ public class TransactionsService {
         Optional<TransactionEntity> transactionOptional = transactionRepository.findById(transactionId);
         TransactionEntity transaction = transactionOptional.orElseThrow();
         transaction.setStatus(status);
+        if (status == TransactionStatus.IN_PROGRESS) {
+            transactionRepository.save(transaction);
+
+            AvailabilityEntity availability = transaction.getAvailability();
+            String buyerEmail = transaction.getBuyer().getEmail();
+            emailService.sendInvitationAcceptedEmail(availability, buyerEmail);
+
+        }
         return TransactionDto.fromEntity(transactionRepository.save(transaction));
     }
 
