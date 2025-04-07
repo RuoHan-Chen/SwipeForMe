@@ -69,6 +69,10 @@ const buySwipes: React.FC = () => {
     currentUserPendingAvailabilityIds,
     setCurrentUserPendingAvailabilityIds,
   ] = useState<Set<number>>(new Set());
+  const [
+    currentUserConfirmedAvailabilityIds,
+    setCurrentUserConfirmedAvailabilityIds,
+  ] = useState<Set<number>>(new Set());
   const [loadingAvailabilityId, setLoadingAvailabilityId] = useState<
     number | null
   >(null);
@@ -112,7 +116,7 @@ const buySwipes: React.FC = () => {
           setAvailabilities(futureAvailabilities);
         }
       } catch (error) {
-        console.error("Error fetching availabilities:", error);
+        snackbar.error("Error fetching availabilities");
       }
     };
 
@@ -132,7 +136,17 @@ const buySwipes: React.FC = () => {
             .map((transaction) => transaction.availability.id)
         )
       );
-      console.log(currentUserPendingAvailabilityIds);
+
+      setCurrentUserConfirmedAvailabilityIds(
+        new Set(
+          response
+            .filter(
+              (transaction) =>
+                transaction.status === TransactionStatus.IN_PROGRESS
+            )
+            .map((transaction) => transaction.availability.id)
+        )
+      );
     };
 
     fetchCurrentUserTransactions();
@@ -241,6 +255,10 @@ const buySwipes: React.FC = () => {
     return currentUserPendingAvailabilityIds.has(availabilityId);
   };
 
+  const isTransactionConfirmed = (availabilityId: number) => {
+    return currentUserConfirmedAvailabilityIds.has(availabilityId);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div style={{ paddingTop: "50px" }}>
@@ -339,23 +357,35 @@ const buySwipes: React.FC = () => {
                                     backgroundColor: "#F4F4F4",
                                     border: "1px solid #757171",
                                   }
+                                : isTransactionConfirmed(row.id)
+                                ? {
+                                    backgroundColor: "transparent",
+                                    border: "1px solid #25DAC5",
+                                  }
                                 : {}),
                             }}
                             onClick={() =>
                               handleSendInvite(row.id, row.user.id)
                             }
-                            disabled={isTransactionPending(row.id)}
+                            disabled={
+                              isTransactionPending(row.id) ||
+                              isTransactionConfirmed(row.id)
+                            }
                             loading={loadingAvailabilityId === row.id}
                           >
                             <div
                               style={{
                                 color: isTransactionPending(row.id)
                                   ? "#757171"
+                                  : isTransactionConfirmed(row.id)
+                                  ? "#25DAC5"
                                   : "white",
                               }}
                             >
                               {isTransactionPending(row.id)
                                 ? "Pending"
+                                : isTransactionConfirmed(row.id)
+                                ? "Confirmed"
                                 : "Send Invite"}
                             </div>
                           </Button>

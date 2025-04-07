@@ -2,9 +2,15 @@
 // Time spent: 15 minutes
 
 import { toEndpointUrl } from "./utils";
-import { Availability } from "../types";
+import { Availability, User } from "../types";
 export interface CreateAvailabilityRequest {
   userId: number;
+  location: string;
+  startTime: string;
+  endTime: string;
+}
+
+export interface UpdateAvailabilityRequest {
   location: string;
   startTime: string;
   endTime: string;
@@ -110,4 +116,51 @@ export const deleteAvailability = async (id: number): Promise<void> => {
       `Failed to delete availability: ${response.status} ${response.statusText}`
     );
   }
+};
+
+export const updateAvailability = async (
+  id: number,
+  request: UpdateAvailabilityRequest
+): Promise<Availability> => {
+  const urlWithParams =
+    `/api/availabilities/${id}?` +
+    new URLSearchParams({
+      location: request.location,
+      startTime: request.startTime,
+      endTime: request.endTime,
+    }).toString();
+
+  const response = await fetch(toEndpointUrl(urlWithParams), {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update availability");
+  }
+
+  return await response.json();
+};
+
+export const getUsersByAvailabilityId = async (
+  availabilityId: number
+): Promise<User[]> => {
+  const response = await fetch(
+    toEndpointUrl(`/api/availabilities/${availabilityId}/users`),
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to get users by availability ID");
+  }
+
+  return await response.json();
 };

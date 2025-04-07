@@ -3,16 +3,14 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import Grid from "@mui/material/Grid";
 import { Availability, Transaction } from "../../../../types";
 import { getCurrentUserTransactionsAsSeller } from "../../../../clients/transactionClient";
-import {
-  getCurrentUserAvailability,
-  deleteAvailability,
-} from "../../../../clients/availabilityClient";
+import { getCurrentUserAvailability } from "../../../../clients/availabilityClient";
 import { mapLocationsToEnum } from "../../../../utils/enumUtils";
 import PendingInviteCard from "./PendingInviteCard";
 import AvailabilityCard from "./AvailabilityCard";
-import { useSnackbar } from "../../../../context/SnackbarContext";
+import AvailabilityDetailsModal from "./AvailabilityDetailsModal";
 import { useNavigate } from "react-router-dom";
 
 interface SellerViewProps {
@@ -25,7 +23,8 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
     []
   );
   const [loading, setLoading] = useState(false);
-  const { snackbar } = useSnackbar();
+  const [selectedAvailability, setSelectedAvailability] =
+    useState<Availability | null>(null);
   const navigate = useNavigate();
 
   const fetchAvailabilities = async () => {
@@ -76,29 +75,15 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
 
   // Handler for editing an availability
   const handleEditAvailability = (id: number) => {
-    console.log(`Edit availability with ID: ${id}`);
-    // TODO: Implement edit functionality, e.g., open a dialog or navigate to edit page
-    // For now, we'll just show a notification
-    snackbar.success("Edit availability feature coming soon!");
+    const availability = availabilities.find((a) => a.id === id);
+    if (availability) {
+      setSelectedAvailability(availability);
+    }
   };
 
-  // Handler for deleting an availability
-  const handleDeleteAvailability = async (id: number) => {
-    try {
-      snackbar.loading("Deleting availability...");
-
-      // Confirm deletion with the user
-      if (
-        window.confirm("Are you sure you want to delete this availability?")
-      ) {
-        await deleteAvailability(id);
-        snackbar.success("Availability deleted successfully");
-        // Refresh the availabilities list
-        fetchAvailabilities();
-      }
-    } catch (err) {
-      snackbar.error((err as Error).message || "Failed to delete availability");
-    }
+  const handleAvailabilityUpdated = () => {
+    fetchAvailabilities();
+    setSelectedAvailability(null);
   };
 
   if (loading && sellerTransactions.length === 0) {
@@ -108,7 +93,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
   return (
     <Box sx={{ display: "flex", gap: 3 }}>
       {/* Left panel - Upcoming Availabilities */}
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1, maxWidth: "33.33%" }}>
         <Typography variant="h6" sx={{ mb: 2, color: "text.secondary" }}>
           Upcoming Availabilities
         </Typography>
@@ -121,7 +106,6 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
                 availability={availability}
                 formatDuration={formatDuration}
                 onEdit={handleEditAvailability}
-                onDelete={handleDeleteAvailability}
               />
             ))
           ) : (
@@ -164,16 +148,18 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
           {sellerTransactions.filter(
             (transaction) => transaction.status === "PENDING"
           ).length > 0 ? (
-            sellerTransactions
-              .filter((transaction) => transaction.status === "PENDING")
-              .map((transaction) => (
-                <PendingInviteCard
-                  key={transaction.id}
-                  transaction={transaction}
-                  formatDuration={formatDuration}
-                  onTransactionUpdated={fetchSellerTransactions}
-                />
-              ))
+            <Grid container spacing={2}>
+              {sellerTransactions
+                .filter((transaction) => transaction.status === "PENDING")
+                .map((transaction) => (
+                  <Grid item key={transaction.id} xs={12} sm={6}>
+                    <PendingInviteCard
+                      transaction={transaction}
+                      onTransactionUpdated={fetchSellerTransactions}
+                    />
+                  </Grid>
+                ))}
+            </Grid>
           ) : (
             <Typography variant="body1" color="text.secondary">
               No pending invites
@@ -181,6 +167,16 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
           )}
         </Box>
       </Box>
+
+      {/* Availability Details Modal */}
+      {selectedAvailability && (
+        <AvailabilityDetailsModal
+          open={!!selectedAvailability}
+          onClose={() => setSelectedAvailability(null)}
+          availability={selectedAvailability}
+          onAvailabilityUpdated={handleAvailabilityUpdated}
+        />
+      )}
     </Box>
   );
 };

@@ -9,13 +9,11 @@ import { Paper, Box, Avatar, Button, Typography } from "@mui/material";
 
 interface PendingInviteCardProps {
   transaction: Transaction;
-  formatDuration: (startTime: string, endTime: string) => string;
   onTransactionUpdated: () => void;
 }
 
 const PendingInviteCard = ({
   transaction,
-  formatDuration,
   onTransactionUpdated,
 }: PendingInviteCardProps) => {
   const [loadingAccept, setLoadingAccept] = useState(false);
@@ -74,11 +72,22 @@ const PendingInviteCard = ({
           />
           <Box>
             <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-              {formatDuration(
-                transaction.availability.startTime,
-                transaction.availability.endTime
+              {new Date(transaction.availability.startTime).toLocaleDateString(
+                "en-US",
+                { month: "short", day: "numeric" }
               )}{" "}
               @ {transaction.availability.location}
+            </Typography>
+            <Typography variant="body2" sx={{ fontWeight: "medium" }}>
+              {new Date(transaction.availability.startTime).toLocaleTimeString(
+                [],
+                { hour: "2-digit", minute: "2-digit" }
+              )}{" "}
+              -{" "}
+              {new Date(transaction.availability.endTime).toLocaleTimeString(
+                [],
+                { hour: "2-digit", minute: "2-digit" }
+              )}
             </Typography>
             <Typography variant="body2" sx={{ fontWeight: "medium" }}>
               {transaction.buyer.firstName + " " + transaction.buyer.lastName}
