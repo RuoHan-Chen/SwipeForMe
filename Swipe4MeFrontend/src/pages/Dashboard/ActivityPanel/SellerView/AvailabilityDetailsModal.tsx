@@ -16,6 +16,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  IconButton,
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -29,7 +30,10 @@ import { useSnackbar } from "../../../../context/SnackbarContext";
 import {
   updateAvailability,
   getUsersByAvailabilityId,
+  deleteAvailability,
 } from "../../../../clients/availabilityClient";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface AvailabilityDetailsModalProps {
   open: boolean;
@@ -52,6 +56,7 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
   const [endTime, setEndTime] = useState<Dayjs | null>(null);
   const [registeredUsers, setRegisteredUsers] = useState<User[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const { snackbar } = useSnackbar();
   const lastFetchedAvailabilityId = useRef<number | null>(null);
 
@@ -110,9 +115,33 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
 
       snackbar.success("Availability updated successfully");
       onAvailabilityUpdated();
-      onClose();
+      setIsEditing(false);
     } catch (error) {
       snackbar.error("Failed to update availability");
+    }
+  };
+
+  const handleCancel = () => {
+    // Reset form values to original availability
+    setDate(dayjs(availability.startTime));
+    setLocation(availability.location);
+    setStartTime(dayjs(availability.startTime));
+    setEndTime(dayjs(availability.endTime));
+    setIsEditing(false);
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (
+        window.confirm("Are you sure you want to delete this availability?")
+      ) {
+        await deleteAvailability(availability.id);
+        snackbar.success("Availability deleted successfully");
+        onAvailabilityUpdated();
+        onClose();
+      }
+    } catch (error) {
+      snackbar.error("Failed to delete availability");
     }
   };
 
@@ -131,7 +160,43 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
         },
       }}
     >
-      <DialogTitle>Edit Availability</DialogTitle>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        Availability Details
+        <Box>
+          {!isEditing && (
+            <>
+              <IconButton
+                onClick={() => setIsEditing(true)}
+                sx={{
+                  mr: 1,
+                  "&:hover": {
+                    bgcolor: "rgba(138, 43, 226, 0.08)",
+                  },
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                onClick={handleDelete}
+                color="error"
+                sx={{
+                  "&:hover": {
+                    bgcolor: "rgba(211, 47, 47, 0.08)",
+                  },
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </>
+          )}
+        </Box>
+      </DialogTitle>
       <DialogContent sx={{ p: 3 }}>
         <Box sx={{ mt: 2 }}>
           <Grid2 container spacing={4}>
@@ -145,6 +210,7 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
                       value={date}
                       onChange={(newValue) => setDate(newValue)}
                       sx={{ width: "100%" }}
+                      disabled={!isEditing}
                     />
                   </Grid2>
                   <Grid2 size={12}>
@@ -156,6 +222,7 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
                         onChange={(e) =>
                           setLocation(e.target.value as DiningLocation)
                         }
+                        disabled={!isEditing}
                       >
                         {Object.values(DiningLocation).map((loc) => (
                           <MenuItem key={loc} value={loc}>
@@ -171,6 +238,7 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
                       value={startTime}
                       onChange={(newValue) => setStartTime(newValue)}
                       sx={{ width: "100%" }}
+                      disabled={!isEditing}
                     />
                   </Grid2>
                   <Grid2 size={6}>
@@ -179,6 +247,7 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
                       value={endTime}
                       onChange={(newValue) => setEndTime(newValue)}
                       sx={{ width: "100%" }}
+                      disabled={!isEditing}
                     />
                   </Grid2>
                 </Grid2>
@@ -226,10 +295,16 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
         </Box>
       </DialogContent>
       <DialogActions sx={{ p: 3 }}>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSave} variant="contained" color="primary">
-          Save Changes
-        </Button>
+        {isEditing ? (
+          <>
+            <Button onClick={handleCancel}>Cancel</Button>
+            <Button onClick={handleSave} variant="contained" color="primary">
+              Save Changes
+            </Button>
+          </>
+        ) : (
+          <Button onClick={onClose}>Close</Button>
+        )}
       </DialogActions>
     </Dialog>
   );

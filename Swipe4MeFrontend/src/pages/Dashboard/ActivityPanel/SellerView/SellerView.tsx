@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import Grid from "@mui/material/Grid";
 import { Availability, Transaction } from "../../../../types";
 import { getCurrentUserTransactionsAsSeller } from "../../../../clients/transactionClient";
 import {
@@ -116,7 +117,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
   return (
     <Box sx={{ display: "flex", gap: 3 }}>
       {/* Left panel - Upcoming Availabilities */}
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1, maxWidth: "33.33%" }}>
         <Typography variant="h6" sx={{ mb: 2, color: "text.secondary" }}>
           Upcoming Availabilities
         </Typography>
@@ -129,7 +130,6 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
                 availability={availability}
                 formatDuration={formatDuration}
                 onEdit={handleEditAvailability}
-                onDelete={handleDeleteAvailability}
               />
             ))
           ) : (
@@ -172,16 +172,19 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
           {sellerTransactions.filter(
             (transaction) => transaction.status === "PENDING"
           ).length > 0 ? (
-            sellerTransactions
-              .filter((transaction) => transaction.status === "PENDING")
-              .map((transaction) => (
-                <PendingInviteCard
-                  key={transaction.id}
-                  transaction={transaction}
-                  formatDuration={formatDuration}
-                  onTransactionUpdated={fetchSellerTransactions}
-                />
-              ))
+            <Grid container spacing={2}>
+              {sellerTransactions
+                .filter((transaction) => transaction.status === "PENDING")
+                .map((transaction) => (
+                  <Grid item key={transaction.id} xs={12} sm={6}>
+                    <PendingInviteCard
+                      transaction={transaction}
+                      formatDuration={formatDuration}
+                      onTransactionUpdated={fetchSellerTransactions}
+                    />
+                  </Grid>
+                ))}
+            </Grid>
           ) : (
             <Typography variant="body1" color="text.secondary">
               No pending invites
