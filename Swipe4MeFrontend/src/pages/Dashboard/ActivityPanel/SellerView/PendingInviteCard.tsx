@@ -9,13 +9,11 @@ import { Paper, Box, Avatar, Button, Typography } from "@mui/material";
 
 interface PendingInviteCardProps {
   transaction: Transaction;
-  formatDuration: (startTime: string, endTime: string) => string;
   onTransactionUpdated: () => void;
 }
 
 const PendingInviteCard = ({
   transaction,
-  formatDuration,
   onTransactionUpdated,
 }: PendingInviteCardProps) => {
   const [loadingAccept, setLoadingAccept] = useState(false);

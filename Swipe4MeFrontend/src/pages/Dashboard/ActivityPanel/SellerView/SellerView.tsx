@@ -6,15 +6,11 @@ import AddIcon from "@mui/icons-material/Add";
 import Grid from "@mui/material/Grid";
 import { Availability, Transaction } from "../../../../types";
 import { getCurrentUserTransactionsAsSeller } from "../../../../clients/transactionClient";
-import {
-  getCurrentUserAvailability,
-  deleteAvailability,
-} from "../../../../clients/availabilityClient";
+import { getCurrentUserAvailability } from "../../../../clients/availabilityClient";
 import { mapLocationsToEnum } from "../../../../utils/enumUtils";
 import PendingInviteCard from "./PendingInviteCard";
 import AvailabilityCard from "./AvailabilityCard";
 import AvailabilityDetailsModal from "./AvailabilityDetailsModal";
-import { useSnackbar } from "../../../../context/SnackbarContext";
 import { useNavigate } from "react-router-dom";
 
 interface SellerViewProps {
@@ -29,7 +25,6 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
   const [loading, setLoading] = useState(false);
   const [selectedAvailability, setSelectedAvailability] =
     useState<Availability | null>(null);
-  const { snackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const fetchAvailabilities = async () => {
@@ -89,25 +84,6 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
   const handleAvailabilityUpdated = () => {
     fetchAvailabilities();
     setSelectedAvailability(null);
-  };
-
-  // Handler for deleting an availability
-  const handleDeleteAvailability = async (id: number) => {
-    try {
-      snackbar.loading("Deleting availability...");
-
-      // Confirm deletion with the user
-      if (
-        window.confirm("Are you sure you want to delete this availability?")
-      ) {
-        await deleteAvailability(id);
-        snackbar.success("Availability deleted successfully");
-        // Refresh the availabilities list
-        fetchAvailabilities();
-      }
-    } catch (err) {
-      snackbar.error((err as Error).message || "Failed to delete availability");
-    }
   };
 
   if (loading && sellerTransactions.length === 0) {
@@ -179,7 +155,6 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
                   <Grid item key={transaction.id} xs={12} sm={6}>
                     <PendingInviteCard
                       transaction={transaction}
-                      formatDuration={formatDuration}
                       onTransactionUpdated={fetchSellerTransactions}
                     />
                   </Grid>
