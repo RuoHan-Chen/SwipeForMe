@@ -72,7 +72,7 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
       const endTimeISO = endDateTime.format("YYYY-MM-DDTHH:mm:ss.SSSZ");
 
       await updateAvailability(availability.id, {
-        location,
+        location: location.toUpperCase(),
         startTime: startTimeISO,
         endTime: endTimeISO,
       });
