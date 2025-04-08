@@ -4,11 +4,18 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import "../styles/rating.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { updateRating } from "../clients/ratingClient";
+
 interface RatingCategory {
   label: string;
   description: string;
   name: string;
+}
+
+interface LocationState {
+  ratingId: number;
+  isBuyerRating: boolean;
 }
 
 const categories: RatingCategory[] = [
@@ -31,6 +38,9 @@ const categories: RatingCategory[] = [
 
 const Rating: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { ratingId, isBuyerRating } = location.state as LocationState;
+
   const [ratings, setRatings] = useState<Record<string, number>>({
     punctuality: 0,
     friendliness: 0,
@@ -41,9 +51,22 @@ const Rating: React.FC = () => {
     setRatings((prev) => ({ ...prev, [category]: value }));
   };
 
-  const handleSubmit = () => {
-    console.log("Submitted ratings:", ratings);
-    // Submit logic here
+  const handleSubmit = async () => {
+    try {
+      // Calculate average rating
+      const totalRating = Object.values(ratings).reduce((sum, rating) => sum + rating, 0);
+      const averageRating = totalRating / Object.keys(ratings).length;
+
+      await updateRating(ratingId, {
+        toBuyerRating: isBuyerRating ? averageRating : undefined,
+        toSellerRating: !isBuyerRating ? averageRating : undefined,
+      });
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Failed to submit rating:", error);
+      // You might want to show an error message to the user here
+    }
   };
 
   return (
