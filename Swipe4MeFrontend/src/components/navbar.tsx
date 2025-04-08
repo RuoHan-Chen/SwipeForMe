@@ -5,9 +5,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
 import { useAuth } from "../context/AuthContext";
+import { User } from "../types";
+import { getCurrentUser } from "../clients/userClient";
 
 const Navbar: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
@@ -24,6 +27,12 @@ const Navbar: React.FC = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      getCurrentUser().then((user) => setUser(user));
+    }
+  }, [isLoggedIn]);
 
   const handleLogout = () => {
     logout();
@@ -61,7 +70,7 @@ const Navbar: React.FC = () => {
           {isLoggedIn ? (
             <div className="profile-dropdown-container" ref={dropdownRef}>
               <img
-                src="/profile_pic.png"
+                src={user?.profilePicUrl}
                 alt="User Profile"
                 className="profile-image"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
