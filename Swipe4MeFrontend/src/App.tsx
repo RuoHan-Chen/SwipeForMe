@@ -27,7 +27,6 @@ function App() {
     },
   });
 
-
   return (
     <SnackbarProvider>
       <AuthProvider>
@@ -70,7 +69,7 @@ function App() {
                 }
               />
               <Route
-                path="/rating"
+                path="/rating/:transactionId"
                 element={
                   <PrivateRoute>
                     <Rating />

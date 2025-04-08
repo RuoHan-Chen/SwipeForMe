@@ -26,11 +26,13 @@ import { TransactionStatus } from "../clients/transactionClient";
 import { getCurrentUserTransactionsAsSeller } from "../clients/transactionClient";
 import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
 import { mapLocationsToEnum, mapStatusToEnum } from "../utils/enumUtils";
+import { useNavigate } from "react-router-dom";
 const TransactionHistory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 6;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -371,7 +373,13 @@ const TransactionHistory: React.FC = () => {
                       {transaction.status !== TransactionStatus.COMPLETED &&
                         transaction.status !== TransactionStatus.IN_PROGRESS &&
                         !transaction.rating && (
-                          <Button size="small" sx={getRateButtonStyle()}>
+                          <Button
+                            size="small"
+                            sx={getRateButtonStyle()}
+                            onClick={() => {
+                              navigate(`/rating/${transaction.id}`);
+                            }}
+                          >
                             <EditIcon
                               sx={{
                                 width: "15px",
