@@ -1,7 +1,7 @@
 // Author: Cici L
 // Time spent: 15 minutes
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Paper,
   Typography,
@@ -21,68 +21,59 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EditIcon from "@mui/icons-material/Edit";
-
-interface Transaction {
-  id: string;
-  name: string;
-  email: string;
-  diningHall: string;
-  date: string;
-  time: string;
-  status: "completed" | "pending" | "canceled";
-  rating?: number;
-}
-
-const mockTransactions: Transaction[] = [
-  {
-    id: "1",
-    name: "Jane Cooper",
-    email: "jane@vanderbilt.edu",
-    diningHall: "Rand",
-    date: "2025/3/27",
-    time: "1:00 PM - 2:00 PM",
-    status: "completed",
-    rating: 5.0,
-  },
-  {
-    id: "2",
-    name: "Floyd Miles",
-    email: "floyd@vanderbilt.edu",
-    diningHall: "Rand",
-    date: "2025/3/27",
-    time: "1:00 PM - 2:00 PM",
-    status: "pending",
-  },
-  {
-    id: "3",
-    name: "Ronald Richards",
-    email: "ronald@vanderbilt.edu",
-    diningHall: "Rand",
-    date: "2025/3/27",
-    time: "1:00 PM - 2:00 PM",
-    status: "canceled",
-  },
-  {
-    id: "4",
-    name: "Steven Yi",
-    email: "steven.yi@vanderbilt.edu",
-    diningHall: "Rand",
-    date: "2025/3/27",
-    time: "2:00 PM - 3:00 PM",
-    status: "completed",
-  },
-];
-
+import { Transaction } from "../types";
+import { TransactionStatus } from "../clients/transactionClient";
+import { getCurrentUserTransactionsAsSeller } from "../clients/transactionClient";
+import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
+import { mapLocationsToEnum } from "../utils/enumUtils";
 const TransactionHistory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  // Calculate completed transactions
-  // const completedTransactions = mockTransactions.filter(t => t.status === "completed").length;
-  // const totalTransactions = mockTransactions.length;
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      const buyerTransactions = await getCurrentUserTransactionsAsBuyer();
+      const sellerTransactions = await getCurrentUserTransactionsAsSeller();
+      const mappedTransactions = mapLocationsToEnum(
+        buyerTransactions.concat(sellerTransactions)
+      );
+      setTransactions(mappedTransactions);
+    };
+    fetchTransactions();
+  }, []);
+
+  const displayTransactionRating = (transaction: Transaction) => {
+    if (!transaction.rating) {
+      return null;
+    }
+    const currentUserId = localStorage.getItem("userId")!!;
+    if (transaction.buyer.id === parseInt(currentUserId)) {
+      return transaction.rating.toSellerRating;
+    }
+    return transaction.rating.toBuyerRating;
+  };
+
+  const formatTimeAsDate = (time: string) => {
+    const date = new Date(time);
+    return date.toLocaleDateString();
+  };
+
+  const formatDuration = (startTime: string, endTime: string) => {
+    const startDate = new Date(startTime);
+    const endDate = new Date(endTime);
+    const duration = `${startDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })} - ${endDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`;
+    return duration;
+  };
 
   const getStatusButtonStyle = (status: Transaction["status"]) => {
     switch (status) {
-      case "completed":
+      case TransactionStatus.COMPLETED:
         return {
           bgcolor: "#25DAC5",
           color: "#FFFFFF",
@@ -91,7 +82,7 @@ const TransactionHistory: React.FC = () => {
           height: "29.15px",
           fontSize: "14.2588px",
         };
-      case "pending":
+      case TransactionStatus.IN_PROGRESS:
         return {
           bgcolor: "#F4F4F4",
           color: "#757171",
@@ -100,7 +91,7 @@ const TransactionHistory: React.FC = () => {
           height: "29.15px",
           fontSize: "14.2588px",
         };
-      case "canceled":
+      case TransactionStatus.REJECTED:
         return {
           bgcolor: "rgba(233, 58, 61, 0.7)",
           color: "#FFFFFF",
@@ -288,7 +279,7 @@ const TransactionHistory: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockTransactions.map((transaction) => (
+              {transactions.map((transaction) => (
                 <TableRow key={transaction.id}>
                   <TableCell>
                     <Box>
@@ -301,7 +292,8 @@ const TransactionHistory: React.FC = () => {
                           color: "#292D32",
                         }}
                       >
-                        {transaction.name}
+                        {transaction.buyer.firstName}{" "}
+                        {transaction.buyer.lastName}
                       </Typography>
                       <Typography
                         sx={{
@@ -311,13 +303,22 @@ const TransactionHistory: React.FC = () => {
                           color: "rgba(41, 45, 50, 0.8)",
                         }}
                       >
-                        {transaction.email}
+                        {transaction.buyer.email}
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell align="center">{transaction.diningHall}</TableCell>
-                  <TableCell align="center">{transaction.date}</TableCell>
-                  <TableCell align="center">{transaction.time}</TableCell>
+                  <TableCell align="center">
+                    {transaction.availability.location}
+                  </TableCell>
+                  <TableCell align="center">
+                    {formatTimeAsDate(transaction.availability.startTime)}
+                  </TableCell>
+                  <TableCell align="center">
+                    {formatDuration(
+                      transaction.availability.startTime,
+                      transaction.availability.endTime
+                    )}
+                  </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
                     <Button
                       size="small"
@@ -334,7 +335,7 @@ const TransactionHistory: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {transaction.status === "completed" &&
+                      {transaction.status !== TransactionStatus.COMPLETED &&
                         !transaction.rating && (
                           <Button size="small" sx={getRateButtonStyle()}>
                             <EditIcon
@@ -376,7 +377,7 @@ const TransactionHistory: React.FC = () => {
                               color: "#292D32",
                             }}
                           >
-                            {transaction.rating}
+                            {displayTransactionRating(transaction)}
                           </Typography>
                           <EditIcon sx={{ color: "#482BE7", fontSize: 14 }} />
                         </>
