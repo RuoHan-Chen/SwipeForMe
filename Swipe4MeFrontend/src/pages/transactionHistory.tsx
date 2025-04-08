@@ -13,12 +13,14 @@ import {
   TableHead,
   TableRow,
   Button,
-  TextField,
   IconButton,
-  InputAdornment,
   Grid2,
+  FormControl,
+  Select,
+  OutlinedInput,
+  MenuItem,
+  InputLabel,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EditIcon from "@mui/icons-material/Edit";
 import { Transaction } from "../types";
@@ -30,10 +32,17 @@ import { getCurrentUserTransactionsAsSeller } from "../clients/transactionClient
 import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
 import { mapLocationsToEnum, mapStatusToEnum } from "../utils/enumUtils";
 import { useNavigate } from "react-router-dom";
+import { SelectChangeEvent } from "@mui/material";
+
 const TransactionHistory: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [filteredTransactions, setFilteredTransactions] = useState<
+    Transaction[]
+  >([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedStatus, setSelectedStatus] = useState<TransactionStatus | "">(
+    ""
+  );
   const rowsPerPage = 6;
   const navigate = useNavigate();
 
@@ -51,6 +60,13 @@ const TransactionHistory: React.FC = () => {
     });
   };
 
+  const handleStatusFilterChange = (
+    event: SelectChangeEvent<TransactionStatus | "">
+  ) => {
+    setSelectedStatus(event.target.value as TransactionStatus | "");
+  };
+
+  // Fetch data only once when component mounts
   useEffect(() => {
     const fetchTransactions = async () => {
       const buyerTransactions = await getCurrentUserTransactionsAsBuyer();
@@ -71,18 +87,29 @@ const TransactionHistory: React.FC = () => {
       });
 
       setTransactions(sortedTransactions);
+      setFilteredTransactions(sortedTransactions);
     };
     fetchTransactions();
   }, []);
 
+  // Filter transactions whenever status filter changes
+  useEffect(() => {
+    const filtered = selectedStatus
+      ? transactions.filter(
+          (transaction) => transaction.status === selectedStatus
+        )
+      : transactions;
+    setFilteredTransactions(filtered);
+  }, [selectedStatus, transactions]);
+
   // Calculate pagination
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentTransactions = transactions.slice(
+  const currentTransactions = filteredTransactions.slice(
     indexOfFirstRow,
     indexOfLastRow
   );
-  const totalPages = Math.ceil(transactions.length / rowsPerPage);
+  const totalPages = Math.ceil(filteredTransactions.length / rowsPerPage);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -237,54 +264,26 @@ const TransactionHistory: React.FC = () => {
               Active Students
             </Typography> */}
           </Grid2>
-          <Grid2>
-            <TextField
-              placeholder="Search"
-              size="small"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon
-                      sx={{
-                        color: "#7E7E7E",
-                        width: "24.59px",
-                        height: "21.7px",
-                        "& path": {
-                          strokeWidth: "2.03697px",
-                        },
-                      }}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                width: "216px",
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "10.1848px",
-                  bgcolor: "#F9FBFF",
-                  "& fieldset": {
-                    borderColor: "#F9FBFF",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#F9FBFF",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#F9FBFF",
-                  },
-                },
-                "& .MuiInputBase-input": {
-                  fontFamily: "Poppins",
-                  fontSize: "12px",
-                  color: "#7E7E7E",
-                  "&::placeholder": {
-                    color: "#7E7E7E",
-                    opacity: 1,
-                  },
-                },
-              }}
-            />
+          <Grid2 container spacing={2} alignItems="center">
+            <Grid2>
+              <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                <InputLabel>Status</InputLabel>
+                <Select
+                  value={selectedStatus}
+                  onChange={handleStatusFilterChange}
+                  input={<OutlinedInput label="Status" />}
+                >
+                  <MenuItem value="">
+                    <em>All</em>
+                  </MenuItem>
+                  {Object.values(TransactionStatus).map((status) => (
+                    <MenuItem key={status} value={status}>
+                      {status}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid2>
           </Grid2>
         </Grid2>
 
@@ -481,8 +480,8 @@ const TransactionHistory: React.FC = () => {
                 }}
               >
                 {indexOfFirstRow + 1}-
-                {Math.min(indexOfLastRow, transactions.length)} of{" "}
-                {transactions.length}
+                {Math.min(indexOfLastRow, filteredTransactions.length)} of{" "}
+                {filteredTransactions.length}
               </Typography>
               <IconButton
                 size="small"
