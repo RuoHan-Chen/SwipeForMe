@@ -127,6 +127,7 @@ const TransactionHistory: React.FC = () => {
     return duration;
   };
 
+  // TODO: Add a style for pending transactions and awaiting review transactions
   const getStatusButtonStyle = (status: TransactionStatus) => {
     switch (status) {
       case TransactionStatus.COMPLETED:
