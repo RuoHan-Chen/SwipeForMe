@@ -11,11 +11,11 @@ export interface CreateTransactionRequest {
 }
 
 export enum TransactionStatus {
-  PENDING = "PENDING",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-  AWAITING_REVIEW = "AWAITING_REVIEW",
-  REJECTED = "REJECTED",
+  PENDING = "Pending",
+  IN_PROGRESS = "In Progress",
+  COMPLETED = "Completed",
+  AWAITING_REVIEW = "Awaiting Review",
+  REJECTED = "Rejected",
 }
 
 export const createTransaction = async (request: CreateTransactionRequest) => {

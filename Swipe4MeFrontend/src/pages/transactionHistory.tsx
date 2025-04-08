@@ -25,7 +25,7 @@ import { Transaction } from "../types";
 import { TransactionStatus } from "../clients/transactionClient";
 import { getCurrentUserTransactionsAsSeller } from "../clients/transactionClient";
 import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
-import { mapLocationsToEnum } from "../utils/enumUtils";
+import { mapLocationsToEnum, mapStatusToEnum } from "../utils/enumUtils";
 const TransactionHistory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -39,9 +39,10 @@ const TransactionHistory: React.FC = () => {
       const mappedTransactions = mapLocationsToEnum(
         buyerTransactions.concat(sellerTransactions)
       );
+      const mappedStatusTransactions = mapStatusToEnum(mappedTransactions);
 
       // Sort by most recent
-      const sortedTransactions = mappedTransactions.sort((a, b) => {
+      const sortedTransactions = mappedStatusTransactions.sort((a, b) => {
         return (
           new Date(b.availability.startTime).getTime() -
           new Date(a.availability.startTime).getTime()
@@ -105,7 +106,7 @@ const TransactionHistory: React.FC = () => {
     return duration;
   };
 
-  const getStatusButtonStyle = (status: Transaction["status"]) => {
+  const getStatusButtonStyle = (status: TransactionStatus) => {
     switch (status) {
       case TransactionStatus.COMPLETED:
         return {
@@ -362,8 +363,7 @@ const TransactionHistory: React.FC = () => {
                         fontWeight: 500,
                       }}
                     >
-                      {transaction.status.charAt(0).toUpperCase() +
-                        transaction.status.slice(1)}
+                      {transaction.status}
                     </Button>
                   </TableCell>
                   <TableCell>
