@@ -5,11 +5,15 @@ import { Transaction } from "../../../../types";
 import {
   cancelTransaction,
   getCurrentUserTransactionsAsBuyer,
+  TransactionStatus,
 } from "../../../../clients/transactionClient";
 import { StyledTab, StyledTabs } from "../styledComponents";
 import TransactionCard from "./TransactionCard";
 import Box from "@mui/material/Box";
-import { mapLocationsToEnum } from "../../../../utils/enumUtils";
+import {
+  mapLocationsToEnum,
+  mapStatusToEnum,
+} from "../../../../utils/enumUtils";
 import Paper from "@mui/material/Paper";
 import { useSnackbar } from "../../../../context/SnackbarContext";
 
@@ -33,8 +37,9 @@ const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
 
       // Convert location strings to enum values using our utility function
       const mappedTransactions = mapLocationsToEnum(response);
+      const mappedStatusTransactions = mapStatusToEnum(mappedTransactions);
 
-      setBuyerTransactions(mappedTransactions);
+      setBuyerTransactions(mappedStatusTransactions);
     } catch (error) {
       snackbar.error("Failed to fetch transactions");
     } finally {
@@ -74,8 +79,12 @@ const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
   const filteredTransactions = buyerTransactions.filter(
     (transaction) =>
       transaction.status ===
-      (transactionType === "pending" ? "PENDING" : "IN_PROGRESS")
+      (transactionType === "pending"
+        ? TransactionStatus.PENDING
+        : TransactionStatus.IN_PROGRESS)
   );
+
+  console.log(buyerTransactions);
 
   return (
     <>
