@@ -140,6 +140,7 @@ const TransactionHistory: React.FC = () => {
           fontSize: "14.2588px",
         };
       case TransactionStatus.IN_PROGRESS:
+      case TransactionStatus.PENDING:
         return {
           bgcolor: "#F4F4F4",
           color: "#757171",
@@ -153,6 +154,15 @@ const TransactionHistory: React.FC = () => {
           bgcolor: "rgba(233, 58, 61, 0.7)",
           color: "#FFFFFF",
           border: "1px solid #E93A3D",
+          minWidth: "100px",
+          height: "29.15px",
+          fontSize: "14.2588px",
+        };
+      case TransactionStatus.AWAITING_REVIEW:
+        return {
+          bgcolor: "rgba(72, 43, 231, 0.7)",
+          color: "#FFFFFF",
+          border: "1px solid #482BE7",
           minWidth: "100px",
           height: "29.15px",
           fontSize: "14.2588px",
