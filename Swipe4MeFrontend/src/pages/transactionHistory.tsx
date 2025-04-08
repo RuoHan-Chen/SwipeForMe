@@ -22,7 +22,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EditIcon from "@mui/icons-material/Edit";
 import { Transaction } from "../types";
-import { TransactionStatus } from "../clients/transactionClient";
+import {
+  awaitReviewTransaction,
+  TransactionStatus,
+} from "../clients/transactionClient";
 import { getCurrentUserTransactionsAsSeller } from "../clients/transactionClient";
 import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
 import { mapLocationsToEnum, mapStatusToEnum } from "../utils/enumUtils";
@@ -34,6 +37,20 @@ const TransactionHistory: React.FC = () => {
   const rowsPerPage = 6;
   const navigate = useNavigate();
 
+  const handleTransactionsWithExpiredAvailabilities = (
+    transactions: Transaction[]
+  ) => {
+    const currentTime = new Date();
+    transactions.forEach(async (transaction) => {
+      if (
+        transaction.status === TransactionStatus.IN_PROGRESS &&
+        new Date(transaction.availability.endTime) < currentTime
+      ) {
+        await awaitReviewTransaction(transaction.id);
+      }
+    });
+  };
+
   useEffect(() => {
     const fetchTransactions = async () => {
       const buyerTransactions = await getCurrentUserTransactionsAsBuyer();
@@ -42,6 +59,8 @@ const TransactionHistory: React.FC = () => {
         buyerTransactions.concat(sellerTransactions)
       );
       const mappedStatusTransactions = mapStatusToEnum(mappedTransactions);
+
+      handleTransactionsWithExpiredAvailabilities(mappedStatusTransactions);
 
       // Sort by most recent
       const sortedTransactions = mappedStatusTransactions.sort((a, b) => {

@@ -8,9 +8,13 @@ import { Availability, Transaction } from "../../../../types";
 import {
   getCurrentUserTransactionsAsSeller,
   TransactionStatus,
+  awaitReviewTransaction,
 } from "../../../../clients/transactionClient";
 import { getCurrentUserAvailability } from "../../../../clients/availabilityClient";
-import { mapLocationsToEnum } from "../../../../utils/enumUtils";
+import {
+  mapLocationsToEnum,
+  mapStatusToEnum,
+} from "../../../../utils/enumUtils";
 import PendingInviteCard from "./PendingInviteCard";
 import AvailabilityCard from "./AvailabilityCard";
 import AvailabilityDetailsModal from "./AvailabilityDetailsModal";
@@ -37,7 +41,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
       // Filter out availabilities that have already passed
       const currentTime = new Date();
       const upcomingAvailabilities = response.filter(
-        (availability) => new Date(availability.startTime) > currentTime
+        (availability) => new Date(availability.endTime) > currentTime
       );
 
       // Convert location strings to enum values using our utility function
@@ -62,8 +66,9 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
 
       // Convert location strings to enum values using our utility function
       const mappedTransactions = mapLocationsToEnum(response);
+      const mappedStatusTransactions = mapStatusToEnum(mappedTransactions);
 
-      setSellerTransactions(mappedTransactions);
+      setSellerTransactions(mappedStatusTransactions);
     } catch (error) {
       console.error("Error fetching seller transactions:", error);
     } finally {
