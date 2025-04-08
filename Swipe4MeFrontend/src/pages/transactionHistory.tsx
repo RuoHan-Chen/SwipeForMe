@@ -370,8 +370,8 @@ const TransactionHistory: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {transaction.status !== TransactionStatus.COMPLETED &&
-                        transaction.status !== TransactionStatus.IN_PROGRESS &&
+                      {transaction.status ===
+                        TransactionStatus.AWAITING_REVIEW &&
                         !transaction.rating && (
                           <Button
                             size="small"
