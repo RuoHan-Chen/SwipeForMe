@@ -3,6 +3,7 @@
 
 package com.sp25group8.swipe4mebackend.models.transactions;
 
+import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -43,4 +44,8 @@ public class TransactionEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
 	private TransactionStatus status;
+
+	@OneToOne(mappedBy = "transaction", fetch = FetchType.EAGER)
+	@Builder.Default
+	private RatingEntity rating = null;
 }

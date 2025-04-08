@@ -27,6 +27,7 @@ function App() {
     },
   });
 
+
   return (
     <SnackbarProvider>
       <AuthProvider>

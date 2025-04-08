@@ -29,6 +29,7 @@ import {
   CreateAvailabilityRequest,
 } from "../../clients/availabilityClient";
 import { useSnackbar } from "../../context/SnackbarContext";
+import { useNavigate } from "react-router-dom";
 
 const DonateSwipes: React.FC = () => {
   const [date, setDate] = useState<Dayjs | null>(null);
@@ -38,6 +39,7 @@ const DonateSwipes: React.FC = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const { snackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const handleDateChange = (newValue: Date | Dayjs | null) => {
     setDate(newValue as Dayjs | null);
@@ -90,6 +92,7 @@ const DonateSwipes: React.FC = () => {
       try {
         await createAvailability(request);
         snackbar.success("Availability created!");
+        navigate("/dashboard");
       } catch (err) {
         snackbar.error("Failed to create availability");
       }

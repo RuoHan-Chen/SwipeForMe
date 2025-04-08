@@ -3,6 +3,8 @@
 
 package com.sp25group8.swipe4mebackend.models.ratings;
 
+import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "ratings")
@@ -31,6 +35,10 @@ public class RatingEntity {
         @ManyToOne
         @JoinColumn(name = "buyer_id", nullable = false)
         private UserEntity buyer;
+
+        @OneToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "transaction_id", nullable = false)
+        private TransactionEntity transaction;
 
         @Column(name = "to_seller_rating")
         private Double toSellerRating;

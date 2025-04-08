@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import "../styles/rating.css";
-
+import { useNavigate } from "react-router-dom";
 interface RatingCategory {
   label: string;
   description: string;
@@ -30,6 +30,7 @@ const categories: RatingCategory[] = [
 ];
 
 const Rating: React.FC = () => {
+  const navigate = useNavigate();
   const [ratings, setRatings] = useState<Record<string, number>>({
     punctuality: 0,
     friendliness: 0,
@@ -80,16 +81,12 @@ const Rating: React.FC = () => {
           </div>
 
           <div className="feedback-buttons">
-            <button className="cancel-button">Cancel</button>
+            <button className="cancel-button" onClick={() => navigate("/dashboard")}>Cancel</button>
             <button className="submit-button" onClick={handleSubmit}>
               Submit
             </button>
           </div>
         </div>
-        <br></br>
-        <button className="skip-button">
-            Skip
-        </button>
       </div>
     </div>
   );

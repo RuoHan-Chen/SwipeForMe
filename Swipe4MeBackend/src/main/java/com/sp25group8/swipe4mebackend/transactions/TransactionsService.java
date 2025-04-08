@@ -44,7 +44,12 @@ public class TransactionsService {
         AvailabilityEntity availability = availabilityRepository.findById(availabilityId)
                 .orElseThrow();
 
-        TransactionEntity transaction = new TransactionEntity(null, availability, buyer, seller, status);
+        TransactionEntity transaction = TransactionEntity.builder()
+                .buyer(buyer)
+                .seller(seller)
+                .availability(availability)
+                .status(status)
+                .build();
 
         return TransactionDto.fromEntity(transactionRepository.save(transaction));
     }
