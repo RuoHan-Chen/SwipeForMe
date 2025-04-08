@@ -25,6 +25,9 @@ function App() {
         dark: "#1E0E62",
       },
     },
+    typography: {
+      fontFamily: "Poppins",
+    },
   });
 
   return (
