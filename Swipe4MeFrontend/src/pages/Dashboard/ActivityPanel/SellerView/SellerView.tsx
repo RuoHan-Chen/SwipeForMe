@@ -8,7 +8,6 @@ import { Availability, Transaction } from "../../../../types";
 import {
   getCurrentUserTransactionsAsSeller,
   TransactionStatus,
-  awaitReviewTransaction,
 } from "../../../../clients/transactionClient";
 import { getCurrentUserAvailability } from "../../../../clients/availabilityClient";
 import {
