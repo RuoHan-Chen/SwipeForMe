@@ -29,6 +29,8 @@ import { mapLocationsToEnum } from "../utils/enumUtils";
 const TransactionHistory: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 6;
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -50,6 +52,19 @@ const TransactionHistory: React.FC = () => {
     };
     fetchTransactions();
   }, []);
+
+  // Calculate pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentTransactions = transactions.slice(
+    indexOfFirstRow,
+    indexOfLastRow
+  );
+  const totalPages = Math.ceil(transactions.length / rowsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
 
   const displayTransactionRating = (transaction: Transaction) => {
     if (!transaction.rating) {
@@ -175,9 +190,9 @@ const TransactionHistory: React.FC = () => {
                 color: "#000000",
               }}
             >
-              All Students
+              Transaction History
             </Typography>
-            <Typography
+            {/* <Typography
               sx={{
                 fontFamily: "Poppins",
                 fontWeight: 400,
@@ -187,7 +202,7 @@ const TransactionHistory: React.FC = () => {
               }}
             >
               Active Students
-            </Typography>
+            </Typography> */}
           </Grid2>
           <Grid2>
             <TextField
@@ -298,7 +313,7 @@ const TransactionHistory: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {transactions.map((transaction) => (
+              {currentTransactions.map((transaction) => (
                 <TableRow key={transaction.id}>
                   <TableCell>
                     <Box>
@@ -427,7 +442,9 @@ const TransactionHistory: React.FC = () => {
                   fontSize: "14px",
                 }}
               >
-                1-2 of 2
+                {indexOfFirstRow + 1}-
+                {Math.min(indexOfLastRow, transactions.length)} of{" "}
+                {transactions.length}
               </Typography>
               <IconButton
                 size="small"
@@ -437,6 +454,8 @@ const TransactionHistory: React.FC = () => {
                   padding: 0,
                   color: "#B5B7C0",
                 }}
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
               >
                 <KeyboardArrowDownIcon
                   sx={{
@@ -453,6 +472,8 @@ const TransactionHistory: React.FC = () => {
                   padding: 0,
                   color: "#B5B7C0",
                 }}
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
               >
                 <KeyboardArrowDownIcon
                   sx={{
