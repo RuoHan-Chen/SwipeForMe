@@ -37,7 +37,16 @@ const TransactionHistory: React.FC = () => {
       const mappedTransactions = mapLocationsToEnum(
         buyerTransactions.concat(sellerTransactions)
       );
-      setTransactions(mappedTransactions);
+
+      // Sort by most recent
+      const sortedTransactions = mappedTransactions.sort((a, b) => {
+        return (
+          new Date(b.availability.startTime).getTime() -
+          new Date(a.availability.startTime).getTime()
+        );
+      });
+
+      setTransactions(sortedTransactions);
     };
     fetchTransactions();
   }, []);
@@ -50,7 +59,17 @@ const TransactionHistory: React.FC = () => {
     if (transaction.buyer.id === parseInt(currentUserId)) {
       return transaction.rating.toSellerRating;
     }
+
     return transaction.rating.toBuyerRating;
+  };
+
+  const displayUserInfo = (transaction: Transaction) => {
+    const currentUserId = localStorage.getItem("userId")!!;
+    if (transaction.buyer.id === parseInt(currentUserId)) {
+      return transaction.seller.firstName + " " + transaction.seller.lastName;
+    }
+
+    return transaction.buyer.firstName + " " + transaction.buyer.lastName;
   };
 
   const formatTimeAsDate = (time: string) => {
@@ -292,8 +311,7 @@ const TransactionHistory: React.FC = () => {
                           color: "#292D32",
                         }}
                       >
-                        {transaction.buyer.firstName}{" "}
-                        {transaction.buyer.lastName}
+                        {displayUserInfo(transaction)}
                       </Typography>
                       <Typography
                         sx={{
