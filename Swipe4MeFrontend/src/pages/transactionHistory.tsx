@@ -43,6 +43,9 @@ const TransactionHistory: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<TransactionStatus | "">(
     ""
   );
+  const [selectedType, setSelectedType] = useState<"all" | "buyer" | "seller">(
+    "all"
+  );
   const rowsPerPage = 6;
   const navigate = useNavigate();
 
@@ -92,15 +95,31 @@ const TransactionHistory: React.FC = () => {
     fetchTransactions();
   }, []);
 
-  // Filter transactions whenever status filter changes
+  // Filter transactions whenever status or type filter changes
   useEffect(() => {
-    const filtered = selectedStatus
-      ? transactions.filter(
-          (transaction) => transaction.status === selectedStatus
-        )
-      : transactions;
+    let filtered = transactions;
+
+    // Apply status filter
+    if (selectedStatus) {
+      filtered = filtered.filter(
+        (transaction) => transaction.status === selectedStatus
+      );
+    }
+
+    // Apply type filter
+    if (selectedType !== "all") {
+      const currentUserId = parseInt(localStorage.getItem("userId")!!);
+      filtered = filtered.filter((transaction) => {
+        if (selectedType === "buyer") {
+          return transaction.buyer.id === currentUserId;
+        } else {
+          return transaction.seller.id === currentUserId;
+        }
+      });
+    }
+
     setFilteredTransactions(filtered);
-  }, [selectedStatus, transactions]);
+  }, [selectedStatus, selectedType, transactions]);
 
   // Calculate pagination
   const indexOfLastRow = currentPage * rowsPerPage;
@@ -284,6 +303,24 @@ const TransactionHistory: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid2>
+            <Grid2>
+              <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                <InputLabel>Type</InputLabel>
+                <Select
+                  value={selectedType}
+                  onChange={(e) =>
+                    setSelectedType(
+                      e.target.value as "all" | "buyer" | "seller"
+                    )
+                  }
+                  input={<OutlinedInput label="Type" />}
+                >
+                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value="buyer">As Buyer</MenuItem>
+                  <MenuItem value="seller">As Seller</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid2>
           </Grid2>
         </Grid2>
 
@@ -301,7 +338,11 @@ const TransactionHistory: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell sx={{ color: "#B5B7C0", bgcolor: "white" }}>
-                  Name & Email
+                  {selectedType === "all"
+                    ? "Name & Email"
+                    : selectedType === "buyer"
+                    ? "Seller & Email"
+                    : "Buyer & Email"}
                 </TableCell>
                 <TableCell
                   sx={{
