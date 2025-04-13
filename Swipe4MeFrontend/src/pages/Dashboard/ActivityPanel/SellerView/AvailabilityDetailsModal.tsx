@@ -34,12 +34,14 @@ import {
 } from "../../../../clients/availabilityClient";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EventIcon from "@mui/icons-material/Event";
 
 interface AvailabilityDetailsModalProps {
   open: boolean;
   onClose: () => void;
   availability: Availability;
   onAvailabilityUpdated: () => void;
+  handleAddToCalendar: (availability: Availability) => void;
 }
 
 const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
@@ -47,6 +49,7 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
   onClose,
   availability,
   onAvailabilityUpdated,
+  handleAddToCalendar,
 }) => {
   const [date, setDate] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState<DiningLocation>(
@@ -303,7 +306,20 @@ const AvailabilityDetailsModal: React.FC<AvailabilityDetailsModalProps> = ({
             </Button>
           </>
         ) : (
-          <Button onClick={onClose}>Close</Button>
+          <>
+            <Button
+              startIcon={<EventIcon />}
+              variant="outlined"
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCalendar(availability);
+              }}
+            >
+              Add to Calendar
+            </Button>
+            <Button onClick={onClose}>Close</Button>
+          </>
         )}
       </DialogActions>
     </Dialog>

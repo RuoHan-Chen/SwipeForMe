@@ -21,9 +21,13 @@ import { useNavigate } from "react-router-dom";
 
 interface SellerViewProps {
   formatDuration: (startTime: string, endTime: string) => string;
+  handleAddToCalendar: (availability: Availability) => void;
 }
 
-const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
+const SellerView: React.FC<SellerViewProps> = ({
+  formatDuration,
+  handleAddToCalendar,
+}) => {
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const [sellerTransactions, setSellerTransactions] = useState<Transaction[]>(
     []
@@ -113,6 +117,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
                 availability={availability}
                 formatDuration={formatDuration}
                 onEdit={handleEditAvailability}
+                handleAddToCalendar={handleAddToCalendar}
               />
             ))
           ) : (
@@ -185,6 +190,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
           onClose={() => setSelectedAvailability(null)}
           availability={selectedAvailability}
           onAvailabilityUpdated={handleAvailabilityUpdated}
+          handleAddToCalendar={handleAddToCalendar}
         />
       )}
     </Box>
