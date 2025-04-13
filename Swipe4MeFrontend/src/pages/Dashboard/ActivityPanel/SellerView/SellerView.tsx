@@ -19,6 +19,8 @@ import AvailabilityCard from "./AvailabilityCard";
 import AvailabilityDetailsModal from "./AvailabilityDetailsModal";
 import { useNavigate } from "react-router-dom";
 
+const DASHBOARD_URL = "https://swipe-for-me.vercel.app/dashboard";
+
 interface SellerViewProps {
   formatDuration: (startTime: string, endTime: string) => string;
 }
@@ -93,6 +95,29 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
     setSelectedAvailability(null);
   };
 
+  const handleAddToCalendar = (availability: Availability) => {
+    // Format the dates for Google Calendar
+    const startDate = new Date(availability.startTime);
+    const endDate = new Date(availability.endTime);
+
+    // Format dates in YYYYMMDDTHHMMSSZ format
+    const formatDate = (date: Date) => {
+      return date.toISOString().replace(/-|:|\.\d+/g, "");
+    };
+
+    // Create Google Calendar URL
+    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Swipe4Me Swipe Session @ ${
+      availability.location
+    }&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=Location: ${
+      availability.location
+    }%0A%0ASee details of this session at ${DASHBOARD_URL}&location=${encodeURIComponent(
+      availability.location
+    )}`;
+
+    // Open in new tab
+    window.open(calendarUrl, "_blank");
+  };
+
   if (loading && sellerTransactions.length === 0) {
     return <Typography>Loading...</Typography>;
   }
@@ -113,6 +138,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
                 availability={availability}
                 formatDuration={formatDuration}
                 onEdit={handleEditAvailability}
+                handleAddToCalendar={handleAddToCalendar}
               />
             ))
           ) : (
@@ -185,6 +211,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
           onClose={() => setSelectedAvailability(null)}
           availability={selectedAvailability}
           onAvailabilityUpdated={handleAvailabilityUpdated}
+          handleAddToCalendar={handleAddToCalendar}
         />
       )}
     </Box>
