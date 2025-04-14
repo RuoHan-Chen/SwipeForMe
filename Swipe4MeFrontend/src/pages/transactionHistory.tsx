@@ -315,7 +315,7 @@ const TransactionHistory: React.FC = () => {
                   }
                   input={<OutlinedInput label="Type" />}
                 >
-                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value="all">As Buyer & Seller</MenuItem>
                   <MenuItem value="buyer">As Buyer</MenuItem>
                   <MenuItem value="seller">As Seller</MenuItem>
                 </Select>
