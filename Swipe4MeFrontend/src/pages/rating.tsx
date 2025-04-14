@@ -4,7 +4,11 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import "../styles/rating.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { createRating } from "../clients/ratingClient";
+import { Transaction } from "../types";
+import { TransactionStatus } from "../clients/transactionClient";
+
 interface RatingCategory {
   label: string;
   description: string;
@@ -32,6 +36,8 @@ const categories: RatingCategory[] = [
 
 const Rating: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const transaction = location.state?.transaction as Transaction;
   const [ratings, setRatings] = useState<Record<string, number>>({
     punctuality: 0,
     friendliness: 0,
@@ -42,9 +48,35 @@ const Rating: React.FC = () => {
     setRatings((prev) => ({ ...prev, [category]: value }));
   };
 
-  const handleSubmit = () => {
-    console.log("Submitted ratings:", ratings);
-    // Submit logic here
+  const calculateAverageRating = () => {
+    const values = Object.values(ratings);
+    return values.reduce((a, b) => a + b, 0) / values.length;
+  };
+
+  const handleSubmit = async () => {
+    try {
+      if (!transaction) {
+        throw new Error("No transaction data found");
+      }
+
+      const averageRating = calculateAverageRating();
+      
+      // Determine if current user is buyer or seller
+      const isBuyer = transaction.buyer.id === parseInt(localStorage.getItem("userId") || "0");
+      
+      await createRating({
+        transactionId: transaction.id,
+        toSellerRating: isBuyer ? averageRating : 0,
+        toBuyerRating: !isBuyer ? averageRating : 0,
+      });
+
+      // Update transaction status to completed
+      await updateTransactionStatus(transaction.id, TransactionStatus.COMPLETED);
+      
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Failed to submit rating:", error);
+    }
   };
 
   return (
