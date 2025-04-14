@@ -127,6 +127,7 @@ const buySwipes: React.FC = () => {
   useEffect(() => {
     const fetchCurrentUserTransactions = async () => {
       const response = await getCurrentUserTransactionsAsBuyer();
+      console.log(response);
       setCurrentUserPendingAvailabilityIds(
         new Set(
           response

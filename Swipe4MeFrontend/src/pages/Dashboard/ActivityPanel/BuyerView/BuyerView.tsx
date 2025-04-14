@@ -36,7 +36,17 @@ const BuyerView: React.FC<BuyerViewProps> = ({
       const mappedTransactions = mapLocationsToEnum(response);
       const mappedStatusTransactions = mapStatusToEnum(mappedTransactions);
 
-      setBuyerTransactions(mappedStatusTransactions);
+      // Filter out past transactions
+      const filteredTransactions = mappedStatusTransactions.filter(
+        (transaction) => {
+          const availabilityEndTime = new Date(
+            transaction.availability.endTime
+          );
+          return availabilityEndTime > new Date();
+        }
+      );
+
+      setBuyerTransactions(filteredTransactions);
     } catch (error) {
       snackbar.error("Failed to fetch transactions");
     } finally {
