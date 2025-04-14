@@ -80,7 +80,7 @@ const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
         {/* Scrollable content container */}
         <Box
           sx={{
-            height: 300,
+            height: "calc(100vh - 500px)",
             overflow: "auto",
             pr: 1,
             // Add custom scrollbar styling
