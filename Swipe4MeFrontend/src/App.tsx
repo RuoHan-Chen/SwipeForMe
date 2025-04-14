@@ -25,8 +25,10 @@ function App() {
         dark: "#1E0E62",
       },
     },
+    typography: {
+      fontFamily: "Poppins",
+    },
   });
-
 
   return (
     <SnackbarProvider>
@@ -70,7 +72,7 @@ function App() {
                 }
               />
               <Route
-                path="/rating"
+                path="/rating/:transactionId"
                 element={
                   <PrivateRoute>
                     <Rating />

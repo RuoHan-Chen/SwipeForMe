@@ -5,9 +5,15 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import Grid from "@mui/material/Grid";
 import { Availability, Transaction } from "../../../../types";
-import { getCurrentUserTransactionsAsSeller } from "../../../../clients/transactionClient";
+import {
+  getCurrentUserTransactionsAsSeller,
+  TransactionStatus,
+} from "../../../../clients/transactionClient";
 import { getCurrentUserAvailability } from "../../../../clients/availabilityClient";
-import { mapLocationsToEnum } from "../../../../utils/enumUtils";
+import {
+  mapLocationsToEnum,
+  mapStatusToEnum,
+} from "../../../../utils/enumUtils";
 import PendingInviteCard from "./PendingInviteCard";
 import AvailabilityCard from "./AvailabilityCard";
 import AvailabilityDetailsModal from "./AvailabilityDetailsModal";
@@ -15,9 +21,13 @@ import { useNavigate } from "react-router-dom";
 
 interface SellerViewProps {
   formatDuration: (startTime: string, endTime: string) => string;
+  handleAddToCalendar: (availability: Availability) => void;
 }
 
-const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
+const SellerView: React.FC<SellerViewProps> = ({
+  formatDuration,
+  handleAddToCalendar,
+}) => {
   const [availabilities, setAvailabilities] = useState<Availability[]>([]);
   const [sellerTransactions, setSellerTransactions] = useState<Transaction[]>(
     []
@@ -34,7 +44,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
       // Filter out availabilities that have already passed
       const currentTime = new Date();
       const upcomingAvailabilities = response.filter(
-        (availability) => new Date(availability.startTime) > currentTime
+        (availability) => new Date(availability.endTime) > currentTime
       );
 
       // Convert location strings to enum values using our utility function
@@ -59,8 +69,9 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
 
       // Convert location strings to enum values using our utility function
       const mappedTransactions = mapLocationsToEnum(response);
+      const mappedStatusTransactions = mapStatusToEnum(mappedTransactions);
 
-      setSellerTransactions(mappedTransactions);
+      setSellerTransactions(mappedStatusTransactions);
     } catch (error) {
       console.error("Error fetching seller transactions:", error);
     } finally {
@@ -106,6 +117,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
                 availability={availability}
                 formatDuration={formatDuration}
                 onEdit={handleEditAvailability}
+                handleAddToCalendar={handleAddToCalendar}
               />
             ))
           ) : (
@@ -146,11 +158,14 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
 
         <Box sx={{ maxHeight: 250, overflow: "auto", pr: 1 }}>
           {sellerTransactions.filter(
-            (transaction) => transaction.status === "PENDING"
+            (transaction) => transaction.status === TransactionStatus.PENDING
           ).length > 0 ? (
             <Grid container spacing={2}>
               {sellerTransactions
-                .filter((transaction) => transaction.status === "PENDING")
+                .filter(
+                  (transaction) =>
+                    transaction.status === TransactionStatus.PENDING
+                )
                 .map((transaction) => (
                   <Grid item key={transaction.id} xs={12} sm={6}>
                     <PendingInviteCard
@@ -175,6 +190,7 @@ const SellerView: React.FC<SellerViewProps> = ({ formatDuration }) => {
           onClose={() => setSelectedAvailability(null)}
           availability={selectedAvailability}
           onAvailabilityUpdated={handleAvailabilityUpdated}
+          handleAddToCalendar={handleAddToCalendar}
         />
       )}
     </Box>

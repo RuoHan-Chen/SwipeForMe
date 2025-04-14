@@ -4,6 +4,9 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import BuyerView from "./BuyerView/BuyerView";
 import SellerView from "./SellerView/SellerView";
+import { Availability } from "../../../types";
+
+const DASHBOARD_URL = "https://swipe-for-me.vercel.app/dashboard";
 
 interface ActivityPanelProps {
   viewMode: "buyer" | "seller";
@@ -33,6 +36,29 @@ const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
     })}`;
   };
 
+  const handleAddToCalendar = (availability: Availability) => {
+    // Format the dates for Google Calendar
+    const startDate = new Date(availability.startTime);
+    const endDate = new Date(availability.endTime);
+
+    // Format dates in YYYYMMDDTHHMMSSZ format
+    const formatDate = (date: Date) => {
+      return date.toISOString().replace(/-|:|\.\d+/g, "");
+    };
+
+    // Create Google Calendar URL
+    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Swipe4Me Swipe Session @ ${
+      availability.location
+    }&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=Location: ${
+      availability.location
+    }%0A%0ASee details of this session at ${DASHBOARD_URL}&location=${encodeURIComponent(
+      availability.location
+    )}`;
+
+    // Open in new tab
+    window.open(calendarUrl, "_blank");
+  };
+
   return (
     <Grid size={12}>
       <Paper sx={{ p: 3, borderRadius: 4 }}>
@@ -54,7 +80,7 @@ const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
         {/* Scrollable content container */}
         <Box
           sx={{
-            height: 300,
+            height: "calc(100vh - 500px)",
             overflow: "auto",
             pr: 1,
             // Add custom scrollbar styling
@@ -75,9 +101,15 @@ const ActivityPanel: React.FC<ActivityPanelProps> = ({ viewMode }) => {
           }}
         >
           {viewMode === "buyer" ? (
-            <BuyerView viewMode={viewMode} formatDuration={formatDuration} />
+            <BuyerView
+              formatDuration={formatDuration}
+              handleAddToCalendar={handleAddToCalendar}
+            />
           ) : (
-            <SellerView formatDuration={formatDuration} />
+            <SellerView
+              formatDuration={formatDuration}
+              handleAddToCalendar={handleAddToCalendar}
+            />
           )}
         </Box>
       </Paper>
