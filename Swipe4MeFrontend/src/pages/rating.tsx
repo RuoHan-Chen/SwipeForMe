@@ -2,12 +2,20 @@
 // Time spent: 15 minutes
 
 import React, { useState } from "react";
-import { FaStar } from "react-icons/fa";
 import "../styles/rating.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { createRating } from "../clients/ratingClient";
 import { Transaction } from "../types";
 import { TransactionStatus } from "../clients/transactionClient";
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Button,
+  Stack,
+  Rating as MuiRating,
+} from "@mui/material";
 
 interface RatingCategory {
   label: string;
@@ -80,55 +88,121 @@ const Rating: React.FC = () => {
   };
 
   return (
-    <div className="rating-background">
-      <div className="rating-stack">
-        <h1 className="subtitle">Success! Your Swipe Found a Match</h1>
-        <h3 className="text">
-          Help us build trust in the community with your quick feedback. Your
-          ratings help others feel safe and confident when exchanging swipes —
-          and they keep our community respectful, reliable, and kind.
-        </h3>
+    <Box className="rating-background">
+      <Container maxWidth="lg" sx={{ py: 2 }}>
+        <Stack spacing={3} alignItems="center">
+          <Typography
+            variant="h4"
+            color="white"
+            fontWeight="bold"
+            textAlign="center"
+            sx={{ textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}
+          >
+            Success! Your Swipe Found a Match
+          </Typography>
 
-        <div className="feedback-modal">
-          <div className="feedback-modal-header">
-            <h2>Rate Your Experience!</h2>
-          </div>
+          <Typography
+            variant="body1"
+            color="white"
+            textAlign="center"
+            sx={{
+              minWidth: 600,
+              textShadow: "0 1px 2px rgba(0,0,0,0.3)",
+              lineHeight: 1.6,
+            }}
+          >
+            Help us build trust in the community with your quick feedback. Your
+            ratings help others feel safe and confident when exchanging swipes —
+            and they keep our community respectful, reliable, and kind.
+          </Typography>
 
-          <div className="feedback-categories">
-            {categories.map((cat) => (
-              <div key={cat.name} className="feedback-category">
-                <h3>{cat.label}</h3>
-                <p>{cat.description}</p>
-                <div className="feedback-stars">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <FaStar
-                      key={i}
-                      data-testid="star-icon"
-                      className={
-                        ratings[cat.name] >= i ? "star selected" : "star"
-                      }
-                      onClick={() => handleRatingChange(cat.name, i)}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="feedback-buttons">
-            <button
-              className="cancel-button"
-              onClick={() => navigate("/dashboard")}
+          <Paper
+            elevation={3}
+            sx={{
+              p: 3,
+              width: "100%",
+              maxWidth: 480,
+              borderRadius: 2,
+              backgroundColor: "white",
+            }}
+          >
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              textAlign="center"
+              gutterBottom
+              sx={{ color: "#333" }}
             >
-              Cancel
-            </button>
-            <button className="submit-button" onClick={handleSubmit}>
-              Submit
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+              Rate Your Experience!
+            </Typography>
+
+            <Stack spacing={3} sx={{ mt: 2 }}>
+              {categories.map((cat) => (
+                <Box key={cat.name}>
+                  <Typography
+                    variant="h6"
+                    fontWeight="medium"
+                    sx={{ color: "#333" }}
+                  >
+                    {cat.label}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 1 }}
+                  >
+                    {cat.description}
+                  </Typography>
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <MuiRating
+                      value={ratings[cat.name]}
+                      onChange={(_, value) =>
+                        handleRatingChange(cat.name, value || 0)
+                      }
+                      size="large"
+                    />
+                  </Box>
+                </Box>
+              ))}
+            </Stack>
+
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="center"
+              sx={{ mt: 4 }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => navigate("/dashboard")}
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 1,
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 1,
+                  bgcolor: "#25DAC5",
+                  "&:hover": {
+                    bgcolor: "#10b981",
+                  },
+                }}
+              >
+                Submit
+              </Button>
+            </Stack>
+          </Paper>
+        </Stack>
+      </Container>
+    </Box>
   );
 };
 
