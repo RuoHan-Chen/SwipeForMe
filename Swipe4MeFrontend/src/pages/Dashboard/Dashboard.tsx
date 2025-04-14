@@ -27,7 +27,14 @@ const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <Box sx={{ flexGrow: 1, p: 3, bgcolor: "#2e1a80" }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        p: 3,
+        bgcolor: "#2e1a80",
+        minHeight: "calc(100vh - 64px)",
+      }}
+    >
       <Grid container spacing={3}>
         {/* Profile section */}
         <Profile user={user} viewMode={viewMode} setViewMode={setViewMode} />
