@@ -268,8 +268,7 @@ const buySwipes: React.FC = () => {
             width: "80%",
             margin: "0 auto",
             borderRadius: "30px",
-            maxHeight: "650px",
-            minHeight: "600px",
+            height: "calc(100vh - 200px)",
             overflowY: "auto",
             position: "relative",
           }}

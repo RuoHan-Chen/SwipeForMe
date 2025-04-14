@@ -15,7 +15,8 @@ const categories: RatingCategory[] = [
   {
     name: "punctuality",
     label: "Punctuality",
-    description: "Did the user arrive on time and complete the transaction as agreed?",
+    description:
+      "Did the user arrive on time and complete the transaction as agreed?",
   },
   {
     name: "friendliness",
@@ -71,7 +72,9 @@ const Rating: React.FC = () => {
                     <FaStar
                       key={i}
                       data-testid="star-icon"
-                      className={ratings[cat.name] >= i ? "star selected" : "star"}
+                      className={
+                        ratings[cat.name] >= i ? "star selected" : "star"
+                      }
                       onClick={() => handleRatingChange(cat.name, i)}
                     />
                   ))}
@@ -81,7 +84,12 @@ const Rating: React.FC = () => {
           </div>
 
           <div className="feedback-buttons">
-            <button className="cancel-button" onClick={() => navigate("/dashboard")}>Cancel</button>
+            <button
+              className="cancel-button"
+              onClick={() => navigate("/dashboard")}
+            >
+              Cancel
+            </button>
             <button className="submit-button" onClick={handleSubmit}>
               Submit
             </button>
