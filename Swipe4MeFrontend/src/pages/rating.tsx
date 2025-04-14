@@ -122,21 +122,15 @@ const Rating: React.FC = () => {
                   >
                     {cat.description}
                   </Typography>
-                  <MuiRating
-                    value={ratings[cat.name]}
-                    onChange={(_, value) =>
-                      handleRatingChange(cat.name, value || 0)
-                    }
-                    size="large"
-                    sx={{
-                      "& .MuiRating-iconFilled": {
-                        color: "#f59e0b",
-                      },
-                      "& .MuiRating-iconHover": {
-                        color: "#f59e0b",
-                      },
-                    }}
-                  />
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <MuiRating
+                      value={ratings[cat.name]}
+                      onChange={(_, value) =>
+                        handleRatingChange(cat.name, value || 0)
+                      }
+                      size="large"
+                    />
+                  </Box>
                 </Box>
               ))}
             </Stack>
