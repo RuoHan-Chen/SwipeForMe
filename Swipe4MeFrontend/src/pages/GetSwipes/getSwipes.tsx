@@ -25,6 +25,8 @@ import { getCurrentUser } from "../../clients/userClient";
 import { useSnackbar } from "../../context/SnackbarContext";
 import { DiningLocation, User, Availability } from "../../types";
 import TableHeader from "./TableHeader";
+import { mapStatusToEnum } from "../../utils/enumUtils";
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -127,10 +129,12 @@ const buySwipes: React.FC = () => {
   useEffect(() => {
     const fetchCurrentUserTransactions = async () => {
       const response = await getCurrentUserTransactionsAsBuyer();
-      console.log(response);
+
+      const mappedTransactions = mapStatusToEnum(response);
+
       setCurrentUserPendingAvailabilityIds(
         new Set(
-          response
+          mappedTransactions
             .filter(
               (transaction) => transaction.status === TransactionStatus.PENDING
             )
@@ -140,7 +144,7 @@ const buySwipes: React.FC = () => {
 
       setCurrentUserConfirmedAvailabilityIds(
         new Set(
-          response
+          mappedTransactions
             .filter(
               (transaction) =>
                 transaction.status === TransactionStatus.IN_PROGRESS
