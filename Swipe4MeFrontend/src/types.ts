@@ -40,7 +40,6 @@ export interface Transaction {
   buyer: User;
   seller: User;
   status: TransactionStatus;
-  rating: Rating | null;
 }
 
 export interface Availability {
@@ -49,13 +48,4 @@ export interface Availability {
   location: DiningLocation;
   startTime: string;
   endTime: string;
-}
-
-export interface Rating {
-  rId: number;
-  seller: User;
-  buyer: User;
-  transaction: Transaction;
-  toSellerRating: number;
-  toBuyerRating: number;
 }

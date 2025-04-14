@@ -1,7 +1,7 @@
 // Author: Cici L
 // Time spent: 15 minutes
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Paper,
   Typography,
@@ -13,170 +13,76 @@ import {
   TableHead,
   TableRow,
   Button,
+  TextField,
   IconButton,
+  InputAdornment,
   Grid2,
-  FormControl,
-  Select,
-  OutlinedInput,
-  MenuItem,
-  InputLabel,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EditIcon from "@mui/icons-material/Edit";
-import { Transaction } from "../types";
-import {
-  awaitReviewTransaction,
-  TransactionStatus,
-} from "../clients/transactionClient";
-import { getCurrentUserTransactionsAsSeller } from "../clients/transactionClient";
-import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
-import { mapLocationsToEnum, mapStatusToEnum } from "../utils/enumUtils";
-import { useNavigate } from "react-router-dom";
-import { SelectChangeEvent } from "@mui/material";
+
+interface Transaction {
+  id: string;
+  name: string;
+  email: string;
+  diningHall: string;
+  date: string;
+  time: string;
+  status: "completed" | "pending" | "canceled";
+  rating?: number;
+}
+
+const mockTransactions: Transaction[] = [
+  {
+    id: "1",
+    name: "Jane Cooper",
+    email: "jane@vanderbilt.edu",
+    diningHall: "Rand",
+    date: "2025/3/27",
+    time: "1:00 PM - 2:00 PM",
+    status: "completed",
+    rating: 5.0,
+  },
+  {
+    id: "2",
+    name: "Floyd Miles",
+    email: "floyd@vanderbilt.edu",
+    diningHall: "Rand",
+    date: "2025/3/27",
+    time: "1:00 PM - 2:00 PM",
+    status: "pending",
+  },
+  {
+    id: "3",
+    name: "Ronald Richards",
+    email: "ronald@vanderbilt.edu",
+    diningHall: "Rand",
+    date: "2025/3/27",
+    time: "1:00 PM - 2:00 PM",
+    status: "canceled",
+  },
+  {
+    id: "4",
+    name: "Steven Yi",
+    email: "steven.yi@vanderbilt.edu",
+    diningHall: "Rand",
+    date: "2025/3/27",
+    time: "2:00 PM - 3:00 PM",
+    status: "completed",
+  },
+];
 
 const TransactionHistory: React.FC = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [filteredTransactions, setFilteredTransactions] = useState<
-    Transaction[]
-  >([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedStatus, setSelectedStatus] = useState<TransactionStatus | "">(
-    ""
-  );
-  const [selectedType, setSelectedType] = useState<"all" | "buyer" | "seller">(
-    "all"
-  );
-  const rowsPerPage = 6;
-  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleTransactionsWithExpiredAvailabilities = (
-    transactions: Transaction[]
-  ) => {
-    const currentTime = new Date();
-    transactions.forEach(async (transaction) => {
-      if (
-        transaction.status === TransactionStatus.IN_PROGRESS &&
-        new Date(transaction.availability.endTime) < currentTime
-      ) {
-        await awaitReviewTransaction(transaction.id);
-      }
-    });
-  };
+  // Calculate completed transactions
+  // const completedTransactions = mockTransactions.filter(t => t.status === "completed").length;
+  // const totalTransactions = mockTransactions.length;
 
-  const handleStatusFilterChange = (
-    event: SelectChangeEvent<TransactionStatus | "">
-  ) => {
-    setSelectedStatus(event.target.value as TransactionStatus | "");
-  };
-
-  // Fetch data only once when component mounts
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      const buyerTransactions = await getCurrentUserTransactionsAsBuyer();
-      const sellerTransactions = await getCurrentUserTransactionsAsSeller();
-      const mappedTransactions = mapLocationsToEnum(
-        buyerTransactions.concat(sellerTransactions)
-      );
-      const mappedStatusTransactions = mapStatusToEnum(mappedTransactions);
-
-      handleTransactionsWithExpiredAvailabilities(mappedStatusTransactions);
-
-      // Sort by most recent
-      const sortedTransactions = mappedStatusTransactions.sort((a, b) => {
-        return (
-          new Date(b.availability.startTime).getTime() -
-          new Date(a.availability.startTime).getTime()
-        );
-      });
-
-      setTransactions(sortedTransactions);
-      setFilteredTransactions(sortedTransactions);
-    };
-    fetchTransactions();
-  }, []);
-
-  // Filter transactions whenever status or type filter changes
-  useEffect(() => {
-    let filtered = transactions;
-
-    // Apply status filter
-    if (selectedStatus) {
-      filtered = filtered.filter(
-        (transaction) => transaction.status === selectedStatus
-      );
-    }
-
-    // Apply type filter
-    if (selectedType !== "all") {
-      const currentUserId = parseInt(localStorage.getItem("userId")!!);
-      filtered = filtered.filter((transaction) => {
-        if (selectedType === "buyer") {
-          return transaction.buyer.id === currentUserId;
-        } else {
-          return transaction.seller.id === currentUserId;
-        }
-      });
-    }
-
-    setFilteredTransactions(filtered);
-  }, [selectedStatus, selectedType, transactions]);
-
-  // Calculate pagination
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentTransactions = filteredTransactions.slice(
-    indexOfFirstRow,
-    indexOfLastRow
-  );
-  const totalPages = Math.ceil(filteredTransactions.length / rowsPerPage);
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  const displayTransactionRating = (transaction: Transaction) => {
-    if (!transaction.rating) {
-      return null;
-    }
-    const currentUserId = localStorage.getItem("userId")!!;
-    if (transaction.buyer.id === parseInt(currentUserId)) {
-      return transaction.rating.toSellerRating;
-    }
-
-    return transaction.rating.toBuyerRating;
-  };
-
-  const displayUserInfo = (transaction: Transaction) => {
-    const currentUserId = localStorage.getItem("userId")!!;
-    if (transaction.buyer.id === parseInt(currentUserId)) {
-      return transaction.seller.firstName + " " + transaction.seller.lastName;
-    }
-
-    return transaction.buyer.firstName + " " + transaction.buyer.lastName;
-  };
-
-  const formatTimeAsDate = (time: string) => {
-    const date = new Date(time);
-    return date.toLocaleDateString();
-  };
-
-  const formatDuration = (startTime: string, endTime: string) => {
-    const startDate = new Date(startTime);
-    const endDate = new Date(endTime);
-    const duration = `${startDate.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })} - ${endDate.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}`;
-    return duration;
-  };
-
-  // TODO: Add a style for pending transactions and awaiting review transactions
-  const getStatusButtonStyle = (status: TransactionStatus) => {
+  const getStatusButtonStyle = (status: Transaction["status"]) => {
     switch (status) {
-      case TransactionStatus.COMPLETED:
+      case "completed":
         return {
           bgcolor: "#25DAC5",
           color: "#FFFFFF",
@@ -185,8 +91,7 @@ const TransactionHistory: React.FC = () => {
           height: "29.15px",
           fontSize: "14.2588px",
         };
-      case TransactionStatus.IN_PROGRESS:
-      case TransactionStatus.PENDING:
+      case "pending":
         return {
           bgcolor: "#F4F4F4",
           color: "#757171",
@@ -195,20 +100,11 @@ const TransactionHistory: React.FC = () => {
           height: "29.15px",
           fontSize: "14.2588px",
         };
-      case TransactionStatus.REJECTED:
+      case "canceled":
         return {
           bgcolor: "rgba(233, 58, 61, 0.7)",
           color: "#FFFFFF",
           border: "1px solid #E93A3D",
-          minWidth: "100px",
-          height: "29.15px",
-          fontSize: "14.2588px",
-        };
-      case TransactionStatus.AWAITING_REVIEW:
-        return {
-          bgcolor: "rgba(72, 43, 231, 0.7)",
-          color: "#FFFFFF",
-          border: "1px solid #482BE7",
           minWidth: "100px",
           height: "29.15px",
           fontSize: "14.2588px",
@@ -245,7 +141,8 @@ const TransactionHistory: React.FC = () => {
           width: "80%",
           margin: "0 auto",
           borderRadius: "30px",
-          height: "calc(100vh - 200px)",
+          maxHeight: "650px",
+          minHeight: "600px",
           overflowY: "auto",
           position: "relative",
         }}
@@ -268,9 +165,9 @@ const TransactionHistory: React.FC = () => {
                 color: "#000000",
               }}
             >
-              Transaction History
+              All Students
             </Typography>
-            {/* <Typography
+            <Typography
               sx={{
                 fontFamily: "Poppins",
                 fontWeight: 400,
@@ -280,46 +177,56 @@ const TransactionHistory: React.FC = () => {
               }}
             >
               Active Students
-            </Typography> */}
+            </Typography>
           </Grid2>
-          <Grid2 container spacing={2} alignItems="center">
-            <Grid2>
-              <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={selectedStatus}
-                  onChange={handleStatusFilterChange}
-                  input={<OutlinedInput label="Status" />}
-                >
-                  <MenuItem value="">
-                    <em>All</em>
-                  </MenuItem>
-                  {Object.values(TransactionStatus).map((status) => (
-                    <MenuItem key={status} value={status}>
-                      {status}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid2>
-            <Grid2>
-              <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
-                <InputLabel>Type</InputLabel>
-                <Select
-                  value={selectedType}
-                  onChange={(e) =>
-                    setSelectedType(
-                      e.target.value as "all" | "buyer" | "seller"
-                    )
-                  }
-                  input={<OutlinedInput label="Type" />}
-                >
-                  <MenuItem value="all">As Buyer & Seller</MenuItem>
-                  <MenuItem value="buyer">As Buyer</MenuItem>
-                  <MenuItem value="seller">As Seller</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid2>
+          <Grid2>
+            <TextField
+              placeholder="Search"
+              size="small"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon
+                      sx={{
+                        color: "#7E7E7E",
+                        width: "24.59px",
+                        height: "21.7px",
+                        "& path": {
+                          strokeWidth: "2.03697px",
+                        },
+                      }}
+                    />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                width: "216px",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10.1848px",
+                  bgcolor: "#F9FBFF",
+                  "& fieldset": {
+                    borderColor: "#F9FBFF",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#F9FBFF",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#F9FBFF",
+                  },
+                },
+                "& .MuiInputBase-input": {
+                  fontFamily: "Poppins",
+                  fontSize: "12px",
+                  color: "#7E7E7E",
+                  "&::placeholder": {
+                    color: "#7E7E7E",
+                    opacity: 1,
+                  },
+                },
+              }}
+            />
           </Grid2>
         </Grid2>
 
@@ -337,11 +244,7 @@ const TransactionHistory: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell sx={{ color: "#B5B7C0", bgcolor: "white" }}>
-                  {selectedType === "all"
-                    ? "Name & Email"
-                    : selectedType === "buyer"
-                    ? "Seller & Email"
-                    : "Buyer & Email"}
+                  Name & Email
                 </TableCell>
                 <TableCell
                   sx={{
@@ -385,7 +288,7 @@ const TransactionHistory: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentTransactions.map((transaction) => (
+              {mockTransactions.map((transaction) => (
                 <TableRow key={transaction.id}>
                   <TableCell>
                     <Box>
@@ -398,7 +301,7 @@ const TransactionHistory: React.FC = () => {
                           color: "#292D32",
                         }}
                       >
-                        {displayUserInfo(transaction)}
+                        {transaction.name}
                       </Typography>
                       <Typography
                         sx={{
@@ -408,22 +311,13 @@ const TransactionHistory: React.FC = () => {
                           color: "rgba(41, 45, 50, 0.8)",
                         }}
                       >
-                        {transaction.buyer.email}
+                        {transaction.email}
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell align="center">
-                    {transaction.availability.location}
-                  </TableCell>
-                  <TableCell align="center">
-                    {formatTimeAsDate(transaction.availability.startTime)}
-                  </TableCell>
-                  <TableCell align="center">
-                    {formatDuration(
-                      transaction.availability.startTime,
-                      transaction.availability.endTime
-                    )}
-                  </TableCell>
+                  <TableCell align="center">{transaction.diningHall}</TableCell>
+                  <TableCell align="center">{transaction.date}</TableCell>
+                  <TableCell align="center">{transaction.time}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
                     <Button
                       size="small"
@@ -434,21 +328,15 @@ const TransactionHistory: React.FC = () => {
                         fontWeight: 500,
                       }}
                     >
-                      {transaction.status}
+                      {transaction.status.charAt(0).toUpperCase() +
+                        transaction.status.slice(1)}
                     </Button>
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {transaction.status ===
-                        TransactionStatus.AWAITING_REVIEW &&
+                      {transaction.status === "completed" &&
                         !transaction.rating && (
-                          <Button
-                            size="small"
-                            sx={getRateButtonStyle()}
-                            onClick={() => {
-                              navigate(`/rating/${transaction.id}`);
-                            }}
-                          >
+                          <Button size="small" sx={getRateButtonStyle()}>
                             <EditIcon
                               sx={{
                                 width: "15px",
@@ -488,7 +376,7 @@ const TransactionHistory: React.FC = () => {
                               color: "#292D32",
                             }}
                           >
-                            {displayTransactionRating(transaction)}
+                            {transaction.rating}
                           </Typography>
                           <EditIcon sx={{ color: "#482BE7", fontSize: 14 }} />
                         </>
@@ -519,9 +407,7 @@ const TransactionHistory: React.FC = () => {
                   fontSize: "14px",
                 }}
               >
-                {indexOfFirstRow + 1}-
-                {Math.min(indexOfLastRow, filteredTransactions.length)} of{" "}
-                {filteredTransactions.length}
+                1-2 of 2
               </Typography>
               <IconButton
                 size="small"
@@ -531,8 +417,6 @@ const TransactionHistory: React.FC = () => {
                   padding: 0,
                   color: "#B5B7C0",
                 }}
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
               >
                 <KeyboardArrowDownIcon
                   sx={{
@@ -549,8 +433,6 @@ const TransactionHistory: React.FC = () => {
                   padding: 0,
                   color: "#B5B7C0",
                 }}
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
               >
                 <KeyboardArrowDownIcon
                   sx={{

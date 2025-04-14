@@ -11,11 +11,11 @@ export interface CreateTransactionRequest {
 }
 
 export enum TransactionStatus {
-  PENDING = "Pending",
-  IN_PROGRESS = "In Progress",
-  COMPLETED = "Completed",
-  AWAITING_REVIEW = "Awaiting Review",
-  REJECTED = "Rejected",
+  PENDING = "PENDING",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  AWAITING_REVIEW = "AWAITING_REVIEW",
+  REJECTED = "REJECTED",
 }
 
 export const createTransaction = async (request: CreateTransactionRequest) => {
@@ -25,7 +25,7 @@ export const createTransaction = async (request: CreateTransactionRequest) => {
       availabilityId: request.availabilityId.toString(),
       buyerId: request.buyerId.toString(),
       sellerId: request.sellerId.toString(),
-      status: "PENDING",
+      status: TransactionStatus.PENDING,
     }).toString();
 
   const response = await fetch(toEndpointUrl(urlWithParams), {
@@ -95,7 +95,7 @@ export const acceptTransaction = async (transactionId: number) => {
   const urlWithParams =
     `/api/transactions/${transactionId}/status?` +
     new URLSearchParams({
-      status: "IN_PROGRESS",
+      status: TransactionStatus.IN_PROGRESS,
     }).toString();
 
   const response = await fetch(toEndpointUrl(urlWithParams), {
@@ -113,32 +113,11 @@ export const acceptTransaction = async (transactionId: number) => {
   return await response.json();
 };
 
-export const awaitReviewTransaction = async (transactionId: number) => {
-  const urlWithParams =
-    `/api/transactions/${transactionId}/status?` +
-    new URLSearchParams({
-      status: "AWAITING_REVIEW",
-    }).toString();
-
-  const response = await fetch(toEndpointUrl(urlWithParams), {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to await review transaction");
-  }
-
-  return await response.json();
-};
-
 export const cancelTransaction = async (transactionId: number) => {
   const urlWithParams =
     `/api/transactions/${transactionId}/status?` +
     new URLSearchParams({
-      status: "REJECTED",
+      status: TransactionStatus.REJECTED,
     }).toString();
 
   const response = await fetch(toEndpointUrl(urlWithParams), {

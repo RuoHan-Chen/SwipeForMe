@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
-import { Transaction, Availability } from "../../../../types";
+import Grid from "@mui/material/Grid2";
+import { Transaction } from "../../../../types";
 import {
   cancelTransaction,
   getCurrentUserTransactionsAsBuyer,
-  TransactionStatus,
 } from "../../../../clients/transactionClient";
+import { StyledTab, StyledTabs } from "../styledComponents";
 import TransactionCard from "./TransactionCard";
 import Box from "@mui/material/Box";
-import {
-  mapLocationsToEnum,
-  mapStatusToEnum,
-} from "../../../../utils/enumUtils";
+import { mapLocationsToEnum } from "../../../../utils/enumUtils";
+import Paper from "@mui/material/Paper";
 import { useSnackbar } from "../../../../context/SnackbarContext";
 
 interface BuyerViewProps {
+  viewMode: "buyer" | "seller";
   formatDuration: (startTime: string, endTime: string) => string;
-  handleAddToCalendar: (availability: Availability) => void;
 }
 
-const BuyerView: React.FC<BuyerViewProps> = ({
-  formatDuration,
-  handleAddToCalendar,
-}) => {
+const BuyerView: React.FC<BuyerViewProps> = ({ viewMode, formatDuration }) => {
   const [buyerTransactions, setBuyerTransactions] = useState<Transaction[]>([]);
+  const [transactionType, setTransactionType] = useState<
+    "pending" | "inProgress"
+  >("pending");
   const [loading, setLoading] = useState(false);
   const { snackbar } = useSnackbar();
 
@@ -34,14 +33,21 @@ const BuyerView: React.FC<BuyerViewProps> = ({
 
       // Convert location strings to enum values using our utility function
       const mappedTransactions = mapLocationsToEnum(response);
-      const mappedStatusTransactions = mapStatusToEnum(mappedTransactions);
 
-      setBuyerTransactions(mappedStatusTransactions);
+      setBuyerTransactions(mappedTransactions);
     } catch (error) {
       snackbar.error("Failed to fetch transactions");
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle tab change
+  const handleTabChange = (
+    _: React.SyntheticEvent,
+    newValue: "pending" | "inProgress"
+  ) => {
+    setTransactionType(newValue);
   };
 
   useEffect(() => {
@@ -64,78 +70,69 @@ const BuyerView: React.FC<BuyerViewProps> = ({
     return <Typography>Loading transactions...</Typography>;
   }
 
-  // Filter transactions based on status
-  const pendingTransactions = buyerTransactions.filter(
-    (transaction) => transaction.status === TransactionStatus.PENDING
-  );
-  const confirmedTransactions = buyerTransactions.filter(
-    (transaction) => transaction.status === TransactionStatus.IN_PROGRESS
+  // Filter transactions based on selected type
+  const filteredTransactions = buyerTransactions.filter(
+    (transaction) =>
+      transaction.status ===
+      (transactionType === "pending" ? "PENDING" : "IN_PROGRESS")
   );
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "row", gap: 4, width: "100%" }}>
-      {/* Pending Transactions Section */}
-      <Box sx={{ flex: 1 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Pending Confirmation
-        </Typography>
-        {pendingTransactions.length > 0 ? (
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {pendingTransactions.map((transaction, index) => (
-              <Box key={index} sx={{ width: "100%" }}>
-                <TransactionCard
-                  pending={true}
-                  transaction={transaction}
-                  status="buyer"
-                  formatDuration={formatDuration}
-                  onCancel={handleCancel}
-                  handleAddToCalendar={handleAddToCalendar}
-                />
-              </Box>
-            ))}
-          </Box>
-        ) : (
-          <Typography variant="body1" color="text.secondary">
-            No pending confirmation transactions
-          </Typography>
-        )}
-      </Box>
+    <>
+      {/* Transaction type toggle */}
+      {viewMode === "buyer" && (
+        <Box sx={{ position: "sticky", top: 0, zIndex: 1000 }}>
+          <Paper elevation={0}>
+            <StyledTabs
+              value={transactionType}
+              onChange={handleTabChange}
+              aria-label="transaction tabs"
+              variant="fullWidth"
+              TabIndicatorProps={{
+                sx: { transition: "all 0.2s ease" },
+              }}
+            >
+              <StyledTab
+                value="pending"
+                label="Pending Confirmation"
+                disableRipple
+              />
+              <StyledTab value="inProgress" label="Confirmed" disableRipple />
+            </StyledTabs>
+          </Paper>
+        </Box>
+      )}
 
-      {/* Confirmed Transactions Section */}
-      <Box sx={{ flex: 2 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Confirmed
-        </Typography>
-        {confirmedTransactions.length > 0 ? (
-          <Box
+      {filteredTransactions.length > 0 ? (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Grid
+            container
+            columnSpacing={10}
             sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 1,
-              width: "100%",
-              maxWidth: "1000px",
+              maxWidth: "fit-content",
+              margin: "0 auto",
             }}
           >
-            {confirmedTransactions.map((transaction, index) => (
-              <Box key={index} sx={{ width: "100%" }}>
+            {filteredTransactions.map((transaction, index) => (
+              <Grid size="auto" key={index}>
                 <TransactionCard
-                  pending={false}
                   transaction={transaction}
                   status="buyer"
                   formatDuration={formatDuration}
                   onCancel={handleCancel}
-                  handleAddToCalendar={handleAddToCalendar}
                 />
-              </Box>
+              </Grid>
             ))}
-          </Box>
-        ) : (
-          <Typography variant="body1" color="text.secondary">
-            No confirmed transactions
-          </Typography>
-        )}
-      </Box>
-    </Box>
+          </Grid>
+        </Box>
+      ) : (
+        <Typography variant="body1" color="text.secondary">
+          No{" "}
+          {transactionType === "pending" ? "pending confirmation" : "confirmed"}{" "}
+          transactions
+        </Typography>
+      )}
+    </>
   );
 };
 
