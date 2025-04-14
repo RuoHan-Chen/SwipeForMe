@@ -58,7 +58,7 @@ const Rating: React.FC = () => {
 
   return (
     <Box className="rating-background">
-      <Container maxWidth="sm" sx={{ py: 4 }}>
+      <Container maxWidth="lg" sx={{ py: 2 }}>
         <Stack spacing={3} alignItems="center">
           <Typography
             variant="h4"
@@ -75,7 +75,7 @@ const Rating: React.FC = () => {
             color="white"
             textAlign="center"
             sx={{
-              maxWidth: 600,
+              minWidth: 600,
               textShadow: "0 1px 2px rgba(0,0,0,0.3)",
               lineHeight: 1.6,
             }}
@@ -154,9 +154,6 @@ const Rating: React.FC = () => {
                   px: 4,
                   py: 1.5,
                   borderRadius: 1,
-                  textTransform: "none",
-                  fontSize: "1.1rem",
-                  fontWeight: 600,
                 }}
               >
                 Cancel
@@ -169,9 +166,6 @@ const Rating: React.FC = () => {
                   py: 1.5,
                   borderRadius: 1,
                   bgcolor: "#25DAC5",
-                  textTransform: "none",
-                  fontSize: "1.1rem",
-                  fontWeight: 600,
                   "&:hover": {
                     bgcolor: "#10b981",
                   },
