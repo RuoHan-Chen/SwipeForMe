@@ -40,7 +40,7 @@ export interface Transaction {
   buyer: User;
   seller: User;
   status: TransactionStatus;
-  rating: Rating | null;
+  rating: Rating;
 }
 
 export interface Availability {

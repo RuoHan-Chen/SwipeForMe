@@ -3,6 +3,7 @@
 
 package com.sp25group8.swipe4mebackend.ratings;
 
+import com.sp25group8.swipe4mebackend.models.ratings.RatingDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -32,17 +34,27 @@ public class RatingController {
     }
 
     @PutMapping("/{ratingId}")
-    public ResponseEntity<RatingEntity> updateRating(
+    public ResponseEntity<RatingDto> updateRating(
             @PathVariable Long ratingId,
             @Valid @RequestBody UpdateRatingRequest request) {
         
-        RatingEntity updatedRating = RatingEntity.builder()
-            .toSellerRating(request.toSellerRating())
-            .toBuyerRating(request.toBuyerRating())
-            .build();
+        RatingEntity.RatingEntityBuilder builder = RatingEntity.builder();
+        
+        if (request.toSellerRating() > 0) {
+            builder.toSellerRating(request.toSellerRating());
+        }
+        if (request.toBuyerRating() > 0) {
+            builder.toBuyerRating(request.toBuyerRating());
+        }
             
-        RatingEntity result = ratingService.updateRating(ratingId, updatedRating);
+        RatingDto result = ratingService.updateRating(ratingId, builder.build());
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping
+    public ResponseEntity<RatingEntity> createRating(@RequestParam Long transactionId) {
+        RatingEntity rating = ratingService.createRating(transactionId);
+        return ResponseEntity.ok(rating);
     }
 
 }

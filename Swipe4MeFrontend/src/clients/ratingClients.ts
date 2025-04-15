@@ -1,13 +1,13 @@
 import { toEndpointUrl } from "./utils";
 
 export interface CreateRatingRequest {
-  transactionId: number;
+  ratingId: number;
   toSellerRating: number;
   toBuyerRating: number;
 }
 
-export const createRating = async (request: CreateRatingRequest) => {
-  const response = await fetch(toEndpointUrl(`/api/ratings/${request.transactionId}`), {
+export const updateRating = async (request: CreateRatingRequest) => {
+  const response = await fetch(toEndpointUrl(`/api/ratings/${request.ratingId}`), {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,

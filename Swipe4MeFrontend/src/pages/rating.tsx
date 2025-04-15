@@ -3,10 +3,9 @@
 
 import React, { useState } from "react";
 import "../styles/rating.css";
-import { useNavigate, useLocation } from "react-router-dom";
-import { createRating } from "../clients/ratingClient";
-import { Transaction } from "../types";
-import { TransactionStatus } from "../clients/transactionClient";
+import { useNavigate, useParams } from "react-router-dom";
+import { updateRating } from "../clients/ratingClients";
+import { completeTransaction, getTransactionById, getRatingByTransactionId } from "../clients/transactionClient";
 import {
   Box,
   Container,
@@ -44,8 +43,7 @@ const categories: RatingCategory[] = [
 
 const Rating: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const transaction = location.state?.transaction as Transaction;
+  const { transactionId } = useParams();
   const [ratings, setRatings] = useState<Record<string, number>>({
     punctuality: 0,
     friendliness: 0,
@@ -63,23 +61,42 @@ const Rating: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      if (!transaction) {
-        throw new Error("No transaction data found");
+      if (!transactionId) {
+        throw new Error("Transaction ID is required");
       }
-
+      
       const averageRating = calculateAverageRating();
       
       // Determine if current user is buyer or seller
+      const transaction = await getTransactionById(parseInt(transactionId));
+      const rating = await getRatingByTransactionId(parseInt(transactionId));
       const isBuyer = transaction.buyer.id === parseInt(localStorage.getItem("userId") || "0");
-      
-      await createRating({
-        transactionId: transaction.id,
-        toSellerRating: isBuyer ? averageRating : 0,
-        toBuyerRating: !isBuyer ? averageRating : 0,
-      });
 
-      // Update transaction status to completed
-      await updateTransactionStatus(transaction.id, TransactionStatus.COMPLETED);
+      
+      if (isBuyer) {
+        await updateRating({
+          ratingId: rating.rId,
+          toSellerRating: averageRating,
+          toBuyerRating: rating.toBuyerRating,
+        });
+        if (rating.toSellerRating != null) {
+          await completeTransaction(parseInt(transactionId));
+        }
+      } else {
+        await updateRating({
+          ratingId: rating.rId,
+          toBuyerRating: averageRating,
+          toSellerRating: rating.toSellerRating,
+        });
+        if (rating.toBuyerRating != null) {
+          await completeTransaction(parseInt(transactionId));
+        }
+      }
+      
+      // // Update transaction status to completed
+      // if (rating.toSellerRating != null && rating.toBuyerRating != null) {
+      //   await completeTransaction(parseInt(transactionId));
+      // }
       
       navigate("/dashboard");
     } catch (error) {
