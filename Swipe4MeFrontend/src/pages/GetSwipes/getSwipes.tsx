@@ -342,7 +342,7 @@ const buySwipes: React.FC = () => {
                         </TableCell>
                         <TableCell align="left">{row.user.email}</TableCell>
                         <TableCell align="center">
-                          {row.user.rating || "N/A"}
+                          {Math.round(row.user.rating * 100) / 100 || "N/A"}
                         </TableCell>
                         <TableCell align="center">
                           <Button

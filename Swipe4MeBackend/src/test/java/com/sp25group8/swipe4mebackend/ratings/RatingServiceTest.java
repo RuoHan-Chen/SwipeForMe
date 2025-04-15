@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.sp25group8.swipe4mebackend.transactions.TransactionsRepository;
+import com.sp25group8.swipe4mebackend.users.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,11 +23,17 @@ public class RatingServiceTest {
     @Mock
     private RatingRepository ratingRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private TransactionsRepository transactionsRepository;
+
     private RatingService ratingService;
 
     @BeforeEach
     void setUp() {
-        ratingService = new RatingService(ratingRepository);
+        ratingService = new RatingService(ratingRepository, transactionsRepository, userRepository);
     }
 
     @Test

@@ -15,12 +15,16 @@ import com.sp25group8.swipe4mebackend.transactions.TransactionsService;
 
 import lombok.RequiredArgsConstructor;
 
+import com.sp25group8.swipe4mebackend.models.users.UserEntity;
+import com.sp25group8.swipe4mebackend.users.UserRepository;
+
 @Service
 @RequiredArgsConstructor
 public class RatingService {
 
     private final RatingRepository ratingRepository;
     private final TransactionsRepository transactionsRepository;
+    private final UserRepository userRepository;
 
     // find the user's rating according to its user
     public double getUserRating(Long userId) {
@@ -66,6 +70,15 @@ public class RatingService {
         existingRating.setToBuyerRating(updatedRating.getToBuyerRating());
         
         RatingEntity savedRating = ratingRepository.save(existingRating);
+        
+        UserEntity ratingSeller = savedRating.getSeller();
+        ratingSeller.setRating(getUserRating(ratingSeller.getId()));
+        userRepository.save(ratingSeller);
+        
+        UserEntity ratingBuyer = savedRating.getBuyer();
+        ratingBuyer.setRating(getUserRating(ratingBuyer.getId()));
+        userRepository.save(ratingBuyer);
+        
         return RatingDto.fromEntity(savedRating);
     }
 
