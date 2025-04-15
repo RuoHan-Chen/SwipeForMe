@@ -50,8 +50,8 @@ public class RatingService {
             .transaction(transaction)
             .seller(transaction.getSeller())
             .buyer(transaction.getBuyer())
-            .toSellerRating(null)
-            .toBuyerRating(null)
+            .toSellerRating(0.0)
+            .toBuyerRating(0.0)
             .build();
             
         return ratingRepository.save(rating);

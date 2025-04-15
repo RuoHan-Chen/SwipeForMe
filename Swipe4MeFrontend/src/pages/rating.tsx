@@ -70,6 +70,7 @@ const Rating: React.FC = () => {
       // Determine if current user is buyer or seller
       const transaction = await getTransactionById(parseInt(transactionId));
       const rating = await getRatingByTransactionId(parseInt(transactionId));
+      console.log(rating);
       const isBuyer = transaction.buyer.id === parseInt(localStorage.getItem("userId") || "0");
 
       
@@ -79,7 +80,7 @@ const Rating: React.FC = () => {
           toSellerRating: averageRating,
           toBuyerRating: rating.toBuyerRating,
         });
-        if (rating.toSellerRating != null) {
+        if (rating.toBuyerRating != 0) {
           await completeTransaction(parseInt(transactionId));
         }
       } else {
@@ -88,16 +89,12 @@ const Rating: React.FC = () => {
           toBuyerRating: averageRating,
           toSellerRating: rating.toSellerRating,
         });
-        if (rating.toBuyerRating != null) {
+        if (rating.toSellerRating != 0) {
           await completeTransaction(parseInt(transactionId));
         }
       }
-      
-      // // Update transaction status to completed
-      // if (rating.toSellerRating != null && rating.toBuyerRating != null) {
-      //   await completeTransaction(parseInt(transactionId));
-      // }
-      
+
+      console.log("Navigating to dashboard");
       navigate("/dashboard");
     } catch (error) {
       console.error("Failed to submit rating:", error);

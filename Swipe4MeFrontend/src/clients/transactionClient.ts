@@ -96,7 +96,6 @@ export const completeTransaction = async (transactionId: number) => {
       throw new Error("Failed to complete transaction");
     }
   
-    console.log(await response.json());
     return await response.json();
 };
 

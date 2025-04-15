@@ -3,6 +3,8 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
+import { useEffect, useState } from "react";
+import { getRatings } from "../../clients/ratingClients";
 
 const Rating = () => {
   const userData = {
@@ -14,6 +16,34 @@ const Rating = () => {
     rating: 4.5,
     ratingCount: 256,
   };
+
+  const [ratings, setRatings] = useState<number[]>([]);
+  const [averageRating, setAverageRating] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchRatings = async () => {
+      const ratings = await getRatings();
+      console.log(ratings);
+      setRatings(ratings);
+      setAverageRating(Math.round(ratings.reduce((acc: number, curr: number) => acc + curr, 0) / ratings.length * 100) / 100);
+      for (let i = 0; i < ratings.length; i++) {
+        ratings[i] = Math.round(ratings[i]);
+      }
+    };
+    fetchRatings();
+
+  }, []);
+
+  const calculateStarBarWidth = (targetRating: number) => {
+    let count = 0;
+    ratings.forEach((rating) => {
+      if (rating == targetRating) {
+        count++;
+      }
+    });
+    const percentage = Math.round(count / ratings.length * 100);
+    return String(percentage)+"%";
+  }
 
   return (
     <Grid size={6}>
@@ -34,7 +64,7 @@ const Rating = () => {
         <Grid container alignItems="flex-start" spacing={2} sx={{ flex: 1 }}>
           <Grid size={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <Typography variant="h3" sx={{ fontWeight: "bold", mb: 1 }}>
-              {userData.rating}
+              {averageRating}
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
               {[...Array(5)].map((_, i) => (
@@ -42,13 +72,13 @@ const Rating = () => {
                   key={i}
                   sx={{
                     fontSize: "1rem",
-                    color: i < Math.floor(userData.rating) ? "#ffc107" : "#e0e0e0",
+                    color: i < Math.floor(averageRating) ? "#ffc107" : "#e0e0e0",
                   }}
                 />
               ))}
             </Box>
             <Typography variant="body2" color="text.secondary">
-              {userData.ratingCount} ratings
+              {ratings.length} ratings
             </Typography>
           </Grid>
           <Grid size={8} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -74,16 +104,7 @@ const Rating = () => {
                         top: 0,
                         left: 0,
                         height: "100%",
-                        width:
-                          rating === 5
-                            ? "90%"
-                            : rating === 4
-                            ? "30%"
-                            : rating === 3
-                            ? "15%"
-                            : rating === 2
-                            ? "5%"
-                            : "10%",
+                        width: calculateStarBarWidth(rating),
                         bgcolor: "#673ab7",
                         borderRadius: 3,
                       }}

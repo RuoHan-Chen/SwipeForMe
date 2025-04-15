@@ -6,6 +6,18 @@ export interface CreateRatingRequest {
   toBuyerRating: number;
 }
 
+export const getRatings = async () => {
+  const userId = localStorage.getItem("userId")!!;
+  const url = `/api/ratings?userId=${userId}`;
+  const response = await fetch(toEndpointUrl(url), {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+  return await response.json();
+};
+
 export const updateRating = async (request: CreateRatingRequest) => {
   const response = await fetch(toEndpointUrl(`/api/ratings/${request.ratingId}`), {
     method: "PUT",
