@@ -6,6 +6,36 @@
 
 Check out our app [here](swipe-for-me.vercel.app)!
 
+## **Running the app locally**
+
+To run the backend locally, first ensure that you have docker installed. Then, navigate into the backend directory and run
+
+```
+docker-compose up -d
+```
+
+to start a database instance. Then, run
+
+```
+make dev
+```
+
+to start the app.
+
+To run the frontend, navigate into the frontend directory and run
+
+```
+npm install
+```
+
+to install dependencies, then run
+
+```
+npm run dev
+```
+
+to start the app.
+
 ## **Project Overview**
 
 The Meal Swipe Exchange Platform is a peer-to-peer web application designed to help Vanderbilt University students make the most of their meal plans. Many students find themselves with unused meal swipes, while others, particularly off-campus students, struggle to access affordable and convenient meals. This platform bridges the gap by enabling students to list, browse, and negotiate meal swipe exchanges, fostering a sustainable and community-driven solution.
