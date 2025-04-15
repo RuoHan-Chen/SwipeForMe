@@ -96,7 +96,7 @@ const BuyerView: React.FC<BuyerViewProps> = ({
           </Box>
         ) : (
           <Typography variant="body1" color="text.secondary">
-            No pending confirmation transactions
+            No pending confirmation swipe sessions
           </Typography>
         )}
       </Box>
@@ -131,7 +131,7 @@ const BuyerView: React.FC<BuyerViewProps> = ({
           </Box>
         ) : (
           <Typography variant="body1" color="text.secondary">
-            No confirmed transactions
+            No confirmed swipe sessions
           </Typography>
         )}
       </Box>

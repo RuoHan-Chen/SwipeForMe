@@ -3,6 +3,9 @@
 
 package com.sp25group8.swipe4mebackend.models.ratings;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.users.UserEntity;
 
@@ -42,8 +45,9 @@ public class RatingEntity {
         @JoinColumn(name = "buyer_id", nullable = false)
         private UserEntity buyer;
 
-        @OneToOne(fetch = FetchType.EAGER)
+        @OneToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "transaction_id", nullable = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
         private TransactionEntity transaction;
 
         @Column(name = "to_seller_rating")
