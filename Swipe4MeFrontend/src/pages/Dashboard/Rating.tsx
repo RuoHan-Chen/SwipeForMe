@@ -53,9 +53,15 @@ const Rating = () => {
 
         <Grid container alignItems="flex-start" spacing={2} sx={{ flex: 1 }}>
           <Grid size={4} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <Typography variant="h3" sx={{ fontWeight: "bold", mb: 1 }}>
-              {averageRating}
-            </Typography>
+            {ratings.length == 0 ? (
+              <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1 }}>
+                No ratings
+              </Typography>
+            ) : (
+              <Typography variant="h3" sx={{ fontWeight: "bold", mb: 1 }}>
+                {averageRating}
+              </Typography>
+            )}
             <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
               {[...Array(5)].map((_, i) => (
                 <StarIcon
