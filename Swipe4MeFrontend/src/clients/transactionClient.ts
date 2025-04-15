@@ -1,7 +1,7 @@
 // Author: Steven Yi
 // Time spent: 30 minutes
 
-import { Transaction } from "../types";
+import { Rating, Transaction } from "../types";
 import { toEndpointUrl } from "./utils";
 
 export interface CreateTransactionRequest {
@@ -16,6 +16,40 @@ export enum TransactionStatus {
   COMPLETED = "Completed",
   AWAITING_REVIEW = "Awaiting Review",
   REJECTED = "Rejected",
+}
+
+export const getTransactionById = async (transactionId: number): Promise<Transaction> => {
+  const response = await fetch(toEndpointUrl(`/api/transactions/${transactionId}`), {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to get transaction");
+  }
+
+  const transaction = await response.json();
+  console.log(transaction);
+  return transaction;
+};
+
+export const getRatingByTransactionId = async (transactionId: number): Promise<Rating> => {
+  const response = await fetch(toEndpointUrl(`/api/transactions/${transactionId}/rating`), {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to get rating");
+  }
+
+  const rating = await response.json();
+  console.log(rating);
+  return rating;
 }
 
 export const createTransaction = async (request: CreateTransactionRequest) => {
@@ -41,6 +75,28 @@ export const createTransaction = async (request: CreateTransactionRequest) => {
   }
 
   return await response.json();
+};
+
+export const completeTransaction = async (transactionId: number) => {
+  const urlWithParams =
+    `/api/transactions/${transactionId}/status?` +
+    new URLSearchParams({
+      status: "COMPLETED",
+    }).toString();
+
+    const response = await fetch(toEndpointUrl(urlWithParams), {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+  
+    if (!response.ok) {
+      throw new Error("Failed to complete transaction");
+    }
+  
+    return await response.json();
 };
 
 export const getCurrentUserTransactionsAsBuyer = async (): Promise<
@@ -124,6 +180,7 @@ export const awaitReviewTransaction = async (transactionId: number) => {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
     },
   });
 

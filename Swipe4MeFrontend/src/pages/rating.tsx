@@ -2,8 +2,10 @@
 // Time spent: 15 minutes
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "../styles/rating.css";
+import { useNavigate, useParams } from "react-router-dom";
+import { updateRating } from "../clients/ratingClients";
+import { completeTransaction, getTransactionById, getRatingByTransactionId } from "../clients/transactionClient";
 import {
   Box,
   Container,
@@ -41,6 +43,7 @@ const categories: RatingCategory[] = [
 
 const Rating: React.FC = () => {
   const navigate = useNavigate();
+  const { transactionId } = useParams();
   const [ratings, setRatings] = useState<Record<string, number>>({
     punctuality: 0,
     friendliness: 0,
@@ -51,9 +54,51 @@ const Rating: React.FC = () => {
     setRatings((prev) => ({ ...prev, [category]: value }));
   };
 
-  const handleSubmit = () => {
-    console.log("Submitted ratings:", ratings);
-    // Submit logic here
+  const calculateAverageRating = () => {
+    const values = Object.values(ratings);
+    return values.reduce((a, b) => a + b, 0) / values.length;
+  };
+
+  const handleSubmit = async () => {
+    try {
+      if (!transactionId) {
+        throw new Error("Transaction ID is required");
+      }
+      
+      const averageRating = calculateAverageRating();
+      
+      // Determine if current user is buyer or seller
+      const transaction = await getTransactionById(parseInt(transactionId));
+      const rating = await getRatingByTransactionId(parseInt(transactionId));
+      console.log(rating);
+      const isBuyer = transaction.buyer.id === parseInt(localStorage.getItem("userId") || "0");
+
+      
+      if (isBuyer) {
+        await updateRating({
+          ratingId: rating.rId,
+          toSellerRating: averageRating,
+          toBuyerRating: rating.toBuyerRating,
+        });
+        if (rating.toBuyerRating != 0) {
+          await completeTransaction(parseInt(transactionId));
+        }
+      } else {
+        await updateRating({
+          ratingId: rating.rId,
+          toBuyerRating: averageRating,
+          toSellerRating: rating.toSellerRating,
+        });
+        if (rating.toSellerRating != 0) {
+          await completeTransaction(parseInt(transactionId));
+        }
+      }
+
+      console.log("Navigating to dashboard");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Failed to submit rating:", error);
+    }
   };
 
   return (

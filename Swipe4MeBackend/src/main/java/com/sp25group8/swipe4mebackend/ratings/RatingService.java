@@ -5,9 +5,13 @@ package com.sp25group8.swipe4mebackend.ratings;
 
 import java.util.List;
 
+import com.sp25group8.swipe4mebackend.models.ratings.RatingDto;
+import com.sp25group8.swipe4mebackend.transactions.TransactionsRepository;
 import org.springframework.stereotype.Service;
 
 import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
+import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
+import com.sp25group8.swipe4mebackend.transactions.TransactionsService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class RatingService {
 
     private final RatingRepository ratingRepository;
+    private final TransactionsRepository transactionsRepository;
 
     // find the user's rating according to its user
     public double getUserRating(Long userId) {
@@ -38,20 +43,30 @@ public class RatingService {
         return sum / numEntries;
     }
 
-    // 创建新的评分
-    public RatingEntity createRating(RatingEntity rating) {
+    public RatingEntity createRating(Long transactionId) {
+        TransactionEntity transaction = transactionsRepository.findById(transactionId).orElseThrow();
+        
+        RatingEntity rating = RatingEntity.builder()
+            .transaction(transaction)
+            .seller(transaction.getSeller())
+            .buyer(transaction.getBuyer())
+            .toSellerRating(0.0)
+            .toBuyerRating(0.0)
+            .build();
+            
         return ratingRepository.save(rating);
     }
 
     // 更新评分
-    public RatingEntity updateRating(Long ratingId, RatingEntity updatedRating) {
+    public RatingDto updateRating(Long ratingId, RatingEntity updatedRating) {
         RatingEntity existingRating = ratingRepository.findById(ratingId)
                 .orElseThrow(() -> new RuntimeException("Rating not found with id: " + ratingId));
         
         existingRating.setToSellerRating(updatedRating.getToSellerRating());
         existingRating.setToBuyerRating(updatedRating.getToBuyerRating());
         
-        return ratingRepository.save(existingRating);
+        RatingEntity savedRating = ratingRepository.save(existingRating);
+        return RatingDto.fromEntity(savedRating);
     }
 
     // 根据ID获取评分

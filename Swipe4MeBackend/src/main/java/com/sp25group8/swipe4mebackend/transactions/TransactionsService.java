@@ -5,6 +5,8 @@ package com.sp25group8.swipe4mebackend.transactions;
 
 import com.sp25group8.swipe4mebackend.emails.EmailService;
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
+import com.sp25group8.swipe4mebackend.models.ratings.RatingDto;
+import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.CreateTransactionDto;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionDto;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
@@ -16,7 +18,7 @@ import com.sp25group8.swipe4mebackend.users.UserService;
 import com.sp25group8.swipe4mebackend.availability.AvailabilityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import com.sp25group8.swipe4mebackend.ratings.RatingService;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,7 @@ public class TransactionsService {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final AvailabilityRepository availabilityRepository;
+    private final RatingService ratingService;
 
     // create transaction
     public TransactionDto createTransaction(
@@ -51,12 +54,23 @@ public class TransactionsService {
                 .status(status)
                 .build();
 
-        return TransactionDto.fromEntity(transactionRepository.save(transaction));
+        TransactionEntity savedTransactionEntity = transactionRepository.save(transaction);
+
+        ratingService.createRating(savedTransactionEntity.getId());
+
+        return TransactionDto.fromEntity(savedTransactionEntity);
     }
 
     // 根据 ID 获取交易
-    public Optional<TransactionDto> getTransactionById(Long transactionId) {
-        return transactionRepository.findById(transactionId).map(TransactionDto::fromEntity);
+    public TransactionDto getTransactionById(Long transactionId) {
+        return TransactionDto.fromEntity(transactionRepository.findById(transactionId).orElseThrow());
+    }
+
+    public RatingDto getRatingByTransactionId(Long transactionId) {
+        TransactionEntity transactionEntity = transactionRepository.findById(transactionId).orElseThrow();
+        RatingEntity ratingEntity = transactionEntity.getRating();
+
+        return RatingDto.fromEntity(ratingEntity);
     }
 
     // 获取用户的所有交易（作为买家）

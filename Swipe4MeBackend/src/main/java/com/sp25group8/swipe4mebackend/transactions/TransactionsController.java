@@ -3,6 +3,8 @@
 
 package com.sp25group8.swipe4mebackend.transactions;
 
+import com.sp25group8.swipe4mebackend.models.ratings.RatingDto;
+import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.CreateTransactionDto;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionDto;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
@@ -34,6 +36,16 @@ public class TransactionsController {
             @RequestParam Long availabilityId,
             @RequestParam TransactionStatus status) {
         return ResponseEntity.ok(transactionsService.createTransaction(buyerId, sellerId, availabilityId, status));
+    }
+
+    @GetMapping("/{transactionId}")
+    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long transactionId) {
+        return ResponseEntity.ok(transactionsService.getTransactionById(transactionId));
+    }
+
+    @GetMapping("/{transactionId}/rating")
+    public ResponseEntity<RatingDto> getRatingByTransactionId(@PathVariable Long transactionId) {
+        return ResponseEntity.ok(transactionsService.getRatingByTransactionId(transactionId));
     }
 
     @GetMapping("/buyer/{buyerId}")
