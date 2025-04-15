@@ -4,12 +4,16 @@
 
 # **Meal Swipe Exchange Platform**
 
+Check out our app [here](swipe-for-me.vercel.app)!
+
 ## **Project Overview**
+
 The Meal Swipe Exchange Platform is a peer-to-peer web application designed to help Vanderbilt University students make the most of their meal plans. Many students find themselves with unused meal swipes, while others, particularly off-campus students, struggle to access affordable and convenient meals. This platform bridges the gap by enabling students to list, browse, and negotiate meal swipe exchanges, fostering a sustainable and community-driven solution.
 
 ---
 
 ## **Features**
+
 - **User Authentication:** Students can securely log in using their university credentials.
 - **Listing Creation:** Students with extra meal swipes can create listings with details such as price, location, and availability.
 - **Browsing and Search:** Users can search for meal swipes based on time, location, or price, and filter listings to suit their preferences.
@@ -22,6 +26,7 @@ The Meal Swipe Exchange Platform is a peer-to-peer web application designed to h
 ---
 
 ## **Tech Stack**
+
 - **Backend:** Java (Spring Boot) for robust and scalable API development.
 - **Frontend:** TypeScript (React) for an interactive and responsive user interface.
 - **Database:** PostgreSQL for managing user data, listings, and transactions.
@@ -31,6 +36,7 @@ The Meal Swipe Exchange Platform is a peer-to-peer web application designed to h
 ---
 
 ## **Setup Instructions**
+
 1. **Clone the Repository:**
    ```bash
    git clone https://github.com/your-repo-url.git
@@ -50,6 +56,7 @@ The Meal Swipe Exchange Platform is a peer-to-peer web application designed to h
      npm run dev
      ```
 4. **Database Configuration:**
+
    - Update the `application.properties` file with your PostgreSQL credentials.
 
 5. **Run the Application:**
@@ -58,25 +65,30 @@ The Meal Swipe Exchange Platform is a peer-to-peer web application designed to h
 ---
 
 ## **Project Plan and Progress**
-- **Sprint 1:** Core Authentication and Profile System  
-- **Sprint 2:** Listing, Browsing, Messaging, and Scheduling Features  
-- **Sprint 3:** Trust, Admin Features, Integration, and Deployment  
+
+- **Sprint 1:** Core Authentication and Profile System
+- **Sprint 2:** Listing, Browsing, Messaging, and Scheduling Features
+- **Sprint 3:** Trust, Admin Features, Integration, and Deployment
 
 ### **Current Progress:**
-- [x] User Authentication  
-- [ ] Listing Creation and Browsing  
-- [ ] Messaging and Scheduling  
-- [ ] Deployment  
+
+- [x] User Authentication
+- [ ] Listing Creation and Browsing
+- [ ] Messaging and Scheduling
+- [ ] Deployment
 
 ---
 
 ## **License**
+
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
 ---
 
 ## **Contact**
+
 For questions or feedback, please contact the project team at:
+
 - **Email:** swipe4me@vanderbilt.edu
 - **Instagram:** [@mealswipeexchange](https://instagram.com/swipe4me)
 
