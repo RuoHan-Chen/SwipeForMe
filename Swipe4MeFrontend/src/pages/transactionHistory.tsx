@@ -379,9 +379,6 @@ const TransactionHistory: React.FC = () => {
                 >
                   Status
                 </TableCell>
-                <TableCell sx={{ color: "#B5B7C0", bgcolor: "white" }}>
-                  Rating
-                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -436,64 +433,6 @@ const TransactionHistory: React.FC = () => {
                     >
                       {transaction.status}
                     </Button>
-                  </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {transaction.status ===
-                        TransactionStatus.AWAITING_REVIEW &&
-                        !transaction.rating && (
-                          <Button
-                            size="small"
-                            sx={getRateButtonStyle()}
-                            onClick={() => {
-                              navigate(`/rating/${transaction.id}`);
-                            }}
-                          >
-                            <EditIcon
-                              sx={{
-                                width: "15px",
-                                height: "15px",
-                                opacity: 0.6,
-                                color: "#482BE7",
-                                "& path": {
-                                  border: "1.2px solid #482BE7",
-                                },
-                              }}
-                            />
-                            <Typography
-                              sx={{
-                                fontFamily: "Poppins",
-                                fontStyle: "normal",
-                                fontWeight: 500,
-                                fontSize: "14.2588px",
-                                lineHeight: "21px",
-                                display: "flex",
-                                alignItems: "flex-end",
-                                letterSpacing: "-0.01em",
-                                color: "#482BE7",
-                              }}
-                            >
-                              Rate
-                            </Typography>
-                          </Button>
-                        )}
-                      {transaction.rating && (
-                        <>
-                          <Typography
-                            sx={{
-                              fontFamily: "Poppins",
-                              fontWeight: 500,
-                              fontSize: "14.2588px",
-                              lineHeight: "21px",
-                              color: "#292D32",
-                            }}
-                          >
-                            {displayTransactionRating(transaction)}
-                          </Typography>
-                          <EditIcon sx={{ color: "#482BE7", fontSize: 14 }} />
-                        </>
-                      )}
-                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
