@@ -93,7 +93,7 @@ const buySwipes: React.FC = () => {
         // Filter out past availabilities
         const currentTime = new Date();
         const futureAvailabilities = response.filter(
-          (availability) => new Date(availability.startTime) > currentTime
+          (availability) => new Date(availability.endTime) > currentTime
         );
 
         // Sort the availabilities by start time
