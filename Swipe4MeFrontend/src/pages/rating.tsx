@@ -5,7 +5,11 @@ import React, { useState } from "react";
 import "../styles/rating.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateRating } from "../clients/ratingClients";
-import { completeTransaction, getTransactionById, getRatingByTransactionId } from "../clients/transactionClient";
+import {
+  completeTransaction,
+  getTransactionById,
+  getRatingByTransactionId,
+} from "../clients/transactionClient";
 import {
   Box,
   Container,
@@ -15,7 +19,7 @@ import {
   Stack,
   Rating as MuiRating,
 } from "@mui/material";
-
+import { useSnackbar } from "../context/SnackbarContext";
 interface RatingCategory {
   label: string;
   description: string;
@@ -49,6 +53,7 @@ const Rating: React.FC = () => {
     friendliness: 0,
     satisfaction: 0,
   });
+  const { snackbar } = useSnackbar();
 
   const handleRatingChange = (category: string, value: number) => {
     setRatings((prev) => ({ ...prev, [category]: value }));
@@ -64,16 +69,17 @@ const Rating: React.FC = () => {
       if (!transactionId) {
         throw new Error("Transaction ID is required");
       }
-      
+
       const averageRating = calculateAverageRating();
-      
+
       // Determine if current user is buyer or seller
       const transaction = await getTransactionById(parseInt(transactionId));
       const rating = await getRatingByTransactionId(parseInt(transactionId));
       console.log(rating);
-      const isBuyer = transaction.buyer.id === parseInt(localStorage.getItem("userId") || "0");
+      const isBuyer =
+        transaction.buyer.id ===
+        parseInt(localStorage.getItem("userId") || "0");
 
-      
       if (isBuyer) {
         await updateRating({
           ratingId: rating.rId,
@@ -94,10 +100,10 @@ const Rating: React.FC = () => {
         }
       }
 
-      console.log("Navigating to dashboard");
+      snackbar.success("Rating submitted successfully");
       navigate("/dashboard");
     } catch (error) {
-      console.error("Failed to submit rating:", error);
+      snackbar.error("Failed to submit rating: " + error);
     }
   };
 
