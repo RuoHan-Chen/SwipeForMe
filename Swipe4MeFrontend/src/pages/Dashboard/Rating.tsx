@@ -7,16 +7,6 @@ import { useEffect, useState } from "react";
 import { getRatings } from "../../clients/ratingClients";
 
 const Rating = () => {
-  const userData = {
-    name: "RuoHan Chen",
-    email: "Ruohan@gamil.com",
-    phone: "+1 7306185390",
-    age: 21,
-    class: "Sophomore",
-    rating: 4.5,
-    ratingCount: 256,
-  };
-
   const [ratings, setRatings] = useState<number[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
 
