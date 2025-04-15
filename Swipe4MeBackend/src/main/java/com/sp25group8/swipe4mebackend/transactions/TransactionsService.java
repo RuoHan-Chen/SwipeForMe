@@ -3,24 +3,27 @@
 
 package com.sp25group8.swipe4mebackend.transactions;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.sp25group8.swipe4mebackend.availability.AvailabilityRepository;
 import com.sp25group8.swipe4mebackend.emails.EmailService;
 import com.sp25group8.swipe4mebackend.models.availabilities.AvailabilityEntity;
 import com.sp25group8.swipe4mebackend.models.ratings.RatingDto;
 import com.sp25group8.swipe4mebackend.models.ratings.RatingEntity;
-import com.sp25group8.swipe4mebackend.models.transactions.CreateTransactionDto;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionDto;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionEntity;
 import com.sp25group8.swipe4mebackend.models.transactions.TransactionStatus;
 import com.sp25group8.swipe4mebackend.models.users.UserDto;
 import com.sp25group8.swipe4mebackend.models.users.UserEntity;
+import com.sp25group8.swipe4mebackend.ratings.RatingRepository;
+import com.sp25group8.swipe4mebackend.ratings.RatingService;
 import com.sp25group8.swipe4mebackend.users.UserRepository;
 import com.sp25group8.swipe4mebackend.users.UserService;
-import com.sp25group8.swipe4mebackend.availability.AvailabilityRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import com.sp25group8.swipe4mebackend.ratings.RatingService;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class TransactionsService {
     private final EmailService emailService;
     private final AvailabilityRepository availabilityRepository;
     private final RatingService ratingService;
+    private final RatingRepository ratingRepository;
 
     // create transaction
     public TransactionDto createTransaction(
@@ -68,7 +72,7 @@ public class TransactionsService {
 
     public RatingDto getRatingByTransactionId(Long transactionId) {
         TransactionEntity transactionEntity = transactionRepository.findById(transactionId).orElseThrow();
-        RatingEntity ratingEntity = transactionEntity.getRating();
+        RatingEntity ratingEntity = ratingRepository.findByTransaction_Id(transactionId);
 
         return RatingDto.fromEntity(ratingEntity);
     }
