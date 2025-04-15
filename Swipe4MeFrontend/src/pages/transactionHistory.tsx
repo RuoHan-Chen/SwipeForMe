@@ -22,7 +22,6 @@ import {
   InputLabel,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import EditIcon from "@mui/icons-material/Edit";
 import { Transaction } from "../types";
 import {
   awaitReviewTransaction,
@@ -31,7 +30,6 @@ import {
 import { getCurrentUserTransactionsAsSeller } from "../clients/transactionClient";
 import { getCurrentUserTransactionsAsBuyer } from "../clients/transactionClient";
 import { mapLocationsToEnum, mapStatusToEnum } from "../utils/enumUtils";
-import { useNavigate } from "react-router-dom";
 import { SelectChangeEvent } from "@mui/material";
 
 const TransactionHistory: React.FC = () => {
@@ -47,7 +45,6 @@ const TransactionHistory: React.FC = () => {
     "all"
   );
   const rowsPerPage = 6;
-  const navigate = useNavigate();
 
   const handleTransactionsWithExpiredAvailabilities = (
     transactions: Transaction[]
@@ -134,18 +131,6 @@ const TransactionHistory: React.FC = () => {
     setCurrentPage(newPage);
   };
 
-  const displayTransactionRating = (transaction: Transaction) => {
-    if (!transaction.rating) {
-      return null;
-    }
-    const currentUserId = localStorage.getItem("userId")!!;
-    if (transaction.buyer.id === parseInt(currentUserId)) {
-      return transaction.rating.toSellerRating;
-    }
-
-    return transaction.rating.toBuyerRating;
-  };
-
   const displayUserInfo = (transaction: Transaction) => {
     const currentUserId = localStorage.getItem("userId")!!;
     if (transaction.buyer.id === parseInt(currentUserId)) {
@@ -217,25 +202,6 @@ const TransactionHistory: React.FC = () => {
         return {};
     }
   };
-
-  const getRateButtonStyle = () => ({
-    boxSizing: "border-box",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "4.07393px 12px 4.07393px 12.2218px",
-    gap: "5px",
-    width: "80px",
-    height: "29.15px",
-    background: "#FFFFFF",
-    border: "1.01848px solid #482BE7",
-    borderRadius: "4.07393px",
-    textTransform: "none",
-    "&:hover": {
-      background: "#FFFFFF",
-    },
-  });
 
   return (
     <div style={{ paddingTop: "50px" }}>
